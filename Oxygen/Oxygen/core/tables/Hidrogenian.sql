@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[Hidrogenian] (
+
+	Id INT IDENTITY(1,1) NOT NULL,
+	ProfileId INT NOT NULL,
+	Email NVARCHAR(50) NOT NULL,
+	EmailConfirmed BIT NOT NULL DEFAULT 0,
+	UserName NVARCHAR(20) NOT NULL,
+	PasswordHash NVARCHAR(255) NOT NULL,
+	PasswordSalt NVARCHAR(255) NOT NULL,
+	PhoneNumber NVARCHAR(20) DEFAULT NULL,
+	PhoneNumberConfirmed BIT NOT NULL DEFAULT 0,
+	AccessFailedCount INT DEFAULT 1,
+	LockoutEnabled BIT NOT NULL DEFAULT 0,
+	LockoutEnd DATETIME2(7) DEFAULT NULL,
+	TwoFactorEnabled BIT DEFAULT 0,
+	CreatedOn DATETIME2(7) DEFAULT (GETDATE()),
+	UpdatedOn DATETIME2(7) DEFAULT NULL,
+	DeactivatedOn DATETIME2(7) DEFAULT NULL,
+	LastSignin DATETIME2(7) DEFAULT NULL,
+	LastSignout DATETIME2(7) DEFAULT NULL,
+	RecoveryToken NVARCHAR(255) DEFAULT NULL,
+	TokenSetOn DATETIME2(7) DEFAULT NULL,
+	CONSTRAINT [PK_Hidrogenian_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_Hidrogenian_HidroProfile] FOREIGN KEY ([ProfileId]) REFERENCES [dbo].[HidroProfile] ([Id])
+)
