@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[HidroRole] (
+
+	Id INT IDENTITY(1,1) NOT NULL,
+	RoleName NVARCHAR(30) DEFAULT NULL,
+	RoleDescription NVARCHAR(100) DEFAULT NULL,
+	CONSTRAINT [PK_HidroRole_Id] PRIMARY KEY ([Id] ASC)
+)
