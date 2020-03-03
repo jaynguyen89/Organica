@@ -1,0 +1,29 @@
+html {
+    min-height: 100%;
+    position: relative;
+    font-family: "KoHo";
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+.footer {
+    background-color: #49A9D6;
+    padding: 20px;
+    color: whitesmoke;
+}
+
+.footer-container {
+    width: 100%;
+    text-align: center;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    font-size: small;
+    overflow: hidden;
+    height: 60px;
+}
+
+.nav-wrapper {
+    width: 80%;
+    margin: auto;
+}

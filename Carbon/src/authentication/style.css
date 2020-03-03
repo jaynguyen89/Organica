@@ -1,0 +1,30 @@
+.signin-wrapper {
+    width: 60%;
+    height: 100%;
+    margin: 100px auto;
+}
+
+.signin-assistance {
+    padding-top: 10px;
+}
+
+.social-row {
+    padding-left: 30px;
+}
+
+h5 {
+    margin-bottom: 20px;
+}
+
+.social-icon {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.fb-color {
+    color: #3B5998;
+}
+
+.gg-color {
+    color: #F50057;
+}

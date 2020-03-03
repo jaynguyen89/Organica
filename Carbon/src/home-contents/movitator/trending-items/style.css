@@ -1,0 +1,30 @@
+.trending-wrapper {
+    width: 100%;
+    margin-top: 0;
+}
+
+.trending-list {
+    width: 80%;
+    margin: auto;
+    background: transparent;
+    padding: 7px 10px;
+    background-color: #E3E3E3;
+}
+
+.trending-list h5 {
+    font-weight: bolder;
+    margin-bottom: 0;
+}
+
+.trending-list p {
+    margin-top: 2px;
+}
+
+.categories {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: #F0F0F0;
+}
