@@ -4090,7 +4090,7 @@ nav {
     background-color: #49A9D6;
     width: 100%;
     height: 56px;
-    line-height: 56px
+    line-height: 56px;
 }
 
 nav.nav-extended {
@@ -7631,7 +7631,7 @@ input[type=range]::-ms-thumb {
     opacity: 0;
     height: 120vh;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 997;
+    z-index: 100;
     display: none
 }
 

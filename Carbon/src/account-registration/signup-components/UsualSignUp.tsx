@@ -1,6 +1,12 @@
 import React from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const UsualSignUp = () => {
+
+    const reCaptchaClicked = (value : string) => {
+        console.log(value);
+    }
+
     return (
         <>
             <h4><i className='fas fa-user-plus'></i>&nbsp;Create your account</h4>
@@ -38,7 +44,18 @@ const UsualSignUp = () => {
                             <label htmlFor='given-name'>Given Name</label>
                         </div>
                         <div className='col s12'>
-                            <a className='btn' style={{ marginTop:'20px' }}>Submit</a>
+                            <div className='row'>
+                                <div className='col s12'>
+                                    <ReCAPTCHA
+                                        sitekey='6LeXhN4UAAAAAHKW6-44VxtUVMYSlMPj04WRoC8z'
+                                        onChange={ reCaptchaClicked } />
+                                </div>
+                                <div className='col s12'>
+                                    <a className='btn' style={{ marginTop:'20px' }}>Submit</a>
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>

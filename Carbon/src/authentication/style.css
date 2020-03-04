@@ -4,6 +4,12 @@
     margin: 100px auto;
 }
 
+@media only screen and (max-width: 599px) {
+    .signin-wrapper {
+        width: 90%;
+    }
+}
+
 .signin-assistance {
     padding-top: 10px;
 }
