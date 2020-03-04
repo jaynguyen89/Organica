@@ -1,3 +1,4 @@
+using HelperLibrary;
 using Hidrogen.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace Hidrogen {
             });
 
             services.RegisterHidrogenServices();
+            services.RegisterCommonServices();
         }
 
 
