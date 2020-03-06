@@ -1,5 +1,7 @@
-﻿using System;
+﻿using HelperLibrary.Common;
+using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using static HelperLibrary.Common.HidroAttributes;
 
 namespace HelperLibrary {
@@ -16,6 +18,15 @@ namespace HelperLibrary {
             ) as StringValueAttribute[];
 
             return atts.Length > 0 ? atts[0].Value : null;
+        }
+
+        public static string CapitalizeFirstLetterOfEachWord(string sentence) {
+            var newSentence = sentence.Replace(HidroConstants.WHITE_SPACE, string.Empty)
+                                      .ToLower();
+
+            newSentence = Regex.Replace(newSentence, @"(^\w)|(\s\w)", m => m.Value.ToUpper());
+
+            return newSentence;
         }
     }
 }

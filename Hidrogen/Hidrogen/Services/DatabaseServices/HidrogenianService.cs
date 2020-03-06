@@ -1,6 +1,10 @@
 ﻿using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
+using Hidrogen.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -8,7 +12,6 @@ namespace Hidrogen.Services.DatabaseServices {
 
         private readonly ILogger<HidrogenianService> _logger;
         private HidrogenDbContext _dbContext;
-
 
         public HidrogenianService(
             ILogger<HidrogenianService> logger,
@@ -18,7 +21,65 @@ namespace Hidrogen.Services.DatabaseServices {
             _dbContext = dbContext;
         }
 
+        public async Task<HidrogenianVM> InsertNewHidrogenian(RegistrationVM registration) {
+            _logger.LogInformation("HidrogenianService.InserNewHidrogenian - Service starts.");
 
+            var dbHidrogenian = new Hidrogenian {
+                Email = registration.Email,
+                UserName = registration.UserName,
+                PasswordHash = registration.Password,
+                PasswordSalt = registration.PasswordConfirm
+            };
 
+            _dbContext.Hidrogenian.Add(dbHidrogenian);
+
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("HidrogenianService.InserNewHidrogenian - Error: " + e.ToString());
+                return null;
+            }
+
+            HidrogenianVM hidrogenian = dbHidrogenian;
+            hidrogenian.FamilyName = registration.FamilyName;
+            hidrogenian.GivenName = registration.GivenName;
+
+            return hidrogenian;
+        }
+
+        public async Task<bool> RemoveNewlyInsertedHidrogenian(int hidrogenianId) {
+            _logger.LogInformation("HidrogenianService.RemoveNewlyInsertedHidrogenian - Service starts.");
+
+            var dbHidrogenian = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
+            _dbContext.Remove(dbHidrogenian);
+
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("HidrogenianService.RemoveNewlyInsertedHidrogenian - Error: " + e.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> SetAccountConfirmationToken(HidrogenianVM hidrogenian) {
+            _logger.LogInformation("HidrogenianService.SetAccountConfirmationToken - Service starts.");
+
+            var dbHidrogenian = await _dbContext.Hidrogenian.FindAsync(hidrogenian.Id);
+            dbHidrogenian.RecoveryToken = hidrogenian.Token;
+            dbHidrogenian.TokenSetOn = DateTime.UtcNow;
+
+            _dbContext.Update(dbHidrogenian);
+
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("HidrogenianService.SetAccountConfirmationToken - Error: " + e.ToString());
+                return false;
+            }
+
+            return true;
+        }
     }
 }

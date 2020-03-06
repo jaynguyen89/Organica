@@ -8,12 +8,12 @@ namespace Hidrogen.Models
         public Hidrogenian()
         {
             HidroAddress = new HashSet<HidroAddress>();
+            HidroProfile = new HashSet<HidroProfile>();
             HidroSetting = new HashSet<HidroSetting>();
             RoleClaimer = new HashSet<RoleClaimer>();
         }
 
         public int Id { get; set; }
-        public int ProfileId { get; set; }
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
         public string UserName { get; set; }
@@ -33,8 +33,8 @@ namespace Hidrogen.Models
         public string RecoveryToken { get; set; }
         public DateTime? TokenSetOn { get; set; }
 
-        public virtual HidroProfile Profile { get; set; }
         public virtual ICollection<HidroAddress> HidroAddress { get; set; }
+        public virtual ICollection<HidroProfile> HidroProfile { get; set; }
         public virtual ICollection<HidroSetting> HidroSetting { get; set; }
         public virtual ICollection<RoleClaimer> RoleClaimer { get; set; }
     }

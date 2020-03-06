@@ -10,6 +10,7 @@ namespace HelperLibrary {
 
             //Add all services here
             services.AddScoped<IGoogleReCaptchaService, GoogleReCaptchaService>();
+            services.AddScoped<IEmailSenderService, EmailSenderService>();
 
             return services;
         }

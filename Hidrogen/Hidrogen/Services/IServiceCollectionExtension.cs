@@ -14,6 +14,7 @@ namespace Hidrogen.Services {
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHidrogenianService, HidrogenianService>();
+            services.AddScoped<IHidroProfileService, HidroProfileService>();
 
             return services;
         }

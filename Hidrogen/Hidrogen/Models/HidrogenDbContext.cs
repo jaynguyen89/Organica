@@ -59,6 +59,11 @@ namespace Hidrogen.Models
                 entity.Property(e => e.PersonalWebsite).HasMaxLength(100);
 
                 entity.Property(e => e.SelfIntroduction).HasMaxLength(500);
+
+                entity.HasOne(d => d.Hidrogenian)
+                    .WithMany(p => p.HidroProfile)
+                    .HasForeignKey(d => d.HidrogenianId)
+                    .HasConstraintName("FK_HidroProfile_Hidrogenian");
             });
 
             modelBuilder.Entity<HidroRole>(entity =>
@@ -223,27 +228,21 @@ namespace Hidrogen.Models
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(120);
 
                 entity.Property(e => e.PasswordSalt)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(60);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(20);
 
-                entity.Property(e => e.RecoveryToken).HasMaxLength(255);
+                entity.Property(e => e.RecoveryToken).HasMaxLength(60);
 
                 entity.Property(e => e.TwoFactorEnabled).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(20);
-
-                entity.HasOne(d => d.Profile)
-                    .WithMany(p => p.Hidrogenian)
-                    .HasForeignKey(d => d.ProfileId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Hidrogenian_HidroProfile");
             });
 
             modelBuilder.Entity<Location>(entity =>

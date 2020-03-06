@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[HidroProfile] (
 
 	Id INT IDENTITY(1,1) NOT NULL,
+	HidrogenianId INT NOT NULL,
 	CitizenCardPhoto NVARCHAR(70) DEFAULT NULL,
 	CitizenCardNumber NVARCHAR(15) DEFAULT NULL,
 	CitizenCardIssuedDate DATETIME2(7) DEFAULT NULL,
@@ -14,5 +15,6 @@
 	JobTitle NVARCHAR(7) DEFAULT NULL,
 	SelfIntroduction NVARCHAR(500) DEFAULT NULL,
 	PersonalWebsite NVARCHAR(100) DEFAULT NULL
-	CONSTRAINT [PK_HidroProfile_Id] PRIMARY KEY ([Id] ASC)
+	CONSTRAINT [PK_HidroProfile_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_HidroProfile_Hidrogenian] FOREIGN KEY ([HidrogenianId]) REFERENCES [dbo].[Hidrogenian] ([Id]) ON DELETE CASCADE
 )

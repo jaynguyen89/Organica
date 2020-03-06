@@ -5,12 +5,8 @@ namespace Hidrogen.Models
 {
     public partial class HidroProfile
     {
-        public HidroProfile()
-        {
-            Hidrogenian = new HashSet<Hidrogenian>();
-        }
-
         public int Id { get; set; }
+        public int HidrogenianId { get; set; }
         public string CitizenCardPhoto { get; set; }
         public string CitizenCardNumber { get; set; }
         public DateTime? CitizenCardIssuedDate { get; set; }
@@ -25,6 +21,6 @@ namespace Hidrogen.Models
         public string SelfIntroduction { get; set; }
         public string PersonalWebsite { get; set; }
 
-        public virtual ICollection<Hidrogenian> Hidrogenian { get; set; }
+        public virtual Hidrogenian Hidrogenian { get; set; }
     }
 }
