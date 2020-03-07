@@ -1,13 +1,11 @@
-﻿using Hidrogen.Models;
-using System;
+﻿using HelperLibrary.Common;
+using Hidrogen.Models;
 
 namespace Hidrogen.ViewModels {
 
     public class HidrogenianVM {
 
         public int Id { get; set; }
-
-        public int ProfileId { get; set; }
 
         public string UserName { get; set; }
 
@@ -16,6 +14,8 @@ namespace Hidrogen.ViewModels {
         public string FamilyName { get; set; }
 
         public string GivenName { get; set; }
+
+        public string FullName => GivenName + HidroConstants.WHITE_SPACE + FamilyName;
 
         public string Token { get; set; }
 

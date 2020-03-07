@@ -21,6 +21,7 @@ namespace HelperLibrary.Services {
         ) {
             _logger = logger;
 
+            //Access for less secure app has been turn on in gmail setting
             _emailPusher = new SmtpClient {
                 Host = HidroConstants.MAIL_SERVER_HOST,
                 Port = HidroConstants.MAIL_SERVER_PORT,

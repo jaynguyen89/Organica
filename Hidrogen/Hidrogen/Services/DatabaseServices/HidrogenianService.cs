@@ -21,6 +21,20 @@ namespace Hidrogen.Services.DatabaseServices {
             _dbContext = dbContext;
         }
 
+        public async Task<HidrogenianVM> GetHidrogenianByEmail(string email) {
+            _logger.LogInformation("HidrogenianService.GetHidrogenianByEmail - Service starts.");
+            return await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                h => h.Email == email && h.EmailConfirmed && h.DeactivatedOn == null
+            );
+        }
+
+        public async Task<HidrogenianVM> GetUnactivatedHidrogenianByEmail(string email) {
+            _logger.LogInformation("HidrogenianService.GetUnactivatedHidrogenianByEmail - Service starts.");
+            return await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                h => h.Email == email && !h.EmailConfirmed && h.DeactivatedOn == null && h.RecoveryToken != null && h.TokenSetOn != null
+            );
+        }
+
         public async Task<HidrogenianVM> InsertNewHidrogenian(RegistrationVM registration) {
             _logger.LogInformation("HidrogenianService.InserNewHidrogenian - Service starts.");
 
@@ -67,6 +81,7 @@ namespace Hidrogen.Services.DatabaseServices {
             _logger.LogInformation("HidrogenianService.SetAccountConfirmationToken - Service starts.");
 
             var dbHidrogenian = await _dbContext.Hidrogenian.FindAsync(hidrogenian.Id);
+
             dbHidrogenian.RecoveryToken = hidrogenian.Token;
             dbHidrogenian.TokenSetOn = DateTime.UtcNow;
 

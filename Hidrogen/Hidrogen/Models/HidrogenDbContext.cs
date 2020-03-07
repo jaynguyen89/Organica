@@ -228,7 +228,7 @@ namespace Hidrogen.Models
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
-                    .HasMaxLength(120);
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.PasswordSalt)
                     .IsRequired()

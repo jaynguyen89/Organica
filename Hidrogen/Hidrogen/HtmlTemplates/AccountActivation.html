@@ -5,10 +5,18 @@
     <meta charset="utf-8" />
     <title>Activate Account</title>
     <style>
+        body {
+            width: 100%;
+            background-color: #49A9D6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .email-body {
+            background-color: white;
             width: 80%;
+            height: 100%;
+            padding: 20px;
             margin: auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
         }
 
         .notice {
@@ -28,10 +36,11 @@
             Please click <a href="http://localhost:3000/activate-account?email=[HidrogenianEmail]&token=[CONFIRM-TOKEN]">HERE</a> and follow the instructions to activate your account.
         </p>
 
+        <br />
         <p style="color: orangered;">**Please note: this email only stays valid for 24 hours. If this email expired, you will need to request another Account Activation email.</p>
 
         <br />
-        <p>To request another Account Activation email, please click <a href="http://localhost:3000/request-activation-email">HERE</a>.</p>
+        <p>To request another Account Activation email, please click <a href="http://localhost:3000/request-activation-email?email=[HidrogenianEmail]">HERE</a>.</p>
 
         <br />
         <p>Kind regards,<br />Hidrogen</p>

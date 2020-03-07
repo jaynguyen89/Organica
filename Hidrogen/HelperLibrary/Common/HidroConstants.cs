@@ -2,6 +2,11 @@
 
     public class HidroConstants {
 
+        public const int TRUSTED_AUTH_EXPIRATION_TIME = 6 * 60 * 60 * 1000; // 6 hours
+        public const int INTRUSTED_AUTH_EXPIRATION_TIME = 1 * 60 * 60 * 1000; // 1 hour
+
+        public const long CLIENT_COOKIE_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 days
+
         public const string WHITE_SPACE = " ";
 
         public const string GOOGLE_CAPTCHA_ENDPOINT = @"https://www.google.com/recaptcha/api/siteverify";

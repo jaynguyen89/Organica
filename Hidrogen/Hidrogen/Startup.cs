@@ -22,6 +22,7 @@ namespace Hidrogen {
 
 
         public void ConfigureServices(IServiceCollection services) {
+
             services.AddCors();
             services.AddControllers();
 
@@ -31,9 +32,9 @@ namespace Hidrogen {
 
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-                options.Cookie.Name = "HidrogenSessionData";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                //options.Cookie.Name = "HidrogenCookieData";
             });
 
             services.RegisterHidrogenServices();
@@ -58,6 +59,8 @@ namespace Hidrogen {
 
             app.UseAuthorization();
             app.UseSession();
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {

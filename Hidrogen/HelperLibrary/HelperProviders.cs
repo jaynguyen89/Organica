@@ -1,5 +1,6 @@
 ﻿using HelperLibrary.Common;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using static HelperLibrary.Common.HidroAttributes;
@@ -7,6 +8,19 @@ using static HelperLibrary.Common.HidroAttributes;
 namespace HelperLibrary {
 
     public static class HelperProviders {
+
+        private static Random random = new Random();
+
+        public static string GenerateTemporaryPassword() {
+            const string CHARS = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890!@#$%^&*_+.";
+            var password = new string(
+                Enumerable.Repeat(CHARS, 15)
+                          .Select(p => p[random.Next(p.Length)])
+                          .ToArray()
+            );
+
+            return password;
+        }
 
         public static string GetStringValue(this Enum value) {
 

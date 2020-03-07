@@ -1,9 +1,12 @@
-﻿using HelperLibrary.Interfaces;
+﻿using HelperLibrary.Common;
+using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,7 +16,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("authentication")]
-    public class AuthenticationController {
+    public class AuthenticationController : ControllerBase {
 
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IAuthenticationService _authService;
@@ -103,9 +106,9 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> RegisterAccount(RegistrationVM registration) {
             _logger.LogInformation("AuthenticationController.RegisterAccount - Service starts.");
 
-            //var verification = await _googleReCaptchaService.IsHumanRegistration(registration.CaptchaToken);
-            //if (!verification.Result)
-            //    return new JsonResult(verification);
+            var verification = await _googleReCaptchaService.IsHumanRegistration(registration.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
 
             var validation = VerifyRegistrationData(registration);
             if (validation.Count != 0) {
@@ -143,7 +146,7 @@ namespace Hidrogen.Controllers {
 
                 if (await _profileService.InsertProfileForNewlyCreatedHidrogenian(profile)) {
                     string emailTemplate;
-                    using (StreamReader reader = File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
+                    using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
                         emailTemplate = reader.ReadToEnd();
                     };
 
@@ -154,7 +157,7 @@ namespace Hidrogen.Controllers {
                     var accountActivationEmail = new EmailParamVM {
                         ReceiverName = profile.FullName,
                         ReceiverAddress = hidrogenian.Email,
-                        Subject = "Hidrogenian - Activate your account",
+                        Subject = "Hidrogen - Activate your account",
                         Body = emailTemplate
                     };
 
@@ -174,6 +177,226 @@ namespace Hidrogen.Controllers {
                 await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
 
             return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+        }
+
+        [HttpPost("activate-account")]
+        public async Task<JsonResult> ActivateAccount(AccountActivationVM activator) {
+            _logger.LogInformation("AuthenticationController.ActivateAccount - Service starts.");
+
+            var verification = await _googleReCaptchaService.IsHumanRegistration(activator.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
+
+            var result = await _authService.ActivateHidrogenianAccount(activator);
+
+            if (!result.Key)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the activation data." });
+
+            if (result.Value == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+
+            if (!result.Value.Value)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
+
+            var FullName = (await _userService.GetHidrogenianByEmail(activator.Email)).FullName;
+
+            string emailTemplate;
+            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
+                emailTemplate = reader.ReadToEnd();
+            };
+
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+            var activationConfirmEmail = new EmailParamVM {
+                ReceiverName = FullName,
+                ReceiverAddress = activator.Email,
+                Subject = "Hidrogen - Account Activated",
+                Body = emailTemplate
+            };
+
+            if (await _emailService.SendEmail(activationConfirmEmail))
+                return new JsonResult(new { Result = RESULTS.SUCCESS });
+
+            return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your account has been activated. However, a confirmation email was failed to send." });
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<JsonResult> SendRecoverPasswordRequest(RecoveryVM recoveree) {
+            _logger.LogInformation("AuthenticationController.RecoverPassword - Service starts.");
+
+            var verification = await _googleReCaptchaService.IsHumanRegistration(recoveree.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
+
+            var result = await _authService.SetTempPasswordAndRecoveryToken(recoveree);
+
+            if (result.Key == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
+
+            if (string.IsNullOrEmpty(result.Key))
+                return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+
+            string emailTemplate;
+            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordReset.html")) {
+                emailTemplate = reader.ReadToEnd();
+            };
+
+            var FullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
+
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", recoveree.Email);
+            emailTemplate = emailTemplate.Replace("[INITIAL-PW]", result.Key);
+            emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", result.Value);
+
+            var activationConfirmEmail = new EmailParamVM {
+                ReceiverName = FullName,
+                ReceiverAddress = recoveree.Email,
+                Subject = "Hidrogen - Reset your password",
+                Body = emailTemplate
+            };
+
+            return null;
+        }
+
+        [HttpPost("request-new-activation-email/{email}")]
+        public async Task<JsonResult> SendNewAccountActivationEmail(RecoveryVM request) {
+            _logger.LogInformation("AuthenticationController.SendNewAccountActivationEmail - Service starts.");
+
+            var verification = await _googleReCaptchaService.IsHumanRegistration(request.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
+
+            var hidrogenian = await _userService.GetUnactivatedHidrogenianByEmail(request.Email);
+            if (hidrogenian == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
+
+            hidrogenian.Token = _authService.GenerateRandomToken();
+
+            if (await _userService.SetAccountConfirmationToken(hidrogenian)) {
+                string emailTemplate;
+                using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
+                    emailTemplate = reader.ReadToEnd();
+                };
+
+                emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
+                emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
+                emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", hidrogenian.Token);
+
+                var accountActivationEmail = new EmailParamVM {
+                    ReceiverName = hidrogenian.FullName,
+                    ReceiverAddress = hidrogenian.Email,
+                    Subject = "Hidrogen - Activate your account",
+                    Body = emailTemplate
+                };
+
+                if (await _emailService.SendEmail(accountActivationEmail))
+                    return new JsonResult(new { Result = RESULTS.SUCCESS });
+
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to send Account Activation email at the moment. Please try again." });
+            }
+
+            return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+        }
+
+        [HttpPost("set-new-password")]
+        public async Task<JsonResult> SetNewPassword(RegistrationVM recovery) {
+            _logger.LogInformation("AuthenticationController.SetNewPassword - Service starts.");
+
+            var verification = await _googleReCaptchaService.IsHumanRegistration(recovery.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
+
+            var validation = recovery.VerifyPassword();
+            if (validation.Count != 0) {
+                var messages = recovery.GenerateErrorMessages(validation);
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
+            }
+
+            var result = await _authService.ReplaceAccountPassword(recovery);
+
+            if (result == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
+
+            if (!result.Value.Key)
+                return new JsonResult(new { Result = RESULTS.FAILED, Messsage = "The recovery data have been no longer valid. Please request another Password Recovery email." });
+
+            if (result.Value.Value == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "The temporary password was invalid. Please check and submit again." });
+
+            if (!result.Value.Value.Value)
+                return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+
+            string emailTemplate;
+            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordResetConfirmation.html")) {
+                emailTemplate = reader.ReadToEnd();
+            };
+
+            var FullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+
+            var accountActivationEmail = new EmailParamVM {
+                ReceiverName = FullName,
+                ReceiverAddress = recovery.Email,
+                Subject = "Hidrogen - Activate your account",
+                Body = emailTemplate
+            };
+
+            if (await _emailService.SendEmail(accountActivationEmail))
+                return new JsonResult(new { Result = RESULTS.SUCCESS });
+
+            return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your new password has been updated successfully. However, a confirmation email was failed to send." });
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
+            _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
+
+            var verification = await _googleReCaptchaService.IsHumanRegistration(auth.CaptchaToken);
+            if (!verification.Result)
+                return new JsonResult(verification);
+
+            var validation = auth.VerifyAuthenticationData();
+            if (validation.Count != 0) {
+                var message = auth.GenerateErrorMessages(validation);
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = message });
+            }
+
+            var authResult = await _authService.AuthenticateHidrogenian(auth);
+            if (!authResult.Key)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "" });
+
+            if (authResult.Value == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "" });
+
+            var authHidrogenian = authResult.Value;
+            HttpContext.Session.SetString(nameof(authHidrogenian.AuthToken), authHidrogenian.AuthToken);
+            HttpContext.Session.SetInt32(nameof(authHidrogenian.ExpirationTime), authHidrogenian.ExpirationTime);
+            HttpContext.Session.SetInt32(nameof(authHidrogenian.UserId), authHidrogenian.UserId);
+            HttpContext.Session.SetString(nameof(authHidrogenian.Role), authHidrogenian.Role);
+
+            var cookieOptions = new CookieOptions {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddMilliseconds(HidroConstants.CLIENT_COOKIE_EXPIRATION_TIME),
+                Domain = "localhost"
+            };
+
+            Response.Cookies.Append("HidrogenianAuthCookie", authHidrogenian.AuthToken, cookieOptions);
+
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authHidrogenian });
+        }
+
+        [HttpPost("cookie-authenticate")]
+        public Task<JsonResult> CookieAuthenticate() {
+            return null;
+        }
+
+        [HttpGet("sign-out")]
+        public JsonResult LogOut() {
+            _logger.LogInformation("AuthenticationController.LogOut - Service starts.");
+
+            HttpContext.Session.Clear();
+
+            return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
         private List<int> VerifyRegistrationData(RegistrationVM data) {
