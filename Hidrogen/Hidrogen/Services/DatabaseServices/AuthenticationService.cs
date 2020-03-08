@@ -86,6 +86,59 @@ namespace Hidrogen.Services.DatabaseServices {
             return new KeyValuePair<bool, AuthenticatedUser>(true, authUser);
         }
 
+        public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie) {
+            _logger.LogInformation("AuthenticationService.AuthenticateWithCookie - Service starts.");
+
+            var dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                h => h.CookieToken != null && h.CookieToken == cookie.CookieToken &&
+                     h.EmailConfirmed && h.RecoveryToken == null &&
+                     h.TokenSetOn == null && h.CookieSetOn != null &&
+                     h.CookieSetOn.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds == cookie.TimeStamp
+            );
+
+            if (dbHidrogenian == null) return new KeyValuePair<bool, AuthenticatedUser>(false, null);
+
+            var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var authToken = GenerateHashedPasswordAndSalt(dbHidrogenian.Id + dbHidrogenian.Email + unixTimeStamp);
+
+            var authUser = new AuthenticatedUser {
+                UserId = dbHidrogenian.Id,
+                Role = "Customer",
+                AuthToken = authToken.Key,
+                ExpirationTime = cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME
+                                                              : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
+            };
+
+            return new KeyValuePair<bool, AuthenticatedUser>(true, authUser);
+        }
+
+        public async Task<CookieAuthenticationVM> GenerateCookieAuthData(AuthenticatedUser auth) {
+            _logger.LogInformation("AuthenticationService.GenerateCookieAuthData - Service starts.");
+
+            var timestamp = DateTime.UtcNow;
+            var unixTimestamp = timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+            var cookieAuthToken = auth.AuthToken + auth.Role + unixTimestamp.ToString();
+            var hashResult = GenerateHashedPasswordAndSalt(cookieAuthToken);
+
+            var dbHidrogenian = await _dbContext.Hidrogenian.FindAsync(auth.UserId);
+            dbHidrogenian.CookieToken = hashResult.Key;
+            dbHidrogenian.CookieSetOn = timestamp;
+
+            _dbContext.Hidrogenian.Update(dbHidrogenian);
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("AuthenticationService.GenerateCookieAuthData - Error: " + e.ToString());
+                return null;
+            }
+
+            return new CookieAuthenticationVM {
+                CookieToken = dbHidrogenian.CookieToken,
+                TimeStamp = unixTimestamp
+            };
+        }
+
         public KeyValuePair<string, string> GenerateHashedPasswordAndSalt(string plainText) {
             _logger.LogInformation("AuthenticationService.GenerateHashedPasswordAndSalt - Service starts.");
 

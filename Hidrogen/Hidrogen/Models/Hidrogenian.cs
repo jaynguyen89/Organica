@@ -32,6 +32,8 @@ namespace Hidrogen.Models
         public DateTime? LastSignout { get; set; }
         public string RecoveryToken { get; set; }
         public DateTime? TokenSetOn { get; set; }
+        public string CookieToken { get; set; }
+        public DateTime? CookieSetOn { get; set; }
 
         public virtual ICollection<HidroAddress> HidroAddress { get; set; }
         public virtual ICollection<HidroProfile> HidroProfile { get; set; }

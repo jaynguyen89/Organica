@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetEscapades.AspNetCore.SecurityHeaders;
 using System;
 
 namespace Hidrogen {
@@ -23,6 +24,10 @@ namespace Hidrogen {
 
         public void ConfigureServices(IServiceCollection services) {
 
+            services.AddAntiforgery(options => {
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
+
             services.AddCors();
             services.AddControllers();
 
@@ -37,6 +42,8 @@ namespace Hidrogen {
                 //options.Cookie.Name = "HidrogenCookieData";
             });
 
+            services.AddHttpContextAccessor();
+
             services.RegisterHidrogenServices();
             services.RegisterCommonServices();
         }
@@ -47,6 +54,15 @@ namespace Hidrogen {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
+            var securityPolicies = new HeaderPolicyCollection()
+                .AddDefaultSecurityHeaders()
+                .AddContentSecurityPolicy(builder => {
+                    builder.AddUpgradeInsecureRequests();
+                    builder.AddDefaultSrc().Self().OverHttps().From("https://localhost:5001/");
+                });
+
+            app.UseSecurityHeaders(securityPolicies);
+
             //app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -55,7 +71,8 @@ namespace Hidrogen {
             app.UseCors(builder =>
                         builder.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin());
+                        .AllowCredentials()
+                        .WithOrigins("http://localhost:3000"));
 
             app.UseAuthorization();
             app.UseSession();
