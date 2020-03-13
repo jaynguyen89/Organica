@@ -220,6 +220,8 @@ namespace Hidrogen.Models
             {
                 entity.Property(e => e.AccessFailedCount).HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.CookieToken).HasMaxLength(150);
+
                 entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.Email)
@@ -228,7 +230,7 @@ namespace Hidrogen.Models
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(150);
 
                 entity.Property(e => e.PasswordSalt)
                     .IsRequired()

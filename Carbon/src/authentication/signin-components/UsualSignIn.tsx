@@ -35,7 +35,7 @@ const UsualSignIn = () => {
                                 <div className='col s12'>
                                     <a className='btn' style={{ marginTop:'20px' }}>Sign in</a>
                                     <p className='signin-assistance'>
-                                        Forgot your password? <a href='/'>Reset</a> now.
+                                        Forgot your password? <a href='/forgot-password'>Reset</a> now.
                                     </p>
                                     <p>
                                         Problem signing into your account? <a href='/'>Contact</a> us.

@@ -48,5 +48,15 @@ namespace Hidrogen.Services.Interfaces {
         /// Returns Key == false if no account found with auth data. When Key == true, Value == null if authentication failed.
         /// </summary>
         Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateHidrogenian(AuthenticationVM auth);
+
+        /// <summary>
+        /// Returns Key being the cookie auth token, and Value being the unix timestamp
+        /// </summary>
+        Task<CookieAuthenticationVM> GenerateCookieAuthData(AuthenticatedUser auth);
+
+        /// <summary>
+        /// Returns Key == false if no account found with cookie data. When Key == true, Value == null if authentication failed.
+        /// </summary>
+        Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie);
     }
 }

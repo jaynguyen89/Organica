@@ -11,21 +11,21 @@ namespace Hidrogen.ViewModels {
 
         public string UserName { get; set; }
 
-        public string Email { get; set; }
+        public string Email { get; set; } //also for resetting password
 
-        public string TempPassword { get; set; }
+        public string TempPassword { get; set; } //only for resetting password
 
-        public string Password { get; set; } = null;
+        public string Password { get; set; } = null; //also for resetting password
 
-        public string PasswordConfirm { get; set; }
+        public string PasswordConfirm { get; set; } //also for resetting password
 
         public string FamilyName { get; set; }
 
         public string GivenName { get; set; }
 
-        public string RecoveryToken { get; set; }
+        public string RecoveryToken { get; set; } //also for resetting password
 
-        public string CaptchaToken { get; set; }
+        public string CaptchaToken { get; set; } //also for resetting password
 
         private static readonly List<string> INVALIDS = new List<string>() {
             "--", "_@", "-@", ".-", "-.", "._", "_.", " ", "@_", "@-", "__", "..", "_-", "-_"
@@ -124,7 +124,7 @@ namespace Hidrogen.ViewModels {
             FamilyName = HelperProviders.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
 
-            var lenTest = new Regex(@".{3,30}");
+            var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(FamilyName))
                 errors.Add(17);
 
@@ -143,7 +143,7 @@ namespace Hidrogen.ViewModels {
             GivenName = HelperProviders.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
 
-            var lenTest = new Regex(@".{3,50}");
+            var lenTest = new Regex(@".{1,50}");
             if (!lenTest.IsMatch(GivenName))
                 errors.Add(20);
 

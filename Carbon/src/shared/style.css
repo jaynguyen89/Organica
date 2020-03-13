@@ -1,0 +1,31 @@
+.card-panel {
+    color: #FFFFFF;
+    padding: 10px 20px;
+}
+
+.inform {
+    padding: 10px 20px;
+    width: 50%;
+    margin: 100px auto;
+    color: #0D0D0D;
+    background-image: linear-gradient(to bottom, #d1c4e9, #ffcdd2);
+}
+
+.inform h5 {
+    font-weight: bold;
+}
+
+.inform h5 i {
+    color: #6200ea  ;
+}
+
+@media screen and (max-width: 600px) {
+    .inform {
+        width: 80%;
+    }
+}
+
+.alert-close {
+    color: white;
+    cursor: pointer;
+}

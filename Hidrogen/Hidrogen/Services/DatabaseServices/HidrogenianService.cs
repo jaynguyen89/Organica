@@ -31,7 +31,8 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<HidrogenianVM> GetUnactivatedHidrogenianByEmail(string email) {
             _logger.LogInformation("HidrogenianService.GetUnactivatedHidrogenianByEmail - Service starts.");
             return await _dbContext.Hidrogenian.FirstOrDefaultAsync(
-                h => h.Email == email && !h.EmailConfirmed && h.DeactivatedOn == null && h.RecoveryToken != null && h.TokenSetOn != null
+                h => h.Email == email && !h.EmailConfirmed && h.DeactivatedOn == null && h.RecoveryToken != null &&
+                     h.TokenSetOn != null && h.TokenSetOn.Value.AddHours(24) > DateTime.UtcNow
             );
         }
 
