@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import reducers from '../indexes/reducerIndex';
+import reducers from '../providers/reducerIndex';
 import * as authConstants from '../authentication/constants';
 
 const composeEnhancers = (

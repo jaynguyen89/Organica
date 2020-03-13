@@ -26,22 +26,22 @@ namespace HelperLibrary.Services {
             GoogleReCaptchaRequest.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<ReCaptchaVerification> IsHumanRegistration(string captchaToken = null)
-        {
+        public async Task<ReCaptchaVerification> IsHumanRegistration(string captchaToken = null) {
             _logger.LogInformation("HidrogenianController.IsHumanRegistration - Checking starts.");
 
             if (captchaToken == null)
                 return new ReCaptchaVerification { Result = false };
 
             var response = await GoogleReCaptchaRequest.PostAsJsonAsync(
-                string.Empty,
-                JsonConvert.SerializeObject(new {
-                    secret = HidroConstants.GOOGLE_CAPTCHA_SECRET_KEY,
-                    response = captchaToken
-                })
+                "?secret=" + HidroConstants.GOOGLE_CAPTCHA_SECRET_KEY + "&response=" + captchaToken,
+                HttpCompletionOption.ResponseContentRead
             );
 
-            return JsonConvert.DeserializeObject<ReCaptchaVerification>(await response.Content.ReadAsStringAsync());
+            var verified = new ReCaptchaVerification();
+            if (response.IsSuccessStatusCode)
+                verified = JsonConvert.DeserializeObject<ReCaptchaVerification>(await response.Content.ReadAsStringAsync());
+
+            return verified;
         }
     }
 }

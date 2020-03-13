@@ -216,11 +216,11 @@ namespace Hidrogen.Controllers {
             if (await _emailService.SendEmail(activationConfirmEmail))
                 return new JsonResult(new { Result = RESULTS.SUCCESS });
 
-            return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your account has been activated. However, a confirmation email was failed to send." });
+            return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your account has been activated. However, a confirmation email was failed to send. You can now login to use Hidrogen." });
         }
 
         [HttpPost("forgot-password")]
-        public async Task<JsonResult> SendRecoverPasswordRequest(RecoveryVM recoveree) {
+        public async Task<JsonResult> SendRecoverPasswordInstruction(RecoveryVM recoveree) {
             _logger.LogInformation("AuthenticationController.RecoverPassword - Service starts.");
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(recoveree.CaptchaToken);
@@ -247,17 +247,20 @@ namespace Hidrogen.Controllers {
             emailTemplate = emailTemplate.Replace("[INITIAL-PW]", result.Key);
             emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", result.Value);
 
-            var activationConfirmEmail = new EmailParamVM {
+            var recoverPasswordEmail = new EmailParamVM {
                 ReceiverName = FullName,
                 ReceiverAddress = recoveree.Email,
                 Subject = "Hidrogen - Reset your password",
                 Body = emailTemplate
             };
 
-            return null;
+            if (await _emailService.SendEmail(recoverPasswordEmail))
+                return new JsonResult(new { Result = RESULTS.SUCCESS });
+
+            return new JsonResult(new { Result = RESULTS.FAILED, Message = "Email was failed to send. Please try again." });
         }
 
-        [HttpPost("request-new-activation-email/{email}")]
+        [HttpPost("request-new-activation-email")]
         public async Task<JsonResult> SendNewAccountActivationEmail(RecoveryVM request) {
             _logger.LogInformation("AuthenticationController.SendNewAccountActivationEmail - Service starts.");
 
@@ -267,7 +270,7 @@ namespace Hidrogen.Controllers {
 
             var hidrogenian = await _userService.GetUnactivatedHidrogenianByEmail(request.Email);
             if (hidrogenian == null)
-                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address. Otherwise, if you have an Account Activation email that has not expired, please follow instruction in the email." });
 
             hidrogenian.Token = _authService.GenerateRandomToken();
 
@@ -336,7 +339,7 @@ namespace Hidrogen.Controllers {
             var accountActivationEmail = new EmailParamVM {
                 ReceiverName = FullName,
                 ReceiverAddress = recovery.Email,
-                Subject = "Hidrogen - Activate your account",
+                Subject = "Hidrogen - New password has set",
                 Body = emailTemplate
             };
 
