@@ -1,4 +1,6 @@
 import moment from 'moment-timezone';
+import _ from 'lodash';
+import md5 from 'md5';
 
 export const CONSTANTS = {
     EMPTY : '',
@@ -46,4 +48,13 @@ export function extractUrlParameters(url: string, params: string[]) {
     }, urlQuery);
 
     return data;
+}
+
+export function getGravatarURL(email: string, size:number = 130) {
+    let defaults  = ['mp', 'identicon', 'monsterid', 'wavatar', 'retro', 'robohash'];
+
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email.toLowerCase()))
+      return `https://www.gravatar.com/avatar/${md5(email.toLowerCase())}?s=${size}&d=${_.sample(defaults)}`;
+    else
+      return 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSXVwEuYLdkIYNy3YoI6AvPvc3K_7ELDrG2SSjxNmu9ktRi6E38';
 }

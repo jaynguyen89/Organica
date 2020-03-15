@@ -29,3 +29,8 @@
     color: white;
     cursor: pointer;
 }
+
+.avatar-round {
+    width: 40px;
+    border-radius: 50%;
+}

@@ -1,7 +1,16 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducers from '../providers/reducerIndex';
-import * as authConstants from '../authentication/constants';
+import * as authConstants from '../authentication/redux/constants';
+
+interface IActionResult {
+    type: string;
+    payload: {
+        hasOwnProperty: (arg0: string) => any;
+        result: number;
+        message: any;
+    };
+}
 
 const composeEnhancers = (
     window && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -9,24 +18,27 @@ const composeEnhancers = (
 
 export const setCookies = () =>
                           (next: (arg0: any) => void) =>
-                          (action: { type: string; payload: { authToken: any; }; }) =>
+                          (action: IActionResult) =>
 {
     if (
-        action.type === authConstants.AUTHENTICATED 
+        action.type === authConstants.AUTHENTICATED && action.payload &&
+        action.payload.hasOwnProperty('result') && action.payload.result === 1
     ) {    
         localStorage.setItem(
-          'currentUser',
-          JSON.stringify(action.payload)
+          'authentication',
+          JSON.stringify(action.payload.message)
         );
         
-        let authToken = action.payload.authToken;
-    
-        sessionStorage.setItem('userToken', authToken.token);
-        sessionStorage.setItem('expirationTime', authToken.tokenExpirationTime);
+        let auth = action.payload.message;
+        
+        sessionStorage.setItem('authToken', auth.authToken);
+        sessionStorage.setItem('expirationTime', auth.expirationTime);
     }
     
-    if (action.type === authConstants.UNAUTHENTICATED)
-        localStorage.removeItem('currentUser');
+    if (action.type === authConstants.NO_AUTHENTICATION) {
+        localStorage.removeItem('authentication');
+        sessionStorage.clear();
+    }
     
     next(action);
 }

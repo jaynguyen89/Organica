@@ -21,7 +21,7 @@ const CarbonAlert = ({ messages, error, type, persistent } : IStatus) => {
         if (!persistent)
             setTimeout(() => {
                 $('.card-panel').hide();
-            }, 60000);
+            }, 120000);
     }, []);
 
     React.useEffect(() => {

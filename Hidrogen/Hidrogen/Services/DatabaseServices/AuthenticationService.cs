@@ -75,10 +75,16 @@ namespace Hidrogen.Services.DatabaseServices {
             var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var authToken = GenerateHashedPasswordAndSalt(hidrogenian.Id + hidrogenian.Email + unixTimeStamp);
 
+            var profile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenian.Id);
+
             var authUser = new AuthenticatedUser {
                 UserId = hidrogenian.Id,
                 Role = "Customer",
                 AuthToken = authToken.Key,
+                Email = hidrogenian.Email,
+                UserName = hidrogenian.UserName,
+                FullName = profile.GivenName + ' ' + profile.FamilyName,
+                Avatar = profile.AvatarName,
                 ExpirationTime = auth.TrustedAuth ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME
                                                   : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
             };
@@ -101,10 +107,15 @@ namespace Hidrogen.Services.DatabaseServices {
             var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var authToken = GenerateHashedPasswordAndSalt(dbHidrogenian.Id + dbHidrogenian.Email + unixTimeStamp);
 
+            var profile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == dbHidrogenian.Id);
+
             var authUser = new AuthenticatedUser {
                 UserId = dbHidrogenian.Id,
                 Role = "Customer",
                 AuthToken = authToken.Key,
+                Email = dbHidrogenian.Email,
+                FullName = profile.GivenName + ' ' + profile.FamilyName,
+                Avatar = profile.AvatarName,
                 ExpirationTime = cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME
                                                               : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
             };

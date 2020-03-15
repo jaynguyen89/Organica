@@ -6,6 +6,7 @@ using Hidrogen.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -370,7 +371,7 @@ namespace Hidrogen.Controllers {
             if (authResult.Value == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Cannot find any Hidrogenian with the login credentials." });
 
-            SetUserSessionAndCookie(authResult.Value, auth.TrustedAuth);
+            await SetUserSessionAndCookie(authResult.Value, auth.TrustedAuth);
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authResult.Value });
         }
 
@@ -381,11 +382,11 @@ namespace Hidrogen.Controllers {
             var result = await _authService.AuthenticateWithCookie(cookie);
             if (!result.Key) return new JsonResult(new { Result = RESULTS.FAILED });
 
-            SetUserSessionAndCookie(result.Value, cookie.TrustedAuth == "True");
+            await SetUserSessionAndCookie(result.Value, cookie.TrustedAuth == "True");
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = result.Value });
         }
 
-        private async void SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
+        private async Task SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
             _logger.LogInformation("AuthenticationController.SetUserSessionAndCookie - private action.");
 
             HttpContext.Session.SetString(nameof(authHidrogenian.AuthToken), authHidrogenian.AuthToken);

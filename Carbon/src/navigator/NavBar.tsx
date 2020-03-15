@@ -1,11 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import $ from 'jquery';
 import M from 'materialize-css';
 
+import GuestItems from './auth-items/GuestItems';
+import CustomerItems from './auth-items/CustomerItems';
 import AuthItem from './auth-items/AuthItem';
 
-const NavBar = () => {
+const mapStateToProps = (state: any) => ({
+    auth : state.AuthenticationStore.authUser
+});
 
+const NavBar = (props: any) => {
     React.useEffect(() => {
         M.Sidenav.init($('.sidenav'), {});
     }, []);
@@ -19,24 +25,24 @@ const NavBar = () => {
                         <i className='fas fa-bars'></i>
                     </a>
                     <ul className='right hide-on-med-and-down'>
-                        <li><a href='/'>Products</a></li>
-                        <li><a href='/'>Categories</a></li>
-                        <li><a href='/'>Markets</a></li>
-                        <li><a href='/'>About</a></li>
-                        <AuthItem />
+                        {
+                            (props.auth && <CustomerItems />) || <GuestItems />
+                        }
+                        <AuthItem { ...props } />
                     </ul>
                 </div>
             </nav>
 
             <ul className='sidenav' id='navbar-collapsed'>
-                <li><a href='/'>Products</a></li>
-                <li><a href='/'>Categories</a></li>
-                <li><a href='/'>Markets</a></li>
-                <li><a href='/'>About</a></li>
-                <AuthItem />
+                {
+                    (props.auth && <CustomerItems />) || <GuestItems />
+                }
+                <AuthItem { ...props } />
             </ul>
         </div>
     );
 }
 
-export default NavBar;
+export default connect(
+    mapStateToProps
+)(NavBar);
