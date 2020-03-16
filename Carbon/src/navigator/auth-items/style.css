@@ -1,7 +1,5 @@
 .navbar-auth {
     background-color: whitesmoke;
-    padding-left: 20px;
-    padding-right: 20px;
     color: #0D0D0D;
     margin: 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 2px 3px rgba(0,0,0,0.24);
@@ -9,6 +7,11 @@
 
 .navbar-auth span {
     cursor: pointer;
+    padding-left: 25px;
+}
+
+.expand-toggle {
+    padding-right: 25px;
 }
 
 .navbar-auth i {
@@ -19,5 +22,34 @@
 .navbar-expand {
     background-color: whitesmoke;
     margin: 0;
-    border-top: 1px solid #ccc;
+    padding: 5px 15px;
+    border-top: 1px solid #CCC;
+    padding-bottom: 15px;
+}
+
+.nav-expand-item {
+    height: 40px;
+    padding-left: 10px;
+    margin: 0;
+    line-height: 40px;
+    border-bottom: 1px solid #CCC;
+}
+
+.nav-expand-item:hover {
+    color: #EA8F61;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #EEE;
+}
+
+.nav-expand-item span {
+    padding-left: 15px;
+    vertical-align: super;
+}
+
+.nav-expand-item i {
+    font-size: 20px;
+    height: 40px !important;
+    line-height: 40px !important;
+    vertical-align: super;
 }

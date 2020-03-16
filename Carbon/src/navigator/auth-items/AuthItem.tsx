@@ -1,8 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './style.css';
 
 import { ClickAwayListener } from '@material-ui/core';
 import CarbonAvatar from '../../shared/CarbonAtavar';
+
+import { universalSignOut } from '../../authentication/redux/actions';
+
+const mapStateToProps = (state: any) => ({
+    requestSending : state.AuthenticationStore.unAuthSending,
+    requestSuccess : state.AuthenticationStore.unAuthSuccess,
+    requestResult : state.AuthenticationStore.unAuthResult
+});
+
+const mapDispatchToProps = {
+    universalSignOut
+};
 
 const AuthItem = (props: any) => {
     const [open, setOpen] = React.useState(false);
@@ -16,12 +29,30 @@ const AuthItem = (props: any) => {
                         <span>
                             G'day! { props.auth.fullName }&nbsp;&nbsp;
                         </span>
-                        <i className='fas fa-caret-down'></i>
+                        <i className='fas fa-caret-down expand-toggle'></i>
                         {
                             open &&
                             <div className='navbar-expand'>
-                                <CarbonAvatar />
-                                Some more details
+                                <div className='nav-expand-item'>
+                                    <CarbonAvatar size='30px' />
+                                    <span>My Account</span>
+                                </div>
+                                <div className='nav-expand-item'>
+                                    <i className='fas fa-user-circle hidro-primary-icon'></i>
+                                    <span>My Profile</span>
+                                </div>
+                                <div className='nav-expand-item'>
+                                    <i className='fas fa-comment-dots hidro-primary-icon'></i>
+                                    <span>My Messages</span>
+                                </div>
+                                <div className='nav-expand-item'>
+                                    <i className='fas fa-shopping-bag hidro-primary-icon'></i>
+                                    <span>My Purchases</span>
+                                </div>
+                                <div className='nav-expand-item' onClick={ () => props.universalSignOut(props.auth.authToken) }>
+                                    <i className='fas fa-sign-out-alt hidro-primary-icon'></i>
+                                    <span>Sign Out</span>
+                                </div>
                             </div>
                         }
                     </div>
@@ -35,4 +66,7 @@ const AuthItem = (props: any) => {
     );
 }
 
-export default AuthItem;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AuthItem);

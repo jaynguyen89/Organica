@@ -26,7 +26,9 @@ const NavBar = (props: any) => {
                     </a>
                     <ul className='right hide-on-med-and-down'>
                         {
-                            (props.auth && <CustomerItems />) || <GuestItems />
+                            (
+                                props.auth && <CustomerItems />
+                            ) || <GuestItems />
                         }
                         <AuthItem { ...props } />
                     </ul>

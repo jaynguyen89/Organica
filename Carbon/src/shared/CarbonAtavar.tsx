@@ -11,8 +11,8 @@ const CarbonAvatar = (props: any) => {
     return (
         (
             props.auth.avatar &&
-            <img className='avatar-round' src={ props.auth.avatar } />
-        ) || <img className='avatar-round' src={ getGravatarURL(props.auth.email) } />
+            <img className='avatar-round' src={ props.auth.avatar } width={ props.size } />
+        ) || <img className='avatar-round' src={ getGravatarURL(props.auth.email, props.size) } />
     );
 }
 

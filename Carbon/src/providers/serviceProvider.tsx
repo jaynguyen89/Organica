@@ -14,7 +14,7 @@ const sendRequestForResult = (action: string, auth: any, data: any, method = 'PO
         url : LOCAL_ENDPOINT + action,
         headers : {
             'Authorization': auth == null ? undefined
-                : 'Bearer ' + (typeof (auth) == 'string' ? auth : auth.token),
+                : 'Bearer ' + (typeof (auth) === 'string' ? auth : auth.authToken),
             'Content-Type': 'application/json',
             'Accept': 'application/json',
             'XSRF-TOKEN': xsrfToken
