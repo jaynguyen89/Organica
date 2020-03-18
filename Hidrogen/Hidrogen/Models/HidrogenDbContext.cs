@@ -68,7 +68,7 @@ namespace Hidrogen.Models
 
             modelBuilder.Entity<HidroRole>(entity =>
             {
-                entity.Property(e => e.RoleDescription).HasMaxLength(100);
+                entity.Property(e => e.RoleDescription).HasMaxLength(250);
 
                 entity.Property(e => e.RoleName).HasMaxLength(30);
             });
@@ -282,6 +282,40 @@ namespace Hidrogen.Models
 
             modelBuilder.Entity<RoleClaimer>(entity =>
             {
+                entity.Property(e => e.AllowCreate)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AllowView)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AllowEditOwn)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AllowEditOthers)
+                    .IsRequired()
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.AllowDeleteOwn)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AllowDeleteOthers)
+                    .IsRequired()
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.AllowReviveOwn)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.AllowReviveOthers)
+                    .IsRequired()
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.AllowTemporarily).HasMaxLength(255);
+
                 entity.HasOne(d => d.Hidrogenian)
                     .WithMany(p => p.RoleClaimer)
                     .HasForeignKey(d => d.HidrogenianId)

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Hidrogen.ViewModels {
+namespace Hidrogen.ViewModels.Authentication {
 
     public class AuthenticationVM {
 

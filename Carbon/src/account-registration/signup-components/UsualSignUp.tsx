@@ -59,7 +59,7 @@ const UsualSignUp = (props : any) => {
     }, [register]);
 
     React.useEffect(() => {
-        if (!props.requestSuccess && !_.isEmpty(props.registrationResult))
+        if (!props.requestSuccess && _.isEmpty(props.registrationResult))
             setStatus({ messages : 'Unable to contact Hidrogen Server at the moment. Please try again later.', type : 'warning' });
         else {
             let result = props.registrationResult;

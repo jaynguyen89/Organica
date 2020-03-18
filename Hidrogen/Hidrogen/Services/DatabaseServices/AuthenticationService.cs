@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using BCrypt;
 using Microsoft.EntityFrameworkCore;
 using System;
-using Hidrogen.ViewModels;
+using Hidrogen.ViewModels.Authentication;
 using HelperLibrary;
 using HelperLibrary.Common;
+using System.Linq;
+using Hidrogen.ViewModels.Authorization;
+using Newtonsoft.Json;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -58,35 +61,48 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateHidrogenian(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationService.AuthenticateHidrogenian - Service starts.");
 
-            var hidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
-                h => (auth.Email != null ? h.Email == auth.Email
-                                         : h.UserName.ToLower() == auth.UserName
-                     ) &&
-                     h.EmailConfirmed &&
-                     h.RecoveryToken == null &&
-                     h.TokenSetOn == null
-            );
+            Hidrogenian hidrogenian = null;
+            var role = string.Empty;
+            try {
+                hidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                    h => (auth.Email != null ? h.Email == auth.Email
+                                             : h.UserName.ToLower() == auth.UserName
+                         ) &&
+                         h.EmailConfirmed &&
+                         h.RecoveryToken == null &&
+                         h.TokenSetOn == null
+                );
 
-            if (hidrogenian == null) return new KeyValuePair<bool, AuthenticatedUser>(false, null);
+                role = await (from rc in _dbContext.RoleClaimer
+                              join r in _dbContext.HidroRole
+                                    on rc.RoleId equals r.Id
+                              where rc.HidrogenianId == hidrogenian.Id
+                              select r.RoleName).FirstOrDefaultAsync();
+            } catch (Exception e) {
+                _logger.LogError("AuthenticationService.AuthenticateHidrogenian - Error: " + e.ToString());
+                return new KeyValuePair<bool, AuthenticatedUser>(false, null);
+            }
 
             if (!BCryptHelper.CheckPassword(auth.Password, hidrogenian.PasswordHash))
                 return new KeyValuePair<bool, AuthenticatedUser>(true, null);
 
-            var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var unixTimeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             var authToken = GenerateHashedPasswordAndSalt(hidrogenian.Id + hidrogenian.Email + unixTimeStamp);
 
             var profile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenian.Id);
+            var expirationTime = ((DateTimeOffset)DateTime.UtcNow.AddSeconds(
+                                    auth.TrustedAuth ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
+                                 )).ToUnixTimeSeconds();
 
             var authUser = new AuthenticatedUser {
                 UserId = hidrogenian.Id,
-                Role = "Customer",
+                Role = role,
                 AuthToken = authToken.Key,
                 Email = hidrogenian.Email,
                 UserName = hidrogenian.UserName,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
                 Avatar = profile.AvatarName,
-                ExpirationTime = auth.TrustedAuth ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME
-                                                  : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
+                ExpirationTime = expirationTime
             };
 
             return new KeyValuePair<bool, AuthenticatedUser>(true, authUser);
@@ -95,39 +111,90 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationService.AuthenticateWithCookie - Service starts.");
 
-            var dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
-                h => h.CookieToken != null && h.CookieToken == cookie.CookieToken &&
-                     h.EmailConfirmed && h.RecoveryToken == null &&
-                     h.TokenSetOn == null && h.CookieSetOn != null &&
-                     h.CookieSetOn.Value.Subtract(new DateTime(1970, 1, 1)).TotalSeconds == cookie.TimeStamp
-            );
+            Hidrogenian dbHidrogenian = null;
+            var role = string.Empty;
+            try {
+                dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                    h => h.CookieToken != null && h.CookieToken == cookie.CookieToken &&
+                         h.EmailConfirmed && h.RecoveryToken == null &&
+                         h.TokenSetOn == null && h.CookieSetOn != null &&
+                         ((DateTimeOffset)h.CookieSetOn.Value).ToUnixTimeSeconds() == cookie.TimeStamp
+                );
 
-            if (dbHidrogenian == null) return new KeyValuePair<bool, AuthenticatedUser>(false, null);
+                role = await (from rc in _dbContext.RoleClaimer
+                              join r in _dbContext.HidroRole
+                                    on rc.RoleId equals r.Id
+                              where rc.HidrogenianId == dbHidrogenian.Id
+                              select r.RoleName).FirstOrDefaultAsync();
+            } catch (Exception e) {
+                _logger.LogError("AuthenticationService.AuthenticateWithCookie - Error: " + e.ToString());
+                return new KeyValuePair<bool, AuthenticatedUser>(false, null);
+            }
 
-            var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var unixTimeStamp = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
             var authToken = GenerateHashedPasswordAndSalt(dbHidrogenian.Id + dbHidrogenian.Email + unixTimeStamp);
 
             var profile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == dbHidrogenian.Id);
+            var expirationTime = ((DateTimeOffset)DateTime.UtcNow.AddSeconds(
+                                    cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
+                                 )).ToUnixTimeSeconds();
 
             var authUser = new AuthenticatedUser {
                 UserId = dbHidrogenian.Id,
-                Role = "Customer",
+                Role = role,
                 AuthToken = authToken.Key,
                 Email = dbHidrogenian.Email,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
                 Avatar = profile.AvatarName,
-                ExpirationTime = cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME
-                                                              : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
+                ExpirationTime = expirationTime
             };
 
             return new KeyValuePair<bool, AuthenticatedUser>(true, authUser);
+        }
+
+        public async Task<HidroPermissionVM> ComputeAuthorizationFor(int hidrogenianId) {
+            _logger.LogInformation("AuthenticationService.ComputeAuthorizationFor - Service starts.");
+
+            var roleClaim = await _dbContext.RoleClaimer.FirstOrDefaultAsync(rc => rc.HidrogenianId == hidrogenianId);
+            HidroPermissionVM permissions = roleClaim;
+
+            if (roleClaim.AllowTemporarily == null) return permissions;
+
+            var temporaryPermissions = JsonConvert.DeserializeObject<TemporaryPermissionVM>(roleClaim.AllowTemporarily);
+            if (temporaryPermissions.EffectUntil < DateTime.UtcNow) return permissions;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowCreate)))
+                permissions.AllowCreate = !permissions.AllowCreate;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowView)))
+                permissions.AllowView = !permissions.AllowView;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowEditOwn)))
+                permissions.AllowEditOwn = !permissions.AllowEditOwn;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowEditOthers)))
+                permissions.AllowEditOthers = !permissions.AllowEditOthers;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowDeleteOwn)))
+                permissions.AllowDeleteOwn = !permissions.AllowDeleteOwn;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowDeleteOthers)))
+                permissions.AllowDeleteOthers = !permissions.AllowDeleteOthers;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowReviveOwn)))
+                permissions.AllowReviveOwn = !permissions.AllowReviveOwn;
+
+            if (temporaryPermissions.OverriddenPermissions.Contains(nameof(HidroPermissionVM.AllowReviveOthers)))
+                permissions.AllowReviveOthers = !permissions.AllowReviveOthers;
+
+            return permissions;
         }
 
         public async Task<CookieAuthenticationVM> GenerateCookieAuthData(AuthenticatedUser auth) {
             _logger.LogInformation("AuthenticationService.GenerateCookieAuthData - Service starts.");
 
             var timestamp = DateTime.UtcNow;
-            var unixTimestamp = timestamp.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var unixTimestamp = ((DateTimeOffset)timestamp).ToUnixTimeSeconds();
 
             var cookieAuthToken = auth.AuthToken + auth.Role + unixTimestamp.ToString();
             var hashResult = GenerateHashedPasswordAndSalt(cookieAuthToken);

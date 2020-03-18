@@ -1,4 +1,4 @@
-﻿namespace Hidrogen.ViewModels {
+﻿namespace Hidrogen.ViewModels.Authentication {
 
     public class PasswordResetVM {
 

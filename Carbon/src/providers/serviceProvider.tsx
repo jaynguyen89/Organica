@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 axios.defaults.timeout = 10000; //10 seconds
 axios.defaults.withCredentials = true; //include all cookies
@@ -7,8 +6,6 @@ axios.defaults.withCredentials = true; //include all cookies
 const LOCAL_ENDPOINT = 'https://localhost:5001/';
 
 const sendRequestForResult = (action: string, auth: any, data: any, method = 'POST') => {
-    const xsrfToken = Cookies.get('XSRF-TOKEN');
-
     const requestOptions = {
         method : method,
         url : LOCAL_ENDPOINT + action,
@@ -17,7 +14,6 @@ const sendRequestForResult = (action: string, auth: any, data: any, method = 'PO
                 : 'Bearer ' + (typeof (auth) === 'string' ? auth : auth.authToken),
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'XSRF-TOKEN': xsrfToken
         },
         data : (method !== 'GET' && data != null) ? JSON.stringify(data) : null
     };

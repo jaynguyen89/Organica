@@ -1,5 +1,6 @@
 ﻿SET IDENTITY_INSERT [dbo].[HidroTheme] ON;
 
+--The default theme
 INSERT INTO [dbo].[HidroTheme] (
 	Id, ThemeName, HidroFont, BaseFontSize, BaseFontWeight, BackgroundColor, ThemePrimaryColor, ThemeSecondaryColor,
 	ThemeHoveredColor, ThemeDisabledColor, TextPrimaryColor, TextHighlightedColor, TextDisabledColor, LinkPrimaryColor,
@@ -13,3 +14,22 @@ INSERT INTO [dbo].[HidroTheme] (
 );
 
 SET IDENTITY_INSERT [dbo].[HidroTheme] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[HidroRole] ON;
+
+--The roles
+INSERT INTO [dbo].[HidroRole] (
+	Id, RoleName, RoleDescription
+) VALUES (1, 'Customer', 'Users with Customer role have the right to make purchases, create listings and open stores.');
+INSERT INTO [dbo].[HidroRole] (
+	Id, RoleName, RoleDescription
+) VALUES (2, 'Supporter', 'Users with Supporter role have the right to review listings and purchases made by Customers and take appropriate actions according to their permissions.');
+INSERT INTO [dbo].[HidroRole] (
+	Id, RoleName, RoleDescription
+) VALUES (3, 'Moderator', 'Users with Moderator role inherit the rights of Inspectors and have additional right to manage Suppoters according to their permissions.');
+INSERT INTO [dbo].[HidroRole] (
+	Id, RoleName, RoleDescription
+) VALUES (4, 'Admintrator', 'Administrators have the right to manage Supporters and Moderators including their permissions and actions.');
+
+SET IDENTITY_INSERT [dbo].[HidroRole] OFF;

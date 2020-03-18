@@ -8,6 +8,13 @@ namespace HelperLibrary {
             FAILED, SUCCESS, INTERRUPTED
         };
 
+        public enum FILTER_RESULT {
+            INVALID_AUTHENTICATION,
+            AUTHENTICATION_EXPIRED,
+            ACCESS_CONTROL_DENIED,
+            INSUFFICIENT_PERMISSION
+        }
+
         public enum HTTP_STATUS_CODES {
             CONTINUE = 100,
             SWITCHING_PROTOCOL = 101,

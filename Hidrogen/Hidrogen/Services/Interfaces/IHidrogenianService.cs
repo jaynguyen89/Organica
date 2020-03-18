@@ -1,4 +1,5 @@
 ﻿using Hidrogen.ViewModels;
+using Hidrogen.ViewModels.Authentication;
 using System.Threading.Tasks;
 
 namespace Hidrogen.Services.Interfaces {

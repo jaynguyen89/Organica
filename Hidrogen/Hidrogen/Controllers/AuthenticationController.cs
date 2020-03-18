@@ -1,8 +1,12 @@
-﻿using HelperLibrary.Common;
+﻿using HelperLibrary;
+using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
+using Hidrogen.Attributes;
+using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
+using Hidrogen.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,6 +27,7 @@ namespace Hidrogen.Controllers {
         private readonly IAuthenticationService _authService;
         private readonly IHidrogenianService _userService;
         private readonly IHidroProfileService _profileService;
+        private readonly IRoleClaimerService _roleClaimer;
         private readonly IEmailSenderService _emailService;
         private readonly IGoogleReCaptchaService _googleReCaptchaService;
 
@@ -33,53 +38,51 @@ namespace Hidrogen.Controllers {
             IAuthenticationService authService,
             IHidrogenianService userService,
             IHidroProfileService profileService,
+            IRoleClaimerService roleClaimer,
             IEmailSenderService emailService,
+            IHttpContextAccessor httpContext,
             IGoogleReCaptchaService googleReCaptchaService
         ) {
             _logger = logger;
             _authService = authService;
             _userService = userService;
             _profileService = profileService;
+            _roleClaimer = roleClaimer;
             _emailService = emailService;
             _googleReCaptchaService = googleReCaptchaService;
         }
 
-        public JsonResult FilterResult(string result) {
+        public static JsonResult FilterResult(HidroEnums.FILTER_RESULT result) {
             switch (result) {
-                case "Unauthenticated":
+                case FILTER_RESULT.ACCESS_CONTROL_DENIED:
                     return new JsonResult(new {
                         Result = RESULTS.FAILED,
                         Message = "You are not allowed to access this feature. Please login before going further!",
                         Error = HTTP_STATUS_CODES.NONAUTHORITATIVE_INFORMATION
                     });
-                case "InvalidAuthentication":
+                case FILTER_RESULT.INVALID_AUTHENTICATION:
                     return new JsonResult(new {
                         Result = RESULTS.FAILED,
                         Message = "Your session seems to be invalid. Please login again to confirm your identity!",
                         Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
                     });
-                case "AuthenticationExpired":
+                case FILTER_RESULT.INSUFFICIENT_PERMISSION:
+                    return new JsonResult(new {
+                        Result = RESULTS.FAILED,
+                        Message = "You do not have the permission to perform this action. Please close this page.",
+                        Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
+                    });
+                default:  //FILTER_RESULT.AUTHENTICATION_EXPIRED
                     return new JsonResult(new {
                         Result = RESULTS.FAILED,
                         Message = "Your session has expired. Please login again to continue!",
                         Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
                     });
-                case "AccessControlDenied":
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "You are required to have another role to access this page!",
-                        Error = HTTP_STATUS_CODES.UNAUTHORIZED
-                    });
-                default: //NoAuthentication
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "Your request failed to pass the authenticity validation. Please login again.",
-                        Error = HTTP_STATUS_CODES.NONAUTHORITATIVE_INFORMATION
-                    });
             }
         }
 
         [HttpGet("check-registration-email/{email}")]
+        [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationEmailAvailability(string email) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationEmailAvailability - Service starts.");
 
@@ -92,6 +95,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("check-registration-username/{username}")]
+        [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationUsernameAvailability(string username) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationUsernameAvailability - Service starts.");
 
@@ -104,6 +108,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("register-account")]
+        [HidroActionFilter]
         public async Task<JsonResult> RegisterAccount(RegistrationVM registration) {
             _logger.LogInformation("AuthenticationController.RegisterAccount - Service starts.");
 
@@ -135,6 +140,11 @@ namespace Hidrogen.Controllers {
             var hidrogenian = await _userService.InsertNewHidrogenian(registration);
             if (hidrogenian == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+
+            if (!(await _roleClaimer.SetRoleOnRegistrationFor(hidrogenian.Id))) {
+                await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
+                return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Sorry, error occurred while creating your new account. Please try again." });
+            }
 
             hidrogenian.Token = _authService.GenerateRandomToken();
 
@@ -181,6 +191,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("activate-account")]
+        [HidroActionFilter]
         public async Task<JsonResult> ActivateAccount(AccountActivationVM activator) {
             _logger.LogInformation("AuthenticationController.ActivateAccount - Service starts.");
 
@@ -221,6 +232,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("forgot-password")]
+        [HidroActionFilter]
         public async Task<JsonResult> SendRecoverPasswordInstruction(RecoveryVM recoveree) {
             _logger.LogInformation("AuthenticationController.RecoverPassword - Service starts.");
 
@@ -262,6 +274,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("request-new-activation-email")]
+        [HidroActionFilter]
         public async Task<JsonResult> SendNewAccountActivationEmail(RecoveryVM request) {
             _logger.LogInformation("AuthenticationController.SendNewAccountActivationEmail - Service starts.");
 
@@ -302,6 +315,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("set-new-password")]
+        [HidroActionFilter]
         public async Task<JsonResult> SetNewPassword(RegistrationVM recovery) {
             _logger.LogInformation("AuthenticationController.SetNewPassword - Service starts.");
 
@@ -351,6 +365,7 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("authenticate")]
+        [HidroActionFilter]
         public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
 
@@ -372,10 +387,14 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Cannot find any Hidrogenian with the login credentials." });
 
             await SetUserSessionAndCookie(authResult.Value, auth.TrustedAuth);
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authResult.Value });
+            if (await SetUserAuthorizationPolicy(authResult.Value.UserId))
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authResult.Value });
+
+            return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try again." });
         }
 
         [HttpPost("cookie-authenticate")]
+        [HidroActionFilter]
         public async Task<JsonResult> CookieAuthenticate(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationController.CookieAuthenticate - Service starts.");
 
@@ -383,16 +402,19 @@ namespace Hidrogen.Controllers {
             if (!result.Key) return new JsonResult(new { Result = RESULTS.FAILED });
 
             await SetUserSessionAndCookie(result.Value, cookie.TrustedAuth == "True");
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = result.Value });
+            if (await SetUserAuthorizationPolicy(result.Value.UserId))
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = result.Value });
+
+            return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try to manually login." });
         }
 
         private async Task SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
             _logger.LogInformation("AuthenticationController.SetUserSessionAndCookie - private action.");
 
-            HttpContext.Session.SetString(nameof(authHidrogenian.AuthToken), authHidrogenian.AuthToken);
-            HttpContext.Session.SetInt32(nameof(authHidrogenian.ExpirationTime), authHidrogenian.ExpirationTime);
-            HttpContext.Session.SetInt32(nameof(authHidrogenian.UserId), authHidrogenian.UserId);
-            HttpContext.Session.SetString(nameof(authHidrogenian.Role), authHidrogenian.Role);
+            HttpContext.Session.SetString(nameof(AuthenticatedUser.AuthToken), authHidrogenian.AuthToken);
+            HttpContext.Session.SetInt32(nameof(AuthenticatedUser.ExpirationTime), (int)authHidrogenian.ExpirationTime);
+            HttpContext.Session.SetInt32(nameof(AuthenticatedUser.UserId), authHidrogenian.UserId);
+            HttpContext.Session.SetString(nameof(AuthenticatedUser.Role), authHidrogenian.Role);
 
             var cookieOptions = new CookieOptions {
                 HttpOnly = false,
@@ -409,7 +431,19 @@ namespace Hidrogen.Controllers {
             }
         }
 
+        private async Task<bool> SetUserAuthorizationPolicy(int hidrogenianId) {
+            _logger.LogInformation("AuthenticationController.SetUserAuthorizationPolicy - Service starts.");
+
+            var permissions = await _authService.ComputeAuthorizationFor(hidrogenianId);
+            if (permissions == null) return false;
+
+            HttpContext.Session.SetString(nameof(HidroAuthorize), JsonConvert.SerializeObject(permissions));
+            return true;
+        }
+
         [HttpGet("sign-out")]
+        [HidroActionFilter]
+        [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public JsonResult LogOut() {
             _logger.LogInformation("AuthenticationController.LogOut - Service starts.");
 

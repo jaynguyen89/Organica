@@ -1,4 +1,5 @@
-﻿using Hidrogen.ViewModels;
+﻿using Hidrogen.ViewModels.Authentication;
+using Hidrogen.ViewModels.Authorization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -58,5 +59,10 @@ namespace Hidrogen.Services.Interfaces {
         /// Returns Key == false if no account found with cookie data. When Key == true, Value == null if authentication failed.
         /// </summary>
         Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie);
+
+        /// <summary>
+        /// Returns null if no claim found with hidrogenianId, otherwise, return HidroPermissionVM instance.
+        /// </summary>
+        Task<HidroPermissionVM> ComputeAuthorizationFor(int hidrogenianId);
     }
 }

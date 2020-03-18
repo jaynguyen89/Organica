@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using HelperLibrary;
 using HelperLibrary.Common;
 
-namespace Hidrogen.ViewModels {
+namespace Hidrogen.ViewModels.Authentication {
 
     public class RegistrationVM {
 

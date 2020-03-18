@@ -1,10 +1,10 @@
-﻿namespace Hidrogen.ViewModels {
+﻿namespace Hidrogen.ViewModels.Authentication {
 
     public class AuthenticatedUser {
 
         public string AuthToken { get; set; }
 
-        public int ExpirationTime { get; set; } // in milliseconds
+        public long ExpirationTime { get; set; } // in seconds
 
         public int UserId { get; set; }
 

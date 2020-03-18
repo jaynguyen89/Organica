@@ -1,4 +1,5 @@
 using HelperLibrary;
+using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

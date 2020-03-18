@@ -1,6 +1,7 @@
 ﻿using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
+using Hidrogen.ViewModels.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;

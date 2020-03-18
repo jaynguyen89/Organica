@@ -1,13 +1,16 @@
-﻿namespace HelperLibrary.Common {
+﻿using System.Collections.Generic;
+
+namespace HelperLibrary.Common {
 
     public class HidroConstants {
 
-        public const int TRUSTED_AUTH_EXPIRATION_TIME = 6 * 60 * 60 * 1000; // 6 hours
-        public const int INTRUSTED_AUTH_EXPIRATION_TIME = 1 * 60 * 60 * 1000; // 1 hour
+        public const int TRUSTED_AUTH_EXPIRATION_TIME = 6 * 60 * 60; // 6 hours
+        public const int INTRUSTED_AUTH_EXPIRATION_TIME = 1 * 60 * 60; // 1 hour
 
-        public const long CLIENT_COOKIE_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; // 7 days
+        public const long CLIENT_COOKIE_EXPIRATION_TIME = 7 * 24 * 60 * 60; // 7 days
 
         public const string WHITE_SPACE = " ";
+        public const int EMPTY = 0;
 
         public const string GOOGLE_CAPTCHA_ENDPOINT = @"https://www.google.com/recaptcha/api/siteverify";
         public const string GOOGLE_CAPTCHA_SECRET_KEY = "6LeXhN4UAAAAADblMiFrLL6v0WM3pNIkHyfaoCg5";
@@ -20,5 +23,13 @@
         public const string MAIL_SERVER_PASSWORD = "Chay571990";
         public const string MAIL_SENDER_ADDRESS = "nguyen.le.kim.phuc@gmail.com";
         public const string MAIL_SENDER_NAME = "Hidrogen";
+
+        public static readonly List<string> ROLES = new List<string> {
+            "customer", "supporter", "moderator", "administrator"
+        };
+
+        public static int GetRoleHierrachy(string role) {
+            return ROLES.IndexOf(role);
+        }
     }
 }
