@@ -33,19 +33,19 @@ const AuthItem = (props: any) => {
                         {
                             open &&
                             <div className='navbar-expand'>
-                                <div className='nav-expand-item'>
+                                <div className='nav-expand-item' onClick={ () => window.location.href = '/user-account' }>
                                     <CarbonAvatar size='30px' />
                                     <span>My Account</span>
                                 </div>
-                                <div className='nav-expand-item'>
+                                <div className='nav-expand-item' onClick={ () => window.location.href = '/user-profile' }>
                                     <i className='fas fa-user-circle hidro-primary-icon'></i>
                                     <span>My Profile</span>
                                 </div>
-                                <div className='nav-expand-item'>
+                                <div className='nav-expand-item' onClick={ () => window.location.href = '/user-profile' }>
                                     <i className='fas fa-comment-dots hidro-primary-icon'></i>
                                     <span>My Messages</span>
                                 </div>
-                                <div className='nav-expand-item'>
+                                <div className='nav-expand-item' onClick={ () => window.location.href = '/user-profile' }>
                                     <i className='fas fa-shopping-bag hidro-primary-icon'></i>
                                     <span>My Purchases</span>
                                 </div>

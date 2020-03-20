@@ -1,0 +1,52 @@
+.account-wrapper {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+.account-content h5 {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.account-content hr {
+    width: 35%;
+    margin-left: 0;
+}
+
+@media screen and (max-width: 992px) {
+    .account-content hr {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .account-content hr {
+        width: 80%;
+    }
+}
+
+.content-container {
+    padding: 5px 15px;
+    margin-bottom: 20px;
+    min-height: 270px;
+}
+
+.content-caption {
+    font-weight: 600;
+    margin: 30px auto;
+}
+
+.account-show {
+    margin: 0;
+}
+
+.link-icon {
+    margin-left: 10px;
+    color: #EA8F61;
+}
+
+.link-icon:hover {
+    cursor: pointer;
+    color: #EFA681;
+}

@@ -5,9 +5,9 @@ const CustomerItems = () => {
         <>
             <li><a href='/'>Selling</a></li>
             <li><a href='/'>Buying</a></li>
-            <li><a href='/'>Watch List</a></li>
-            <li><a href='/'>Followed Sellers</a></li>
-            <li><a href='/'>Recent Views</a></li>
+            <li><a href='/'>Watching</a></li>
+            <li><a href='/'>Following</a></li>
+            <li><a href='/'>Recents</a></li>
         </>
     );
 }

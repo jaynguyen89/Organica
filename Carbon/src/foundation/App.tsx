@@ -9,6 +9,8 @@ import AccountClaimer from '../account-claimation/account-activation/AccountClai
 import RequestActivator from '../account-claimation/account-activation/RequestActivator';
 import ForgotPassword from '../account-claimation/password-recovery/ForgotPassword';
 import PasswordReset from '../account-claimation/password-recovery/PasswordReset';
+import UserProfile from '../user-features/profiles/private-profile/PrivateProfile';
+import HidroAccount from '../user-features/account/HidroAccount';
 
 const App = () => {
     return (
@@ -24,6 +26,8 @@ const App = () => {
                     <Route path='/request-activation-email' component={ RequestActivator } />
                     <Route path='/forgot-password' component={ ForgotPassword } />
                     <Route path='/reset-password' component={ PasswordReset } />
+                    <Route path='/user-account' component={ HidroAccount } />
+                    <Route path='/user-profile' component={ UserProfile } />
                 </Switch>
             </BrowserRouter>
         </>

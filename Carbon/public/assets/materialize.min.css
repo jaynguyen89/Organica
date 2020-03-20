@@ -5001,7 +5001,7 @@ small {
     border-radius: 2px;
     color: #fff;
     min-height: 36px;
-    line-height: 120%;
+    line-height: 100%;
     opacity: 0;
     position: absolute;
     text-align: center;
@@ -5011,7 +5011,7 @@ small {
     top: 0;
     pointer-events: none;
     visibility: hidden;
-    background-color: #323232
+    background-color: #757575
 }
 
 .backdrop {
