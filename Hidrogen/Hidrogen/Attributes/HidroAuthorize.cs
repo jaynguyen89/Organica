@@ -42,6 +42,11 @@ namespace Hidrogen.Attributes {
 
         public Task OnAuthorizationAsync(AuthorizationFilterContext context) {
             var sessionPermissions = context.HttpContext.Session.GetString(nameof(HidroAuthorize));
+            if (sessionPermissions == null) {
+                context.Result = new RedirectToActionResult("LogOutInternal", "Authentication", null);
+                return Task.CompletedTask;
+            }
+
             UserPermissions = JsonConvert.DeserializeObject<HidroPermissionVM>(sessionPermissions);
 
             if (RequiredPermissions.AllowCreate && UserPermissions.AllowCreate == RequiredPermissions.AllowCreate) return Task.CompletedTask;
@@ -54,7 +59,6 @@ namespace Hidrogen.Attributes {
             if (RequiredPermissions.AllowReviveOthers && UserPermissions.AllowReviveOthers == RequiredPermissions.AllowReviveOthers) return Task.CompletedTask;
 
             context.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
-            //new RedirectToActionResult("FilterResult", "Authentication", new { result = HidroEnums.FILTER_RESULT.INSUFFICIENT_PERMISSION });
             return Task.CompletedTask;
         }
     }

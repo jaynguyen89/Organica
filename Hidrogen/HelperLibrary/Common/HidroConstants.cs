@@ -9,8 +9,10 @@ namespace HelperLibrary.Common {
 
         public const long CLIENT_COOKIE_EXPIRATION_TIME = 7 * 24 * 60 * 60; // 7 days
 
+        public const string DOUBLE_SPACE = "  ";
         public const string WHITE_SPACE = " ";
         public const int EMPTY = 0;
+        public const string NA = "N/A";
 
         public const string GOOGLE_CAPTCHA_ENDPOINT = @"https://www.google.com/recaptcha/api/siteverify";
         public const string GOOGLE_CAPTCHA_SECRET_KEY = "6LeXhN4UAAAAADblMiFrLL6v0WM3pNIkHyfaoCg5";

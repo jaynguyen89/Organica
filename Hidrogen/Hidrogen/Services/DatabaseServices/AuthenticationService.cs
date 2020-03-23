@@ -12,6 +12,7 @@ using HelperLibrary.Common;
 using System.Linq;
 using Hidrogen.ViewModels.Authorization;
 using Newtonsoft.Json;
+using Hidrogen.DbContexts;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -94,6 +95,8 @@ namespace Hidrogen.Services.DatabaseServices {
                                     auth.TrustedAuth ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
                                  )).ToUnixTimeSeconds();
 
+            var avatarInfo = profile.ProcessAvatarInfo();
+
             var authUser = new AuthenticatedUser {
                 UserId = hidrogenian.Id,
                 Role = role,
@@ -101,7 +104,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 Email = hidrogenian.Email,
                 UserName = hidrogenian.UserName,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = profile.AvatarName,
+                Avatar = avatarInfo.Thumbnail?.FileUrl,
                 ExpirationTime = expirationTime
             };
 
@@ -139,13 +142,15 @@ namespace Hidrogen.Services.DatabaseServices {
                                     cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
                                  )).ToUnixTimeSeconds();
 
+            var avatarInfo = profile.ProcessAvatarInfo();
+
             var authUser = new AuthenticatedUser {
                 UserId = dbHidrogenian.Id,
                 Role = role,
                 AuthToken = authToken.Key,
                 Email = dbHidrogenian.Email,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = profile.AvatarName,
+                Avatar = avatarInfo.Thumbnail?.FileUrl,
                 ExpirationTime = expirationTime
             };
 

@@ -22,7 +22,7 @@ namespace HelperLibrary {
             return password;
         }
 
-        public static string GetStringValue(this Enum value) {
+        public static string GetValue(this Enum value) {
 
             Type type = value.GetType();
             FieldInfo fieldInfo = type.GetField(value.ToString());
@@ -35,7 +35,7 @@ namespace HelperLibrary {
         }
 
         public static string CapitalizeFirstLetterOfEachWord(string sentence) {
-            var newSentence = sentence.Replace(HidroConstants.WHITE_SPACE, string.Empty)
+            var newSentence = sentence.Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE)
                                       .ToLower();
 
             newSentence = Regex.Replace(newSentence, @"(^\w)|(\s\w)", m => m.Value.ToUpper());

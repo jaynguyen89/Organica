@@ -1,4 +1,4 @@
-﻿using Hidrogen.Models;
+﻿using Hidrogen.DbContexts;
 using Hidrogen.Services.DatabaseServices;
 using Hidrogen.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,8 @@ namespace Hidrogen.Services {
             services.AddScoped<IHidroProfileService, HidroProfileService>();
             services.AddScoped<IHidroRoleService, HidroRoleService>();
             services.AddScoped<IRoleClaimerService, RoleClaimerService>();
+            services.AddScoped<IHidroAddressService, HidroAddressService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             return services;
         }

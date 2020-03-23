@@ -135,11 +135,15 @@
     <Build Include="core\tables\HidroRole.sql" />
     <Build Include="core\tables\RoleClaimer.sql" />
     <Build Include="core\tables\HidroProfile.sql" />
-    <Build Include="core\tables\Location.sql" />
+    <Build Include="core\tables\RawLocation.sql" />
     <Build Include="core\tables\HidroAddress.sql" />
+    <Build Include="core\tables\FineLocation.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Oxygen-Dev.publish.xml" />
     <None Include="publish-scripts\Core-InitialPublishedData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Oxygen.refactorlog" />
   </ItemGroup>
 </Project>

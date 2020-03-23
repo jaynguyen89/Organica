@@ -2,7 +2,7 @@
 
 namespace HelperLibrary {
 
-    public class HidroEnums {
+    public static class HidroEnums {
 
         public enum RESULTS {
             FAILED, SUCCESS, INTERRUPTED
@@ -13,6 +13,10 @@ namespace HelperLibrary {
             AUTHENTICATION_EXPIRED,
             ACCESS_CONTROL_DENIED,
             INSUFFICIENT_PERMISSION
+        }
+
+        public enum GENDERS {
+            MALE, FEMALE, OTHER
         }
 
         public enum HTTP_STATUS_CODES {
@@ -85,24 +89,43 @@ namespace HelperLibrary {
         public enum DATE_FORMATS {
             [StringValue("yyyy/MM/dd hh:mm:ss")]
             FULL_YEAR_FIRST,
+
             [StringValue("dd/MM/yyyy hh:mm:ss")]
             FULL_YEAR_LAST,
+
             [StringValue("MM/dd/yyyy hh:mm:ss")]
             FULL_MONTH_FIRST,
+
             [StringValue("yyyy/MM/dd hh:mm")]
             NONSEC_YEAR_FIRST,
+
             [StringValue("dd/MM/yyyy hh:mm")]
             NONSEC_YEAR_LAST,
+
             [StringValue("MM/dd/yyyy hh:mm")]
             NONSEC_MONTH_FIRST,
+
             [StringValue("yyyy/MM/dd")]
             DATE_YEAR_FIRST,
+
             [StringValue("dd/MM/yyyy")]
             DATE_YEAR_LAST,
+
             [StringValue("MM/dd/yyyy")]
             DATE_MONTH_FIRST,
+
+            [StringValue("dd MMM yyyy")]
+            FULL_DATE_FRIENDLY,
+
+            [StringValue("MMM yyyy")]
+            NONDATE_FRIENDLY,
+
+            [StringValue("yyyy")]
+            YEAR_ONLY,
+
             [StringValue("hh:mm:ss")]
             TIME_FULL,
+
             [StringValue("hh:mm")]
             TIME_NONSEC
         }

@@ -40,7 +40,6 @@ namespace Hidrogen.Controllers {
             IHidroProfileService profileService,
             IRoleClaimerService roleClaimer,
             IEmailSenderService emailService,
-            IHttpContextAccessor httpContext,
             IGoogleReCaptchaService googleReCaptchaService
         ) {
             _logger = logger;
@@ -368,6 +367,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
+            HttpContext.Session.Clear();
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(auth.CaptchaToken);
             if (!verification.Result)
@@ -397,6 +397,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CookieAuthenticate(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationController.CookieAuthenticate - Service starts.");
+            HttpContext.Session.Clear();
 
             var result = await _authService.AuthenticateWithCookie(cookie);
             if (!result.Key) return new JsonResult(new { Result = RESULTS.FAILED });
@@ -450,6 +451,11 @@ namespace Hidrogen.Controllers {
             HttpContext.Session.Clear();
 
             return new JsonResult(new { Result = RESULTS.SUCCESS });
+        }
+
+        public void LogOutInternal() {
+            _logger.LogInformation("AuthenticationController.LogOutInternal - Service runs internally.");
+            HttpContext.Session.Clear();
         }
 
         private List<int> VerifyRegistrationData(RegistrationVM data) {

@@ -10,9 +10,9 @@ namespace Hidrogen.Models
         public string CitizenCardPhoto { get; set; }
         public string CitizenCardNumber { get; set; }
         public DateTime? CitizenCardIssuedDate { get; set; }
-        public string AvatarName { get; set; }
+        public string AvatarInformation { get; set; }
         public DateTime? DateOfBith { get; set; }
-        public bool Gender { get; set; }
+        public bool? Gender { get; set; }
         public string Ethnicity { get; set; }
         public string FamilyName { get; set; }
         public string GivenName { get; set; }

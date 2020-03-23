@@ -40,7 +40,7 @@ namespace Hidrogen.ViewModels.Authentication {
 
             var errors = new List<int>();
 
-            var lenTest = new Regex(@".{6,50}");
+            var lenTest = new Regex(@".{10,50}");
             if (!lenTest.IsMatch(Email))
                 errors.Add(1);
 
@@ -158,13 +158,13 @@ namespace Hidrogen.ViewModels.Authentication {
             var messages = new List<string>();
 
             //For Email
-            if (errors.Contains(0)) messages.Add("Email field is missing input.");
-            if (errors.Contains(1)) messages.Add("Email is either too short or long.");
+            if (errors.Contains(0)) messages.Add("Email field is missing input. Email is required for registration.");
+            if (errors.Contains(1)) messages.Add("Email is either too short or long. Min 10, Max 50 characters.");
             if (errors.Contains(2) || errors.Contains(3)) messages.Add("The email you enter seems to be invalid.");
 
             //For UserName
-            if (errors.Contains(4)) messages.Add("Username field is missing input.");
-            if (errors.Contains(5)) messages.Add("Username is either too short or long.");
+            if (errors.Contains(4)) messages.Add("Username field is missing input. Username is required for registration.");
+            if (errors.Contains(5)) messages.Add("Username is either too short or long. Min 3, Max 20 characters.");
             if (errors.Contains(6) || errors.Contains(7)) messages.Add("The username you enter is not in the required format.");
 
             //For Password
@@ -178,13 +178,13 @@ namespace Hidrogen.ViewModels.Authentication {
             if (errors.Contains(15)) messages.Add("Password must contain at least 1 of these special characters: !@#$%^&*_+.");
 
             //For FamilyName
-            if (errors.Contains(16)) messages.Add("Family Name field is missing input.");
-            if (errors.Contains(17)) messages.Add("Family Name is either too short or long.");
+            if (errors.Contains(16)) messages.Add("Family Name field is missing input. Please enter your Family Name.");
+            if (errors.Contains(17)) messages.Add("Family Name is too long. Max 50 characters.");
             if (errors.Contains(18)) messages.Add("Family Name can only contain these special characters: _-.(')");
 
             //For GivenName
-            if (errors.Contains(19)) messages.Add("Given Name field is missing input.");
-            if (errors.Contains(20)) messages.Add("Given Name is either too short or long.");
+            if (errors.Contains(19)) messages.Add("Given Name field is missing input. Please enter your Given Name.");
+            if (errors.Contains(20)) messages.Add("Given Name is too long. Max 50 characters.");
             if (errors.Contains(21)) messages.Add("Given Name can only contain these special characters: _-.(')");
 
             return messages;
