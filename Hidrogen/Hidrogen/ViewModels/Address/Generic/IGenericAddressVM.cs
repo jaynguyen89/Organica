@@ -4,10 +4,18 @@
 
         int Id { get; set; }
 
-        bool IsPrimaryAddress { get; set; }
+        bool IsPrimary { get; set; }
 
-        bool IsDeliveryAddress { get; set; }
+        bool ForDelivery { get; set; }
 
         bool IsStandard { get; set; }
+
+        bool IsRefined { get; set; }
+
+        LocalLocationVM _lAddress { get; set; }
+
+        StandardLocationVM _sAddress { get; set; }
+
+        string NormalizedAddress { get; }
     }
 }

@@ -21,7 +21,6 @@ namespace Hidrogen.DbContexts
         public virtual DbSet<HidroSetting> HidroSetting { get; set; }
         public virtual DbSet<HidroTheme> HidroTheme { get; set; }
         public virtual DbSet<Hidrogenian> Hidrogenian { get; set; }
-        public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<RawLocation> RawLocation { get; set; }
         public virtual DbSet<RoleClaimer> RoleClaimer { get; set; }
 
@@ -281,45 +280,6 @@ namespace Hidrogen.DbContexts
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(20);
-            });
-
-            modelBuilder.Entity<Location>(entity =>
-            {
-                entity.Property(e => e.AlternateAddress).HasMaxLength(50);
-
-                entity.Property(e => e.BuildingName).HasMaxLength(50);
-
-                entity.Property(e => e.City).HasMaxLength(40);
-
-                entity.Property(e => e.Commute).HasMaxLength(40);
-
-                entity.Property(e => e.Country).HasMaxLength(40);
-
-                entity.Property(e => e.District).HasMaxLength(40);
-
-                entity.Property(e => e.Group).HasMaxLength(3);
-
-                entity.Property(e => e.Hamlet).HasMaxLength(40);
-
-                entity.Property(e => e.Lane).HasMaxLength(10);
-
-                entity.Property(e => e.Note).HasMaxLength(255);
-
-                entity.Property(e => e.Postcode).HasMaxLength(10);
-
-                entity.Property(e => e.Province).HasMaxLength(40);
-
-                entity.Property(e => e.Quarter).HasMaxLength(40);
-
-                entity.Property(e => e.State).HasMaxLength(40);
-
-                entity.Property(e => e.StreetAddress).HasMaxLength(50);
-
-                entity.Property(e => e.Suburb).HasMaxLength(50);
-
-                entity.Property(e => e.Town).HasMaxLength(40);
-
-                entity.Property(e => e.Ward).HasMaxLength(40);
             });
 
             modelBuilder.Entity<RawLocation>(entity =>

@@ -1,4 +1,5 @@
-﻿using Hidrogen.ViewModels.Address.Generic;
+﻿using Hidrogen.Models;
+using Hidrogen.ViewModels.Address.Generic;
 using System;
 
 namespace Hidrogen.ViewModels.Address {
@@ -29,6 +30,48 @@ namespace Hidrogen.ViewModels.Address {
 
         public override string ProduceNormalizedAddress() {
             throw new NotImplementedException();
+        }
+
+        public static implicit operator LocalLocationVM(FineLocation location) {
+            return new LocalLocationVM {
+                Id = location.Id,
+                BuildingName = location.BuildingName,
+                StreetAddress = location.StreetAddress,
+                AlternateAddress = location.AlternateAddress,
+                Group = location.Group,
+                Lane = location.Lane,
+                Quarter = location.Quarter,
+                Hamlet = location.Hamlet,
+                Commute = location.Commute,
+                Ward = location.Ward,
+                District = location.District,
+                Town = location.Town,
+                Province = location.Province,
+                City = location.City,
+                Country = location.Country,
+                Note = location.Note
+            };
+        }
+
+        public static implicit operator LocalLocationVM(RawLocation location) {
+            return new LocalLocationVM {
+                Id = location.Id,
+                BuildingName = location.BuildingName,
+                StreetAddress = location.StreetAddress,
+                AlternateAddress = location.AlternateAddress,
+                Group = location.Group,
+                Lane = location.Lane,
+                Quarter = location.Quarter,
+                Hamlet = location.Hamlet,
+                Commute = location.Commute,
+                Ward = location.Ward,
+                District = location.District,
+                Town = location.Town,
+                Province = location.Province,
+                City = location.City,
+                Country = location.Country,
+                Note = location.Note
+            };
         }
     }
 }
