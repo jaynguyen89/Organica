@@ -64,5 +64,10 @@ namespace Hidrogen.Services.Interfaces {
         /// Returns null if no claim found with hidrogenianId, otherwise, return HidroPermissionVM instance.
         /// </summary>
         Task<HidroPermissionVM> ComputeAuthorizationFor(int hidrogenianId);
+
+        /// <summary>
+        /// Returns null if no hidrogenian found, returns false if incorrect password, otherwise true.
+        /// </summary>
+        Task<bool?> VerifyAccountPasswordFor(int hidrogenianId, string password);
     }
 }

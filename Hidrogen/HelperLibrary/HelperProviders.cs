@@ -11,10 +11,10 @@ namespace HelperLibrary {
 
         private static Random random = new Random();
 
-        public static string GenerateTemporaryPassword() {
+        public static string GenerateTemporaryPassword(int length) {
             const string CHARS = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890!@#$%^&*_+.";
             var password = new string(
-                Enumerable.Repeat(CHARS, 15)
+                Enumerable.Repeat(CHARS, length)
                           .Select(p => p[random.Next(p.Length)])
                           .ToArray()
             );

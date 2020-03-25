@@ -30,5 +30,15 @@ namespace Hidrogen.Services.Interfaces {
         /// Returns null if no account satisfied conditions.
         /// </summary>
         Task<HidrogenianVM> GetUnactivatedHidrogenianByEmail(string email);
+
+        /// <summary>
+        /// Returns null if no account found, returns false if database update failed, otherwise return true.
+        /// </summary>
+        Task<bool?> SaveTwoFaSecretKeyFor(int hidrogenianId, string secretKey);
+
+        /// <summary>
+        /// Returns null if no account found, returns false if database update failed, otherwise return true.
+        /// </summary>
+        Task<bool?> RemoveTwoFaSecretKeyFor(int hidrogenianId);
     }
 }

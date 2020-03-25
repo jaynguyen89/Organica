@@ -25,7 +25,15 @@ namespace Hidrogen.Services.DatabaseServices {
 
             var dbRoleClaim = new RoleClaimer {
                 RoleId = 1, //Customer by default
-                HidrogenianId = hidrogenianId
+                HidrogenianId = hidrogenianId,
+                AllowCreate = true,
+                AllowView = true,
+                AllowEditOwn = true,
+                AllowEditOthers = false,
+                AllowDeleteOwn = true,
+                AllowDeleteOthers = false,
+                AllowReviveOwn = true,
+                AllowReviveOthers = false
             };
 
             _dbContext.RoleClaimer.Add(dbRoleClaim);

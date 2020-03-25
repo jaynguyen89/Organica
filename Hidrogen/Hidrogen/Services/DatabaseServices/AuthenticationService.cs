@@ -311,7 +311,7 @@ namespace Hidrogen.Services.DatabaseServices {
 
             if (dbHidrogenian == null) return new KeyValuePair<string, string>(null, null);
 
-            var tempPassword = HelperProviders.GenerateTemporaryPassword();
+            var tempPassword = HelperProviders.GenerateTemporaryPassword(15);
             var hashedResult = GenerateHashedPasswordAndSalt(tempPassword);
 
             dbHidrogenian.PasswordHash = hashedResult.Key;
@@ -332,6 +332,15 @@ namespace Hidrogen.Services.DatabaseServices {
             }
 
             return new KeyValuePair<string, string>(tempPassword, recoveryToken);
+        }
+
+        public async Task<bool?> VerifyAccountPasswordFor(int hidrogenianId, string password) {
+            _logger.LogInformation("AuthenticationService.VerifyAccountPasswordFor - Service starts.");
+
+            var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
+            if (account == null) return null;
+
+            return BCryptHelper.CheckPassword(password, account.PasswordHash);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Hidrogen.DbContexts
         public virtual DbSet<HidroSetting> HidroSetting { get; set; }
         public virtual DbSet<HidroTheme> HidroTheme { get; set; }
         public virtual DbSet<Hidrogenian> Hidrogenian { get; set; }
+        public virtual DbSet<PaymentMethod> PaymentMethod { get; set; }
         public virtual DbSet<RawLocation> RawLocation { get; set; }
         public virtual DbSet<RoleClaimer> RoleClaimer { get; set; }
 
@@ -253,8 +254,6 @@ namespace Hidrogen.DbContexts
 
             modelBuilder.Entity<Hidrogenian>(entity =>
             {
-                entity.Property(e => e.AccessFailedCount).HasDefaultValueSql("((1))");
-
                 entity.Property(e => e.CookieToken).HasMaxLength(150);
 
                 entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
@@ -262,6 +261,8 @@ namespace Hidrogen.DbContexts
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.LastDeviceInfo).HasMaxLength(150);
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
@@ -275,11 +276,33 @@ namespace Hidrogen.DbContexts
 
                 entity.Property(e => e.RecoveryToken).HasMaxLength(60);
 
-                entity.Property(e => e.TwoFactorEnabled).HasDefaultValueSql("((0))");
+                entity.Property(e => e.TwoFaSecretKey).HasMaxLength(12);
 
                 entity.Property(e => e.UserName)
                     .IsRequired()
                     .HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<PaymentMethod>(entity =>
+            {
+                entity.Property(e => e.AccountBalance)
+                    .HasColumnType("decimal(18, 0)")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.CardNumber).HasMaxLength(15);
+
+                entity.Property(e => e.ExpiryDate).HasColumnType("date");
+
+                entity.Property(e => e.HolderName).HasMaxLength(60);
+
+                entity.Property(e => e.PaypalAddress).HasMaxLength(50);
+
+                entity.Property(e => e.SecurityCode).HasMaxLength(5);
+
+                entity.HasOne(d => d.Hidrogenian)
+                    .WithMany(p => p.PaymentMethod)
+                    .HasForeignKey(d => d.HidrogenianId)
+                    .HasConstraintName("FK_PaymentMethod_Hidrogenian");
             });
 
             modelBuilder.Entity<RawLocation>(entity =>
@@ -323,38 +346,6 @@ namespace Hidrogen.DbContexts
 
             modelBuilder.Entity<RoleClaimer>(entity =>
             {
-                entity.Property(e => e.AllowCreate)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.AllowView)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.AllowEditOwn)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.AllowEditOthers)
-                    .IsRequired()
-                    .HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.AllowDeleteOwn)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.AllowDeleteOthers)
-                    .IsRequired()
-                    .HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.AllowReviveOwn)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.AllowReviveOthers)
-                    .IsRequired()
-                    .HasDefaultValueSql("((0))");
-
                 entity.Property(e => e.AllowTemporarily).HasMaxLength(255);
 
                 entity.HasOne(d => d.Hidrogenian)

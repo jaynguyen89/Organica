@@ -78,7 +78,7 @@ namespace Hidrogen.ViewModels {
 
             Ethnicity = Ethnicity.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrEmpty(Ethnicity) || string.IsNullOrWhiteSpace(Ethnicity)) {
-                errors.Add(2);
+                Ethnicity = null;
                 return errors;
             }
 
@@ -86,11 +86,11 @@ namespace Hidrogen.ViewModels {
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(Ethnicity))
-                errors.Add(3);
+                errors.Add(2);
 
             var enTest = new Regex(@"^[A-Za-z\-.' ]*$");
             if (!enTest.IsMatch(Ethnicity))
-                errors.Add(4);
+                errors.Add(3);
 
             return errors;
         }
@@ -102,7 +102,7 @@ namespace Hidrogen.ViewModels {
 
             Company = Company.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrEmpty(Company) || string.IsNullOrWhiteSpace(Company)) {
-                errors.Add(5);
+                Company = null;
                 return errors;
             }
 
@@ -110,11 +110,11 @@ namespace Hidrogen.ViewModels {
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(Company))
-                errors.Add(6);
+                errors.Add(4);
 
             var cpTest = new Regex(@"^[A-Za-z&,\-.'() ]*$");
             if (!cpTest.IsMatch(Company))
-                errors.Add(7);
+                errors.Add(5);
 
             return errors;
         }
@@ -126,7 +126,7 @@ namespace Hidrogen.ViewModels {
 
             JobTitle = JobTitle.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrEmpty(JobTitle) || string.IsNullOrWhiteSpace(JobTitle)) {
-                errors.Add(8);
+                JobTitle = null;
                 return errors;
             }
 
@@ -134,11 +134,11 @@ namespace Hidrogen.ViewModels {
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(JobTitle))
-                errors.Add(9);
+                errors.Add(6);
 
             var jTest = new Regex(@"^[A-Za-z,\-.'() ]*$");
             if (!jTest.IsMatch(JobTitle))
-                errors.Add(10);
+                errors.Add(7);
 
             return errors;
         }
@@ -149,18 +149,15 @@ namespace Hidrogen.ViewModels {
             if (Website == null) return errors;
 
             Website = Website.ToLower().Trim().Replace(HidroConstants.WHITE_SPACE, string.Empty);
-            if (string.IsNullOrEmpty(Company)) {
-                errors.Add(11);
-                return errors;
-            }
+            if (string.IsNullOrEmpty(Website)) return errors;
 
             var lenTest = new Regex(@".{10,100}");
             if (!lenTest.IsMatch(Website))
-                errors.Add(12);
+                errors.Add(8);
 
             var webTest = new Regex(@"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$");
             if (!webTest.IsMatch(Website))
-                errors.Add(13);
+                errors.Add(9);
 
             return errors;
         }
@@ -171,7 +168,7 @@ namespace Hidrogen.ViewModels {
 
             var lenTest = new Regex(@".{30,500}");
             if (!lenTest.IsMatch(SelfIntroduction))
-                errors.Add(14);
+                errors.Add(10);
 
             return errors;
         }
@@ -179,18 +176,18 @@ namespace Hidrogen.ViewModels {
         //Reprocess the FamilyName before checking
         public List<int> VerifyFamilyName() {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
-                return new List<int>() { 15 };
+                return new List<int>() { 11 };
 
             FamilyName = HelperProviders.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(FamilyName))
-                errors.Add(16);
+                errors.Add(12);
 
             var spTest = new Regex(@"^[A-Za-z_\-.'() ]*$");
             if (!spTest.IsMatch(FamilyName))
-                errors.Add(17);
+                errors.Add(13);
 
             return errors;
         }
@@ -198,18 +195,18 @@ namespace Hidrogen.ViewModels {
         //Reprocess the GivenName before checking
         public List<int> VerifyGivenName() {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
-                return new List<int>() { 18 };
+                return new List<int>() { 14 };
 
             GivenName = HelperProviders.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,50}");
             if (!lenTest.IsMatch(GivenName))
-                errors.Add(19);
+                errors.Add(15);
 
             var spTest = new Regex(@"^[A-Za-z_\-.'() ]*$");
             if (!spTest.IsMatch(GivenName))
-                errors.Add(20);
+                errors.Add(16);
 
             return errors;
         }
@@ -222,37 +219,33 @@ namespace Hidrogen.ViewModels {
             if (errors.Contains(1)) messages.Add("Really? You're sure your age is over 100 years old? Please set valid birthday.");
 
             //For Ethnicity
-            if (errors.Contains(2)) messages.Add("Ethnicity field is a sequence of white-spaces. Please leave it empty if you don't want to set an enthnicity.");
-            if (errors.Contains(3)) messages.Add("Ethnicity is too long. Max 30 characters.");
-            if (errors.Contains(4)) messages.Add("Ethnicity can only contain these special characters: -.'");
+            if (errors.Contains(2)) messages.Add("Ethnicity is too long. Max 30 characters.");
+            if (errors.Contains(3)) messages.Add("Ethnicity can only contain these special characters: -.'");
 
             //For Company
-            if (errors.Contains(5)) messages.Add("Company field is a sequence of white-spaces. Please leave it empty if you don't want to set a company.");
-            if (errors.Contains(6)) messages.Add("Company is either too short or long. Max 30 characters.");
-            if (errors.Contains(7)) messages.Add("Company can only contain these special characters: &,-.'()");
+            if (errors.Contains(4)) messages.Add("Company is either too short or long. Max 30 characters.");
+            if (errors.Contains(5)) messages.Add("Company can only contain these special characters: &,-.'()");
 
             //For JobTitle
-            if (errors.Contains(8)) messages.Add("Job Title field is a sequence of white-spcaes. Please leave it empty if you don't want to set a job title.");
-            if (errors.Contains(9)) messages.Add("Job Title is too long. Max 30 characters.");
-            if (errors.Contains(10)) messages.Add("Job Title can only contain these special characters: ,-.'()");
+            if (errors.Contains(6)) messages.Add("Job Title is too long. Max 30 characters.");
+            if (errors.Contains(7)) messages.Add("Job Title can only contain these special characters: ,-.'()");
 
             //For Website
-            if (errors.Contains(11)) messages.Add("Website field is a sequence of white-spaces. Please leave it empty if you don't want to set a website.");
-            if (errors.Contains(12)) messages.Add("Website URL is either too short or long. Min 10, Max 100 characters. ");
-            if (errors.Contains(13)) messages.Add("Website URL seems to be invalid. Please enter a valid URL.");
+            if (errors.Contains(8)) messages.Add("Website URL is either too short or long. Min 10, Max 100 characters. ");
+            if (errors.Contains(9)) messages.Add("Website URL seems to be invalid. Please enter a valid URL.");
 
             //For Introduction
-            if (errors.Contains(14)) messages.Add("Your introduction is either too short or long. Min 30, Max 500 characters.");
+            if (errors.Contains(10)) messages.Add("Your introduction is either too short or long. Min 30, Max 500 characters.");
 
             //For FamilyName
-            if (errors.Contains(15)) messages.Add("Family Name field is a sequence of white-spaces. Please leave it empty if you don't wnat to provide your name.");
-            if (errors.Contains(16)) messages.Add("Family Name is either too short or long.");
-            if (errors.Contains(17)) messages.Add("Family Name can only contain these special characters: _-.(')");
+            if (errors.Contains(11)) messages.Add("Family Name is missing. This field is required.");
+            if (errors.Contains(12)) messages.Add("Family Name is either too short or long.");
+            if (errors.Contains(13)) messages.Add("Family Name can only contain these special characters: _-.(')");
 
             //For GivenName
-            if (errors.Contains(18)) messages.Add("Given Name field is a sequence of white-spaces. Please leave it empty if you don't wnat to provide your name.");
-            if (errors.Contains(19)) messages.Add("Given Name is either too short or long.");
-            if (errors.Contains(20)) messages.Add("Given Name can only contain these special characters: _-.(')");
+            if (errors.Contains(14)) messages.Add("Given Name is missing. This field is required.");
+            if (errors.Contains(15)) messages.Add("Given Name is either too short or long.");
+            if (errors.Contains(16)) messages.Add("Given Name can only contain these special characters: _-.(')");
 
             return messages;
         }

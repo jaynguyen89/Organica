@@ -10,7 +10,7 @@ using static HelperLibrary.HidroEnums;
 namespace Hidrogen.Controllers {
 
     [ApiController]
-    [Route("profile")]
+    [Route("address")]
     public class AddressController {
 
         public readonly ILogger<AddressController> _logger;

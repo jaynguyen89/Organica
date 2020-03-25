@@ -4,6 +4,8 @@ namespace HelperLibrary.Common {
 
     public class HidroConstants {
 
+        public const string PROJECT_NAME = "HidrogenStore";
+
         public const int TRUSTED_AUTH_EXPIRATION_TIME = 6 * 60 * 60; // 6 hours
         public const int INTRUSTED_AUTH_EXPIRATION_TIME = 1 * 60 * 60; // 1 hour
 

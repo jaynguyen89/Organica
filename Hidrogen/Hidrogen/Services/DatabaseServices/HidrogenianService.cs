@@ -80,6 +80,45 @@ namespace Hidrogen.Services.DatabaseServices {
             return true;
         }
 
+        public async Task<bool?> RemoveTwoFaSecretKeyFor(int hidrogenianId) {
+            _logger.LogInformation("HidrogenianService.RemoveTwoFaSecretKeyFor - Service starts.");
+
+            var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
+            if (account == null) return null;
+
+            account.TwoFaSecretKey = null;
+            account.TwoFactorEnabled = false;
+            _dbContext.Hidrogenian.Update(account);
+
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("HidrogenianService.RemoveTwoFaSecretKeyFor - Error: " + e.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool?> SaveTwoFaSecretKeyFor(int hidrogenianId, string secretKey) {
+            _logger.LogInformation("HidrogenianService.SaveTwoFaSecretKeyFor - Service starts.");
+
+            var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
+            if (account == null) return null;
+
+            account.TwoFaSecretKey = secretKey;
+            _dbContext.Hidrogenian.Update(account);
+
+            try {
+                await _dbContext.SaveChangesAsync();
+            } catch (Exception e) {
+                _logger.LogError("HidrogenianService.SaveTwoFaSecretKeyFor - Error: " + e.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<bool> SetAccountConfirmationToken(HidrogenianVM hidrogenian) {
             _logger.LogInformation("HidrogenianService.SetAccountConfirmationToken - Service starts.");
 

@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[PaymentMethod] (
+	Id INT IDENTITY(1,1) NOT NULL,
+	HidrogenianId INT NOT NULL,
+	AccountBalance DECIMAL DEFAULT 0,
+	BalanceAddedOn DATETIME2(7) DEFAULT NULL,
+	HolderName NVARCHAR(60) DEFAULT NULL,
+	CardNumber NVARCHAR(15) DEFAULT NULL,
+	ExpiryDate DATE DEFAULT NULL,
+	SecurityCode NVARCHAR(5) DEFAULT NULL,
+	CardAddedOn DATETIME2(7) DEFAULT NULL,
+	PaypalAddress NVARCHAR(50) DEFAULT NULL,
+	PaypalAddedOn DATETIME2(7) DEFAULT NULL,
+	CONSTRAINT [PK_PaymentMethod_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_PaymentMethod_Hidrogenian] FOREIGN KEY ([HidrogenianId]) REFERENCES [dbo].[Hidrogenian] ([Id]) ON DELETE CASCADE
+)

@@ -120,6 +120,9 @@ namespace HelperLibrary {
             [StringValue("MMM yyyy")]
             NONDATE_FRIENDLY,
 
+            [StringValue("dd MMM yyyy hh:mm")]
+            NONSEC_DATETIME_FRIENDLY,
+
             [StringValue("yyyy")]
             YEAR_ONLY,
 

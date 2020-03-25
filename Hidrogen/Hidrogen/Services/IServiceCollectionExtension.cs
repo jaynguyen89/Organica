@@ -19,6 +19,7 @@ namespace Hidrogen.Services {
             services.AddScoped<IRoleClaimerService, RoleClaimerService>();
             services.AddScoped<IHidroAddressService, HidroAddressService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             return services;
         }

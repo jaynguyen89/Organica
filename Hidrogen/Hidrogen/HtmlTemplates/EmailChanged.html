@@ -3,10 +3,19 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Email Changed</title>
+    <title>Activate Account</title>
     <style>
+        body {
+            width: 100%;
+            background-color: #49A9D6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .email-body {
+            background-color: white;
             width: 80%;
+            height: 100%;
+            padding: 20px;
             margin: auto;
         }
 
@@ -20,20 +29,24 @@
 
 <body>
     <div class="email-body">
-        <h5>Your email has changed</h5>
-        <p><b>Dear [CustomerName],</b></p>
+        <h5>Confirm your email</h5>
+        <p><b>Dear [HidrogenianName],</b></p>
         <p>
-            Ausmeter advises that your account's email has been changed to this email address.<br />
-            Please click <a href="http://localhost:3000/verify-email?email=[UserEmail]&token=[CONFIRM-TOKEN]">HERE</a> and follow the instructions to confirm your email in order to use Juice website.
+            You have updated your email on Hidrogenian.<br />
+            Please click <a href="http://localhost:3000/activate-account?email=[HidrogenianEmail]&token=[CONFIRM-TOKEN]">HERE</a> and follow the instructions to confirm your change of email.
         </p>
 
-        <p style="color: orangered;">**Please note: the reset link only stays valid for 24 hours.</p>
-
-        <br /><br />
-        <p>Kind regards,<br />Ausmeter</p>
+        <br />
+        <p style="color: orangered;">**Please note: this email only stays valid for 24 hours. If this email expired, you will need to request another confirmation email.</p>
 
         <br />
-        <p class="notice">**Please contact Ausmeter if you do not recognize this request or you have problems while confirming your email.</p>
+        <p>To request another confirmation email, please click <a href="http://localhost:3000/request-activation-email?email=[HidrogenianEmail]">HERE</a>.</p>
+
+        <br />
+        <p>Kind regards,<br />Hidrogen</p>
+
+        <br />
+        <p class="notice">**Please contact Hidrogen if you do not recognize this activity or you have problems while confirming your email.</p>
     </div>
 </body>
 </html>
