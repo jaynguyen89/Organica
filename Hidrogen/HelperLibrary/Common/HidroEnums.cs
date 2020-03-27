@@ -19,6 +19,13 @@ namespace HelperLibrary {
             MALE, FEMALE, OTHER
         }
 
+        public enum PAYMENT_METHODS {
+            [StringValue("card")]
+            CARD,
+            [StringValue("paypal")]
+            PAYPAL
+        }
+
         public enum HTTP_STATUS_CODES {
             CONTINUE = 100,
             SWITCHING_PROTOCOL = 101,
@@ -125,6 +132,9 @@ namespace HelperLibrary {
 
             [StringValue("yyyy")]
             YEAR_ONLY,
+
+            [StringValue("MM/yyyy")]
+            MONTH_YEAR,
 
             [StringValue("hh:mm:ss")]
             TIME_FULL,

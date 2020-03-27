@@ -121,7 +121,7 @@ namespace Hidrogen.ViewModels.Authentication {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
                 return new List<int>() { 16 };
 
-            FamilyName = HelperProviders.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
+            FamilyName = HelperProvider.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,30}");
@@ -140,7 +140,7 @@ namespace Hidrogen.ViewModels.Authentication {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
                 return new List<int>() { 19 };
 
-            GivenName = HelperProviders.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
+            GivenName = HelperProvider.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,50}");

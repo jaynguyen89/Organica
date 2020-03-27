@@ -311,7 +311,7 @@ namespace Hidrogen.Services.DatabaseServices {
 
             if (dbHidrogenian == null) return new KeyValuePair<string, string>(null, null);
 
-            var tempPassword = HelperProviders.GenerateTemporaryPassword(15);
+            var tempPassword = HelperProvider.GenerateTemporaryPassword(15);
             var hashedResult = GenerateHashedPasswordAndSalt(tempPassword);
 
             dbHidrogenian.PasswordHash = hashedResult.Key;

@@ -3,6 +3,8 @@ using HelperLibrary;
 using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
+using Hidrogen.Attributes;
+using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Account;
@@ -47,6 +49,9 @@ namespace Hidrogen.Controllers {
             _reCaptchaService = reCaptchaService;
         }
 
+        [HttpGet("get-identity/{hidrogenianId}")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> GetIdentityDetailFor(int hidrogenianId) {
             _logger.LogInformation("AccountController.GetIdentityDetailFor - hidrogenianId=" + hidrogenianId);
 
@@ -56,6 +61,9 @@ namespace Hidrogen.Controllers {
                                     : new JsonResult(new { Result = RESULTS.SUCCESS, Message = identity });
         }
 
+        [HttpGet("get-two-fa")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> GetTwoFactorDataFor(TwoFaVM twoFa) {
             _logger.LogInformation("AccountController.GetTwoFactorDataFor - hidrogenianId=" + twoFa.Id);
 
@@ -76,6 +84,9 @@ namespace Hidrogen.Controllers {
             return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
+        [HttpGet("get-time-logs/{hidrogenianId}")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> GetTimeStampsFor(int hidrogenianId) {
             _logger.LogInformation("AccountController.GetAccountTimeStamps - hidrogenianId=" + hidrogenianId);
 
@@ -85,6 +96,9 @@ namespace Hidrogen.Controllers {
                                       : new JsonResult(new { Result = RESULTS.SUCCESS, Message = timeStamps });
         }
 
+        [HttpPost("update-identity")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdateAccountIdentity(AccountIdentityVM identity) {
             _logger.LogInformation("AccountController.UpdateAccountIdentity - hidrogenianId=" + identity.Id);
 
@@ -145,6 +159,9 @@ namespace Hidrogen.Controllers {
             return new JsonResult(new { });
         }
 
+        [HttpPost("update-security")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdateAccountPassword(AccountSecurityVM security) {
             _logger.LogInformation("AccountController.UpdateAccountPassword - hidrogenianId=" + security.Id);
 
@@ -173,13 +190,16 @@ namespace Hidrogen.Controllers {
                                                      : new JsonResult(new { Result = RESULTS.SUCCESS }));
         }
 
+        [HttpPost("enable-two-fa")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> EnableTwoFactorAuthentication(TwoFaVM twoFa) {
             _logger.LogInformation("AccountController.EnableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
 
             var validation = await _reCaptchaService.IsHumanRegistration(twoFa.CaptchaToken);
             if (!validation.Result) return new JsonResult(validation);
 
-            var secretKey = HelperProviders.GenerateTemporaryPassword(12);
+            var secretKey = HelperProvider.GenerateTemporaryPassword(12);
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 
             var saved = await _userService.SaveTwoFaSecretKeyFor(twoFa.Id, secretKey);
@@ -197,6 +217,9 @@ namespace Hidrogen.Controllers {
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = twoFa });
         }
 
+        [HttpPost("disable-two-fa")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> DisableTwoFactorAuthentication(TwoFaVM twoFa) {
             _logger.LogInformation("AccountController.EnableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
 

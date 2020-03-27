@@ -1,6 +1,10 @@
-﻿using Hidrogen.Models;
+﻿using HelperLibrary;
+using HelperLibrary.Common;
+using Hidrogen.Models;
 using Hidrogen.ViewModels.Address.Generic;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Hidrogen.ViewModels.Address {
 
@@ -44,6 +48,67 @@ namespace Hidrogen.ViewModels.Address {
                 Country = location.Country,
                 Note = location.Note
             };
+        }
+
+        public List<int> VerifySuburb() {
+            var errors = new List<int>();
+            if (Suburb == null) return new List<int>() { 12 };
+
+            Suburb = Suburb.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
+            if (string.IsNullOrWhiteSpace(Suburb))
+                return new List<int>() { 12 };
+
+            Suburb = HelperProvider.CapitalizeFirstLetterOfEachWord(Suburb);
+
+            var lenTest = new Regex(@".{1,50}");
+            if (!lenTest.IsMatch(Suburb))
+                errors.Add(13);
+
+            var rx = new Regex(@"^[A-Za-z'.\- ]*$");
+            if (!rx.IsMatch(Suburb))
+                errors.Add(14);
+
+            return errors;
+        }
+
+        public List<int> VerifyPostcode() {
+            var errors = new List<int>();
+            if (Postcode == null) return new List<int>() { 15 };
+
+            Postcode = Postcode.Trim().Replace(HidroConstants.WHITE_SPACE, string.Empty);
+            if (string.IsNullOrWhiteSpace(Postcode))
+                return new List<int>() { 15 };
+
+            var lenTest = new Regex(@".{1,10}");
+            if (!lenTest.IsMatch(Postcode))
+                errors.Add(16);
+
+            var rx = new Regex(@"^[\d]*$");
+            if (!rx.IsMatch(Postcode))
+                errors.Add(17);
+
+            return errors;
+        }
+
+        public List<int> VerifyState() {
+            var errors = new List<int>();
+            if (State == null) return new List<int>() { 18 };
+
+            State = State.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
+            if (string.IsNullOrWhiteSpace(State))
+                return new List<int>() { 18 };
+
+            State = HelperProvider.CapitalizeFirstLetterOfEachWord(State);
+
+            var lenTest = new Regex(@".{1,40}");
+            if (!lenTest.IsMatch(State))
+                errors.Add(19);
+
+            var rx = new Regex(@"^[A-Za-z'.\- ]*$");
+            if (!rx.IsMatch(State))
+                errors.Add(20);
+
+            return errors;
         }
     }
 }

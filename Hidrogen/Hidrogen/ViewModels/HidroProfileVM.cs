@@ -82,7 +82,7 @@ namespace Hidrogen.ViewModels {
                 return errors;
             }
 
-            Ethnicity = HelperProviders.CapitalizeFirstLetterOfEachWord(Ethnicity);
+            Ethnicity = HelperProvider.CapitalizeFirstLetterOfEachWord(Ethnicity);
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(Ethnicity))
@@ -106,7 +106,7 @@ namespace Hidrogen.ViewModels {
                 return errors;
             }
 
-            Company = HelperProviders.CapitalizeFirstLetterOfEachWord(Company);
+            Company = HelperProvider.CapitalizeFirstLetterOfEachWord(Company);
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(Company))
@@ -130,7 +130,7 @@ namespace Hidrogen.ViewModels {
                 return errors;
             }
 
-            JobTitle = HelperProviders.CapitalizeFirstLetterOfEachWord(JobTitle);
+            JobTitle = HelperProvider.CapitalizeFirstLetterOfEachWord(JobTitle);
 
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(JobTitle))
@@ -178,7 +178,7 @@ namespace Hidrogen.ViewModels {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
                 return new List<int>() { 11 };
 
-            FamilyName = HelperProviders.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
+            FamilyName = HelperProvider.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,30}");
@@ -197,7 +197,7 @@ namespace Hidrogen.ViewModels {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
                 return new List<int>() { 14 };
 
-            GivenName = HelperProviders.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
+            GivenName = HelperProvider.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
 
             var lenTest = new Regex(@".{1,50}");
