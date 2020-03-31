@@ -104,7 +104,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 Email = hidrogenian.Email,
                 UserName = hidrogenian.UserName,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = avatarInfo.Thumbnail?.FileUrl,
+                Avatar = avatarInfo?.Thumbnail?.FileUrl,
                 ExpirationTime = expirationTime
             };
 

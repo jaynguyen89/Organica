@@ -20,6 +20,14 @@ const mapDispatchToProps = {
 const AuthItem = (props: any) => {
     const [open, setOpen] = React.useState(false);
 
+    React.useEffect(() => {
+        if (props.requestSuccess && props.requestResult &&
+            props.requestResult.hasOwnProperty('result') && props.requestResult.result === 1)
+            window.location.href = '/';
+        else if (!props.requestSuccess && props.requestResult && props.requestResult.hasOwnProperty('stack'))
+            alert('Network connection lost. Please check your internet and try again.');
+    }, [props]);
+
     return (
         (
             props.auth &&

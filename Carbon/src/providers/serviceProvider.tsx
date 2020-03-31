@@ -6,6 +6,9 @@ axios.defaults.withCredentials = true; //include all cookies
 const LOCAL_ENDPOINT = 'https://localhost:5001/';
 
 const sendRequestForResult = (action: string, auth: any, data: any, method = 'POST') => {
+    if (auth == null)
+        auth = sessionStorage.getItem('authToken');
+
     const requestOptions = {
         method : method,
         url : LOCAL_ENDPOINT + action,
@@ -15,7 +18,7 @@ const sendRequestForResult = (action: string, auth: any, data: any, method = 'PO
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
-        data : (method !== 'GET' && data != null) ? JSON.stringify(data) : null
+        body : (method !== 'GET' && data != null) ? JSON.stringify(data) : null
     };
 
     const response = axios(requestOptions).then((result: any) => {

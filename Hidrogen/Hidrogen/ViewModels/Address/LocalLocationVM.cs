@@ -12,17 +12,17 @@ namespace Hidrogen.ViewModels.Address {
 
         public int Id { get; set; }
 
-        public string Group { get; set; }
+        public string Group { get; set; } //To dan pho
 
-        public string Lane { get; set; }
+        public string Lane { get; set; } //Ngo, ngach
 
-        public string Quarter { get; set; }
+        public string Quarter { get; set; } //Khu pho
 
-        public string Hamlet { get; set; }
+        public string Hamlet { get; set; } //Ap
 
-        public string Commute { get; set; }
+        public string Commute { get; set; } //Xa
 
-        public string Ward { get; set; }
+        public string Ward { get; set; } //Phuong
 
         public string District { get; set; }
 
@@ -33,7 +33,21 @@ namespace Hidrogen.ViewModels.Address {
         public string City { get; set; }
 
         public override string ProduceNormalizedAddress() {
-            throw new NotImplementedException();
+            var building = string.IsNullOrEmpty(BuildingName) ? string.Empty : BuildingName + ", ";
+            var street = string.IsNullOrEmpty(StreetAddress) ? string.Empty : StreetAddress + ", ";
+            var lane = string.IsNullOrEmpty(Lane) ? string.Empty : Lane + ", ";
+            var quarter = string.IsNullOrEmpty(Quarter) ? string.Empty : Quarter + ", ";
+            var group = string.IsNullOrEmpty(Group) ? string.Empty : Group + ", ";
+            var hamlet = string.IsNullOrEmpty(Hamlet) ? string.Empty : Hamlet + ", ";
+            var commute = string.IsNullOrEmpty(Commute) ? string.Empty : Commute + ", ";
+            var ward = string.IsNullOrEmpty(Ward) ? string.Empty : Ward + ", ";
+            var district = string.IsNullOrEmpty(District) ? string.Empty : District + ", ";
+            var town = string.IsNullOrEmpty(Town) ? string.Empty : Town + ", ";
+            var city = string.IsNullOrEmpty(City) ? string.Empty : City + ", ";
+            var province = string.IsNullOrEmpty(Province) ? string.Empty : Province + ", ";
+            var country = string.IsNullOrEmpty(Country) ? string.Empty : Country;
+
+            return $"{building}{street}{lane}{quarter}{group}{hamlet}{commute}{ward}{district}{town}{city}{province}{country}";
         }
 
         public static implicit operator LocalLocationVM(FineLocation location) {

@@ -19,7 +19,14 @@ namespace Hidrogen.ViewModels.Address {
         public string State { get; set; }
 
         public override string ProduceNormalizedAddress() {
-            throw new System.NotImplementedException();
+            var building = string.IsNullOrEmpty(BuildingName) ? string.Empty : BuildingName + ", ";
+            var street = string.IsNullOrEmpty(StreetAddress) ? string.Empty : StreetAddress + ", ";
+            var suburb = string.IsNullOrEmpty(Suburb) ? string.Empty : Suburb + ", ";
+            var state = string.IsNullOrEmpty(State) ? string.Empty : State + " ";
+            var post = string.IsNullOrEmpty(Postcode) ? string.Empty : Postcode + ",";
+            var country = string.IsNullOrEmpty(Country) ? string.Empty : Country;
+
+            return $"{building}{street}{suburb}{state}{post}{country}";
         }
 
         public static implicit operator StandardLocationVM(FineLocation location) {

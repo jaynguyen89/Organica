@@ -166,3 +166,8 @@
     position: absolute;
     cursor: pointer;
 }
+
+.dropzone {
+    background-color: #EBEBEB;
+    border: 2px dashed #D6D6D6;
+}
