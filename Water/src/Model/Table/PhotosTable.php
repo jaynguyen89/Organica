@@ -59,6 +59,11 @@ class PhotosTable extends Table
             ->maxLength('PhotoName', 150)
             ->allowEmptyString('PhotoName');
 
+        $validator
+            ->scalar('Location')
+            ->maxLength('Location', 150)
+            ->allowEmptyString('Location');
+
         return $validator;
     }
 }

@@ -10,6 +10,7 @@ use Cake\ORM\Entity;
  *
  * @property int $Id
  * @property string|null $PhotoName
+ * @property string|null $Location
  */
 class Photo extends Entity
 {
@@ -24,5 +25,6 @@ class Photo extends Entity
      */
     protected $_accessible = [
         'PhotoName' => true,
+        'Location' => true,
     ];
 }

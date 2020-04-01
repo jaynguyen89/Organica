@@ -19,6 +19,7 @@ class PhotosFixture extends TestFixture
     public $fields = [
         'Id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'PhotoName' => ['type' => 'string', 'length' => 150, 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '', 'precision' => null],
+        'Location' => ['type' => 'string', 'length' => 150, 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['Id'], 'length' => []],
         ],
@@ -39,6 +40,7 @@ class PhotosFixture extends TestFixture
             [
                 'Id' => 1,
                 'PhotoName' => 'Lorem ipsum dolor sit amet',
+                'Location' => 'Lorem ipsum dolor sit amet',
             ],
         ];
         parent::init();

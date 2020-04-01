@@ -92,23 +92,28 @@ class AppController extends Controller {
 
     /**
      * Save the uploaded image from temp folder to disk
-     * @param $avatar
+     * @param $image
+     * @param null $album
      * @return array
      */
-    public function saveImageToDisk($avatar) {
+    public function saveImageToDisk($image, $album = null) {
         $image_newName = '';
         try {
-            $imageName = strtolower($avatar['name']);
+            $imageName = strtolower($image['name']);
             $tokens = explode('.', $imageName);
             $imageExtension = end($tokens);
 
             $image_newName = md5($imageName) . '_' . time() . '.' . $imageExtension;
-            move_uploaded_file($avatar['tmp_name'], WWW_ROOT . 'files' . DS . 'avatars' . DS . $image_newName);
-            chmod(WWW_ROOT . 'files' . DS . 'avatars' . DS . $image_newName, 0755);
+            move_uploaded_file(
+                $image['tmp_name'],
+                $album != null ? $album.$image_newName
+                    : WWW_ROOT.'files'.DS.'avatars'.DS.$image_newName
+            );
+            chmod(WWW_ROOT.'files'.DS.($album == null ? 'avatars' : 'gallery'.DS.$album).DS.$image_newName, 0755);
         } catch (Exception $e) {
             $message = [
                 'error' => true,
-                'message' => 'An error occurred while attempting to save new avatar. Please try again.'
+                'message' => 'An error occurred while attempting to save new image. Please try again.'
             ];
         }
 
@@ -118,14 +123,16 @@ class AppController extends Controller {
 
     /**
      * Insert database entries for Photos and Userphotos tables
-     * @param $avatarName
+     * @param $imageName
      * @param $userId
+     * @param $location
      * @param bool $isAvatar
      * @param bool $isCover
      */
-    public function persistImageData($avatarName, $userId, $isAvatar = false, $isCover = false) {
+    public function persistImageData($imageName, $userId, $location, $isAvatar = false, $isCover = false) {
         $dbPhoto = TableRegistry::getTableLocator()->get('Photos')->newEmptyEntity();
-        $dbPhoto->PhotoName = $avatarName;
+        $dbPhoto->PhotoName = $imageName;
+        $dbPhoto->Location = $location;
         TableRegistry::get('photos')->save($dbPhoto);
 
         $dbUserPhoto = TableRegistry::getTableLocator()->get('Userphotos')->newEmptyEntity();
@@ -138,23 +145,70 @@ class AppController extends Controller {
 
     /**
      * Remove database entry associated with the image, then delete image on disk
-     * @param $avatarName
+     * @param $imageName
+     * @param bool $isAvatar
+     * @param null $album
      * @return array
      */
-    public function removeImageData($avatarName) {
+    public function removeImageData($imageName, $isAvatar = false, $album = null) {
         $message = array();
         try {
-            $currentDbAvatar = TableRegistry::getTableLocator()->get('Photos')->find()->where(['PhotoName' => $avatarName])->first();
-            TableRegistry::getTableLocator()->get('Photos')->delete($currentDbAvatar);
+            $currentDbImage = TableRegistry::getTableLocator()->get('Photos')->find()->where(['PhotoName' => $imageName, 'IsAvatar' => $isAvatar])->first();
+            TableRegistry::getTableLocator()->get('Photos')->delete($currentDbImage);
 
-            unlink(WWW_ROOT.'files'.DS.'avatars'.DS.$avatarName);
+            unlink(
+                $album != null ? $album.$imageName
+                : WWW_ROOT.'files'.DS.'avatars'.DS.$imageName
+            );
         } catch (Exception $e) {
             $message = [
                 'error' => true,
-                'message' => 'An error occurred while attempting to replace your avatar. Please try again.'
+                'message' => 'An error occurred while attempting to replace your image. Please try again.'
             ];
         }
 
         return $message;
+    }
+
+    /**
+     * Only create the folder if it is not existed.
+     * @param $folderPath
+     * @param int $permission
+     */
+    public function createFolderIfNeeded($folderPath, $permission = 0755) {
+        if (!is_dir(WWW_ROOT.'files'.$folderPath))
+            mkdir(WWW_ROOT.'files'.$folderPath, $permission, true);
+    }
+
+    public function isFolderEmpty($folderPath) {
+        $handle = opendir($folderPath);
+
+        while (false !== ($entry = readdir($handle)))
+            if ($entry != "." && $entry != "..") {
+                closedir($handle);
+                return false;
+            }
+
+        closedir($handle);
+        return true;
+    }
+
+    public function deleteAlbum($albumPath) {
+        if (substr($albumPath, strlen($albumPath) - 1, 1) != DS)
+            $albumPath .= DS;
+
+        $files = glob($albumPath.'*', GLOB_MARK);
+        foreach ($files as $file)
+            if (is_dir($file)) self::deleteAlbum($file);
+            else unlink($file);
+
+        rmdir($albumPath);
+    }
+
+    public function resembleAlbumPath($hidrogenianId, $album) {
+        $userDir = md5($hidrogenianId).'_'.time();
+        $albumDir = md5($album).'_'.time();
+
+        return WWW_ROOT.'files'.DS.'gallery'.DS.$userDir.DS.$albumDir.DS;
     }
 }

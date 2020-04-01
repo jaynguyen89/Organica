@@ -5,54 +5,53 @@ namespace App\Controller;
 
 use Cake\Datasource\ConnectionManager;
 
-class PhotoController extends AppController {
+class AttachmentController extends AppController {
 
-    private const PHOTO_SIZE = 10000000; //10MB
+    private const ATTACHMENT_SIZE = 5000000; //5MB
 
-    //Use Article's ID for Album here
-    public function savePhotos() {
+    //Use Thread's ID for Container here
+    public function saveAttachments() {
         //$this->autoRender = false;
         //$this->request->allowMethod(['post']);
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
-        $coverImage = array_key_exists('coverImage', $_REQUEST) ? $_REQUEST['coverImage'] : null;
-        $album = array_key_exists('album', $_REQUEST) ? $_REQUEST['album'] : null;
-        $images = array_key_exists('images', $_FILES) ? $_FILES['images'] : null;
+        $container = array_key_exists('container', $_REQUEST) ? $_REQUEST['container'] : null;
+        $attachments = array_key_exists('attachments', $_FILES) ? $_FILES['attachments'] : null;
 
-        if ($images != null && $hidrogenianId != null && $coverImage != null && $album != null) {
-            $images = $this->reprocessMultipleImagesTempData($images);
-            $directoryPath = $this->createArticleFolderForUser($hidrogenianId, $album);
+        if ($attachments != null && $hidrogenianId != null && $container != null) {
+            $attachments = $this->reprocessMultipleImagesTempData($attachments);
+            $atmPath = $this->createContainerForAtms($hidrogenianId, $container);
 
-            $dbImageNames = array();
-            $oversizedImages = array();
-            $failedImages = array();
+            $dbAtmNames = array();
+            $oversizedAtms = array();
+            $failedAtms = array();
 
-            foreach ($images as $image) {
-                $message = $this->checkImageExif($image, self::PHOTO_SIZE);
+            foreach ($attachments as $atm) {
+                $message = $this->checkImageExif($atm, self::ATTACHMENT_SIZE);
                 if (!empty($message)) {
-                    array_push($oversizedImages, $image['name']);
+                    array_push($oversizedAtms, $atm['name']);
                     continue;
                 }
 
-                $message = $this->saveImageToDisk($image, $directoryPath);
+                $message = $this->saveImageToDisk($atm, $atmPath);
                 if (!empty($message) && array_key_exists('error', $message)) {
-                    array_push($failedImages, $image['name']);
+                    array_push($failedAtms, $atm['name']);
                     continue;
                 }
 
                 $photo_newName = $message['imageName'];
-                if ($image['type'] != 'image/gif')
-                    $this->reduceImageSize($directoryPath.$photo_newName);
+                if ($atm['type'] != 'image/gif')
+                    $this->reduceImageSize($atmPath.$photo_newName);
 
-                $this->persistImageData($photo_newName, $hidrogenianId, $directoryPath, false, $coverImage == $image['name']);
-                array_push($dbImageNames, $photo_newName);
+                $this->persistImageData($photo_newName, $hidrogenianId, $atmPath);
+                array_push($dbAtmNames, $photo_newName);
             }
 
             $message = [
-                'error' => !(!empty($dbImageNames) && empty($oversizedImages) && empty($failedImages)),
-                'imageNames' => $dbImageNames,
-                'fails' => $failedImages,
-                'oversizes' => $oversizedImages
+                'error' => !(!empty($dbAtmNames) && empty($oversizedAtms) && empty($failedAtms)),
+                'imageNames' => $dbAtmNames,
+                'fails' => $failedAtms,
+                'oversizes' => $oversizedAtms
             ];
         }
         else
@@ -65,15 +64,16 @@ class PhotoController extends AppController {
         $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
         //return $response;
-        $this->set(compact('images', 'message'));
+        $this->set(compact('attachments', 'message'));
     }
 
-    public function removePhotos() {
+
+    public function removeAttachments() {
         //$this->autoRender = false;
         //$this->request->allowMethod(['post']);
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
-        $album = array_key_exists('album', $_REQUEST) ? $_REQUEST['album'] : null;
+        $container = array_key_exists('container', $_REQUEST) ? $_REQUEST['container'] : null;
         $removals = array_key_exists('removals', $_REQUEST) ? $_REQUEST['removals'] : null;
 
         $response = $this->response;
@@ -85,11 +85,11 @@ class PhotoController extends AppController {
 
         if ($hidrogenianId != null && $removals != null) {
             $dbConnection = ConnectionManager::get('default');
-            $albumPath = $this->resembleAlbumPath($hidrogenianId, $album);
+            $container = $this->resembleAlbumPath($hidrogenianId, $container);
 
             foreach ($removals as $removal) {
                 $counter = $dbConnection->execute('
-                SELECT COUNT(p.Id) AS PCount
+                SELECT COUNT(*) AS PCount
                 FROM Photos AS p, Userphotos AS u
                 WHERE p.Id == u.PhotoId
                     AND u.HidrogenianId == ?
@@ -97,13 +97,11 @@ class PhotoController extends AppController {
                 ', [$hidrogenianId, $removal])->fetch('assoc');
 
                 if ($counter['PCount'] == 1) {
-                    $message = $this->removeImageData($removal, $albumPath);
+                    $message = $this->removeImageData($removal, $container);
                     if (!empty($message)) array_push($failedRemovals, $removal);
                 }
                 else array_push($unknownRemovals, $removal);
             }
-
-            if ($this->isFolderEmpty($albumPath)) $this->deleteAlbum($albumPath);
         }
         else
             $message = [
@@ -121,13 +119,13 @@ class PhotoController extends AppController {
         $this->set(compact('removals', 'message'));
     }
 
-    private function createArticleFolderForUser($hidrogenianId, $album) {
+    private function createContainerForAtms($hidrogenianId, $container) {
         $userDir = md5($hidrogenianId).'_'.time();
-        $albumDir = md5($album).'_'.time();
+        $atmDir = md5($container).'_'.time();
 
-        $this->createFolderIfNeeded(DS.'gallery'.DS.$userDir);
-        $this->createFolderIfNeeded(DS.'gallery'.DS.$userDir.DS.$albumDir);
+        $this->createFolderIfNeeded(DS.'attachments'.DS.$userDir);
+        $this->createFolderIfNeeded(DS.'attachments'.DS.$userDir.DS.$atmDir);
 
-        return WWW_ROOT.'files'.DS.'gallery'.DS.$userDir.DS.$albumDir.DS;
+        return WWW_ROOT.'files'.DS.'gallery'.DS.$userDir.DS.$atmDir.DS;
     }
 }

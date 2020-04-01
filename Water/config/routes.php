@@ -22,8 +22,14 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('avatar/remove-avatar', ['controller' => 'Avatar', 'action' => 'removeAvatar']);
 
     $builder->connect('photo/save-photos', ['controller' => 'Photo', 'action' => 'savePhotos']);
-    $builder->connect('photo/replace-photos', ['controller' => 'Photo', 'action' => 'replacePhotos']);
     $builder->connect('photo/remove-photos', ['controller' => 'Photo', 'action' => 'removePhotos']);
+
+    $builder->connect('attachment/save-attachments', ['controller' => 'Attachment', 'action' => 'saveAttachments']);
+    $builder->connect('attachment/remove-attachments', ['controller' => 'Attachment', 'action' => 'removeAttachments']);
+
+    $builder->connect('directory/clean-empty-dirs', ['controller' => 'Directory', 'action' => 'cleanEmptyDirectories']);
+    $builder->connect('directory/delete-user-data-unsafe', ['controller' => 'Directory', 'action' => 'deleteUserDirectoriesAndFilesUnsafe']);
+    $builder->connect('directory/safe-delete-album', ['controller' => 'Directory', 'action' => 'safeDeleteAlbum']);
 
     $builder->fallbacks();
 });

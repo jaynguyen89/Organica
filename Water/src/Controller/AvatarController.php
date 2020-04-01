@@ -2,8 +2,6 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-use Cake\ORM\TableRegistry;
-use Exception;
 
 class AvatarController extends AppController {
 
@@ -41,7 +39,7 @@ class AvatarController extends AppController {
             if ($image['type'] != 'image/gif')
                 $this->reduceImageSize(WWW_ROOT . 'files' . DS . 'avatars' . DS . $avatar_newName);
 
-            $this->persistImageData($avatar_newName, $hidrogenianId, true);
+            $this->persistImageData($avatar_newName, $hidrogenianId, WWW_ROOT.'files'.DS.'avatars'.DS, true);
             $message = [
                 'error' => false,
                 'message' => $avatar_newName
@@ -91,9 +89,9 @@ class AvatarController extends AppController {
 
             $avatar_newName = $message['imageName'];
             if ($newAvatar['type'] != 'image/gif')
-                $this->reduceImageSize(WWW_ROOT . 'files' . DS . 'avatars' . DS . $avatar_newName);
+                $this->reduceImageSize(WWW_ROOT.'files'.DS.'avatars'.DS.$avatar_newName);
 
-            $this->persistImageData($avatar_newName, $hidrogenianId, true);
+            $this->persistImageData($avatar_newName, $hidrogenianId, WWW_ROOT.'files'.DS.'avatars'.DS, true);
             $message = [
                 'error' => false,
                 'message' => $avatar_newName
@@ -121,7 +119,7 @@ class AvatarController extends AppController {
         $response = $response->withType('application/json');
 
         if ($imageName != null) {
-            $message = $this->removeImageData($imageName);
+            $message = $this->removeImageData($imageName, true);
             if (!empty($message)) {
                 $response = $response->withStringBody(json_encode($message));
                 return $response;
