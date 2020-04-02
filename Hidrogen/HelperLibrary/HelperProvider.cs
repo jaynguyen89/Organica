@@ -23,6 +23,11 @@ namespace HelperLibrary {
             return password;
         }
 
+        public static int RandomNumberInRange(int min, int max) {
+            Random rand = new Random();
+            return rand.Next(min, max);
+        }
+
         public static string GetValue(this Enum value) {
 
             Type type = value.GetType();

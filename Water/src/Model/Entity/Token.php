@@ -11,6 +11,8 @@ use Cake\ORM\Entity;
  * @property int $TokenId
  * @property string $TokenString
  * @property \Cake\I18n\FrozenTime $TimeStamp
+ * @property int|null $Life
+ * @property string|null $Target
  */
 class Token extends Entity
 {
@@ -26,5 +28,7 @@ class Token extends Entity
     protected $_accessible = [
         'TokenString' => true,
         'TimeStamp' => true,
+        'Life' => true,
+        'Target' => true,
     ];
 }

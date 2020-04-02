@@ -21,7 +21,7 @@ namespace Hidrogen.ViewModels {
 
         public string FullName => GivenName + HidroConstants.WHITE_SPACE + FamilyName;
 
-        public string Avatar { get; set; } //Use for updating/removing avatar
+        public AvatarVM Avatar { get; set; } //Use for updating/removing avatar
 
         public ProfileBirth Birthday { get; set; }
 
@@ -38,14 +38,12 @@ namespace Hidrogen.ViewModels {
         public string SelfIntroduction { get; set; }
 
         public static implicit operator HidroProfileVM(HidroProfile profile) {
-            var avatar = profile.ProcessAvatarInfo();
-
             return new HidroProfileVM {
                 Id = profile.Id,
                 HidrogenianId = profile.HidrogenianId,
                 FamilyName = profile.FamilyName,
                 GivenName = profile.GivenName,
-                Avatar = avatar.Medium?.FileUrl,
+                Avatar = profile.ProcessAvatarInfo(),
                 Birthday = profile.ProduceBirthValues(),
                 Gender = profile.ProduceGenderEnum(),
                 Ethnicity = profile.Ethnicity,
@@ -249,6 +247,15 @@ namespace Hidrogen.ViewModels {
 
             return messages;
         }
+    }
+
+    public class AvatarVM {
+
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Location { get; set; }
     }
 
     public class ProfileBirth {

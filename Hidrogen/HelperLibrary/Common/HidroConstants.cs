@@ -35,5 +35,10 @@ namespace HelperLibrary.Common {
         public static int GetRoleHierrachy(string role) {
             return ROLES.IndexOf(role);
         }
+
+        public static Dictionary<string, string> API_TOKEN_TARGETS = new Dictionary<string, string> {
+            { "", "" },
+            { "", "" }
+        };
     }
 }

@@ -64,6 +64,7 @@ class DirectoryController extends AppController {
         //return $response;
     }
 
+    //Need review
     public function safeDeleteAlbum() {
         //$this->autoRender = false;
         //$this->request->allowMethod(['delete']);

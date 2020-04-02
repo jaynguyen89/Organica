@@ -3,16 +3,54 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
 use Cake\ORM\TableRegistry;
+use DateTime;
 use Exception;
 
 class AppController extends Controller {
+
+    public const RESULTS = [
+        'NO_KEY' => 'ApiKeyMissing',
+        'NOT_FOUND' => 'DbKeyNotFound',
+        'EXPIRED' => 'ApiKeyExpired',
+        'RETARGET' => 'WrongApiTarget'
+    ];
 
     public function initialize(): void {
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+    }
+
+    public function beforeFilter(EventInterface $event) {
+        parent::beforeFilter($event);
+        $result = '';
+
+        $apiKey = array_key_exists('apikey', $_REQUEST) ? $_REQUEST['apikey'] : null;
+        if ($apiKey == null) $result = self::RESULTS['NO_KEY'];
+
+        $dbKey = TableRegistry::getTableLocator()->get('Tokens')
+            ->find()->where(['TokenString' => $apiKey])->first();
+
+        if ($dbKey == null) $result = self::RESULTS['NOT_FOUND'];
+
+        try {
+            $expiryTime = (new Datetime($dbKey->TimeStamp))->modify('+' . $dbKey->Life . ' minutes');
+        } catch (Exception $e) {
+            $expiryTime = $dbKey->TimeStamp->DateTime::modify('+' . $dbKey->Life . ' minutes');
+        }
+
+        if ($expiryTime < new DateTime()) $result = self::RESULTS['EXPIRED'];
+
+        $queryCtrlr = $this->request->getParam('controller');
+        $queryAction = $this->request->getParam('action');
+
+        $tokens = explode('/', $dbKey->Target);
+        if ($queryCtrlr != $tokens[0] || $queryAction != $tokens[1]) $result = self::RESULTS['RETARGET'];
+
+        if ($result != '') $this->redirect(['controller' => 'Access', 'action' => 'filterResult', $result]);
     }
 
     /**

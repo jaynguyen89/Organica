@@ -2,15 +2,14 @@
 using HelperLibrary.Common;
 using Hidrogen.ViewModels;
 using Newtonsoft.Json;
-using System;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Models {
 
     public partial class HidroProfile {
 
-        public AvatarInformationVM ProcessAvatarInfo() {
-            return string.IsNullOrEmpty(AvatarInformation) ? null : JsonConvert.DeserializeObject<AvatarInformationVM>(AvatarInformation);
+        public AvatarVM ProcessAvatarInfo() {
+            return string.IsNullOrEmpty(AvatarInformation) ? null : JsonConvert.DeserializeObject<AvatarVM>(AvatarInformation);
         }
 
         public ProfileBirth ProduceBirthValues() {

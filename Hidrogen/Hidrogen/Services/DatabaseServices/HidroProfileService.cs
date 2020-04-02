@@ -4,6 +4,7 @@ using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
@@ -77,7 +78,7 @@ namespace Hidrogen.Services.DatabaseServices {
             var dbProfile = await _dbContext.HidroProfile.FindAsync(profile.Id);
             if (dbProfile == null) return null;
 
-            dbProfile.AvatarInformation = profile.Avatar;
+            dbProfile.AvatarInformation = JsonConvert.SerializeObject(profile.Avatar);
             _dbContext.HidroProfile.Update(dbProfile);
 
             try {

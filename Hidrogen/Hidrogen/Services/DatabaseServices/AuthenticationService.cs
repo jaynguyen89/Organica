@@ -95,7 +95,7 @@ namespace Hidrogen.Services.DatabaseServices {
                                     auth.TrustedAuth ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
                                  )).ToUnixTimeSeconds();
 
-            var avatarInfo = profile.ProcessAvatarInfo();
+            var avatar = profile.ProcessAvatarInfo();
 
             var authUser = new AuthenticatedUser {
                 UserId = hidrogenian.Id,
@@ -104,7 +104,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 Email = hidrogenian.Email,
                 UserName = hidrogenian.UserName,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = avatarInfo?.Thumbnail?.FileUrl,
+                Avatar = avatar.Name,
                 ExpirationTime = expirationTime
             };
 
@@ -142,7 +142,7 @@ namespace Hidrogen.Services.DatabaseServices {
                                     cookie.TrustedAuth == "True" ? HidroConstants.TRUSTED_AUTH_EXPIRATION_TIME : HidroConstants.INTRUSTED_AUTH_EXPIRATION_TIME
                                  )).ToUnixTimeSeconds();
 
-            var avatarInfo = profile.ProcessAvatarInfo();
+            var avatar = profile.ProcessAvatarInfo();
 
             var authUser = new AuthenticatedUser {
                 UserId = dbHidrogenian.Id,
@@ -150,7 +150,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 AuthToken = authToken.Key,
                 Email = dbHidrogenian.Email,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = avatarInfo.Thumbnail?.FileUrl,
+                Avatar = avatar.Name,
                 ExpirationTime = expirationTime
             };
 

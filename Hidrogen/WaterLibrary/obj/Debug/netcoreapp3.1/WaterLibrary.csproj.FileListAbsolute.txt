@@ -1,0 +1,8 @@
+D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\WaterLibrary.deps.json
+D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\WaterLibrary.dll
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.AssemblyInfoInputs.cache
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.AssemblyInfo.cs
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.csprojAssemblyReference.cache
+D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\WaterLibrary.pdb
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.dll
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.pdb

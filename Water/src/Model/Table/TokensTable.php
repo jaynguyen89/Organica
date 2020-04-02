@@ -56,13 +56,21 @@ class TokensTable extends Table
 
         $validator
             ->scalar('TokenString')
-            ->maxLength('TokenString', 255)
+            ->maxLength('TokenString', 100)
             ->requirePresence('TokenString', 'create')
             ->notEmptyString('TokenString');
 
         $validator
             ->dateTime('TimeStamp')
             ->notEmptyDateTime('TimeStamp');
+
+        $validator
+            ->allowEmptyString('Life');
+
+        $validator
+            ->scalar('Target')
+            ->maxLength('Target', 70)
+            ->allowEmptyString('Target');
 
         return $validator;
     }
