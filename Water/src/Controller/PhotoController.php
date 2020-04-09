@@ -11,8 +11,19 @@ class PhotoController extends AppController {
 
     //Use Article's ID for Album here
     public function savePhotos() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $coverImage = array_key_exists('coverImage', $_REQUEST) ? $_REQUEST['coverImage'] : null;
@@ -45,39 +56,49 @@ class PhotoController extends AppController {
                     $this->reduceImageSize($directoryPath.$photo_newName);
 
                 $this->persistImageData($photo_newName, $hidrogenianId, $directoryPath, false, $coverImage == $image['name']);
-                array_push($dbImageNames, $photo_newName);
+                array_push($dbImageNames, [
+                    'name' => $photo_newName,
+                    'location' => $directoryPath    
+                ]);
             }
 
             $message = [
                 'error' => !(!empty($dbImageNames) && empty($oversizedImages) && empty($failedImages)),
-                'imageNames' => $dbImageNames,
-                'fails' => $failedImages,
-                'oversizes' => $oversizedImages
+                'errorMessage' => !(!empty($dbImageNames) && empty($oversizedImages) && empty($failedImages)) ? null : 'interrupted',
+                'result' => [
+                    'images' => $dbImageNames,
+                    'fails' => $failedImages,
+                    'oversizes' => $oversizedImages
+                ]
             ];
         }
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process request due to missing data.'
+                'errorMessage' => 'Unable to process request due to missing data.',
+                'result' => null
             ];
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('images', 'message'));
+        return $response;
+        //$this->set(compact('images', 'message'));
     }
 
     public function removePhotos() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $album = array_key_exists('album', $_REQUEST) ? $_REQUEST['album'] : null;
         $removals = array_key_exists('removals', $_REQUEST) ? $_REQUEST['removals'] : null;
-
-        $response = $this->response;
-        $response = $response->withType('application/json');
 
         $message = array();
         $failedRemovals = array();
@@ -97,7 +118,7 @@ class PhotoController extends AppController {
                 ', [$hidrogenianId, $removal])->fetch('assoc');
 
                 if ($counter['PCount'] == 1) {
-                    $message = $this->removeImageData($removal, $albumPath);
+                    $message = $this->removeImageData($removal, false, $albumPath);
                     if (!empty($message)) array_push($failedRemovals, $removal);
                 }
                 else array_push($unknownRemovals, $removal);
@@ -108,17 +129,22 @@ class PhotoController extends AppController {
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process request due to missing data.'
+                'errorMessage' => 'Unable to process request due to missing data.',
+                'result' => null
             ];
 
         $message = (!empty($message)) ? $message : [
             'error' => false,
-            'fails' => $failedRemovals,
-            'unknowns' => $unknownRemovals
+            'errorMessage' => null,
+            'result' => [
+                'fails' => $failedRemovals,
+                'unknowns' => $unknownRemovals
+            ]
         ];
+        
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('removals', 'message'));
+        return $response;
+        //$this->set(compact('removals', 'message'));
     }
 
     private function createArticleFolderForUser($hidrogenianId, $album) {

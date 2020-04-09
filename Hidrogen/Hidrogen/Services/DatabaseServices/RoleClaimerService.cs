@@ -1,9 +1,9 @@
-﻿using Hidrogen.DbContexts;
+﻿using System;
+using System.Threading.Tasks;
+using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -40,7 +40,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("RoleClaimerService.SetRoleOnRegistrationFor - Error: " + e.ToString());
+                _logger.LogError("RoleClaimerService.SetRoleOnRegistrationFor - Error: " + e);
                 return false;
             }
 

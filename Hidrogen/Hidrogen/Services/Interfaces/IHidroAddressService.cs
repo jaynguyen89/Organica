@@ -1,7 +1,6 @@
-﻿using Hidrogen.ViewModels.Address;
-using Hidrogen.ViewModels.Address.Generic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hidrogen.ViewModels.Address.Generic;
 
 namespace Hidrogen.Services.Interfaces {
 

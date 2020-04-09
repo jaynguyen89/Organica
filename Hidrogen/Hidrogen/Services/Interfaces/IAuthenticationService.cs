@@ -1,7 +1,7 @@
-﻿using Hidrogen.ViewModels.Authentication;
-using Hidrogen.ViewModels.Authorization;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hidrogen.ViewModels.Authentication;
+using Hidrogen.ViewModels.Authorization;
 
 namespace Hidrogen.Services.Interfaces {
 

@@ -1,4 +1,7 @@
-﻿using HelperLibrary;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
@@ -11,10 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Controllers {
@@ -51,33 +50,29 @@ namespace Hidrogen.Controllers {
             _googleReCaptchaService = googleReCaptchaService;
         }
 
-        public static JsonResult FilterResult(HidroEnums.FILTER_RESULT result) {
-            switch (result) {
-                case FILTER_RESULT.ACCESS_CONTROL_DENIED:
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "You are not allowed to access this feature. Please login before going further!",
-                        Error = HTTP_STATUS_CODES.NONAUTHORITATIVE_INFORMATION
-                    });
-                case FILTER_RESULT.INVALID_AUTHENTICATION:
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "Your session seems to be invalid. Please login again to confirm your identity!",
-                        Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
-                    });
-                case FILTER_RESULT.INSUFFICIENT_PERMISSION:
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "You do not have the permission to perform this action. Please close this page.",
-                        Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
-                    });
-                default:  //FILTER_RESULT.AUTHENTICATION_EXPIRED
-                    return new JsonResult(new {
-                        Result = RESULTS.FAILED,
-                        Message = "Your session has expired. Please login again to continue!",
-                        Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
-                    });
-            }
+        public static JsonResult FilterResult(FILTER_RESULT result) {
+            return result switch {
+                FILTER_RESULT.ACCESS_CONTROL_DENIED => new JsonResult(new {
+                    Result = RESULTS.FAILED,
+                    Message = "You are not allowed to access this feature. Please login before going further!",
+                    Error = HTTP_STATUS_CODES.NONAUTHORITATIVE_INFORMATION
+                }),
+                FILTER_RESULT.INVALID_AUTHENTICATION => new JsonResult(new {
+                    Result = RESULTS.FAILED,
+                    Message = "Your session seems to be invalid. Please login again to confirm your identity!",
+                    Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
+                }),
+                FILTER_RESULT.INSUFFICIENT_PERMISSION => new JsonResult(new {
+                    Result = RESULTS.FAILED,
+                    Message = "You do not have the permission to perform this action. Please close this page.",
+                    Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
+                }),
+                _ => new JsonResult(new {
+                    Result = RESULTS.FAILED,
+                    Message = "Your session has expired. Please login again to continue!",
+                    Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
+                })
+            };
         }
 
         [HttpGet("check-registration-email/{email}")]
@@ -156,9 +151,9 @@ namespace Hidrogen.Controllers {
 
                 if (await _profileService.InsertProfileForNewlyCreatedHidrogenian(profile)) {
                     string emailTemplate;
-                    using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
+                    using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
                         emailTemplate = reader.ReadToEnd();
-                    };
+                    }
 
                     emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
                     emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
@@ -173,18 +168,15 @@ namespace Hidrogen.Controllers {
 
                     if (await _emailService.SendEmail(accountActivationEmail))
                         return new JsonResult(new { Result = RESULTS.SUCCESS });
-                    else {
-                        await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
-                        return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Error occurred while sending Account Activation email." });
-                    }
-                }
-                else {
                     await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
-                    return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Error occurred while creating User Profile for your account." });
+                    return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Error occurred while sending Account Activation email." });
                 }
-            }
-            else
+
                 await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
+                return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Error occurred while creating User Profile for your account." });
+            }
+
+            await _userService.RemoveNewlyInsertedHidrogenian(hidrogenian.Id);
 
             return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
         }
@@ -209,16 +201,16 @@ namespace Hidrogen.Controllers {
             if (!result.Value.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
 
-            var FullName = (await _userService.GetHidrogenianByEmail(activator.Email)).FullName;
+            var fullName = (await _userService.GetHidrogenianByEmail(activator.Email)).FullName;
 
             string emailTemplate;
-            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
+            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
                 emailTemplate = reader.ReadToEnd();
-            };
+            }
 
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
             var activationConfirmEmail = new EmailParamVM {
-                ReceiverName = FullName,
+                ReceiverName = fullName,
                 ReceiverAddress = activator.Email,
                 Subject = "Hidrogen - Account Activated",
                 Body = emailTemplate
@@ -248,19 +240,19 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
             string emailTemplate;
-            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordReset.html")) {
+            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordReset.html")) {
                 emailTemplate = reader.ReadToEnd();
-            };
+            }
 
-            var FullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
+            var fullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
 
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
             emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", recoveree.Email);
             emailTemplate = emailTemplate.Replace("[INITIAL-PW]", result.Key);
             emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", result.Value);
 
             var recoverPasswordEmail = new EmailParamVM {
-                ReceiverName = FullName,
+                ReceiverName = fullName,
                 ReceiverAddress = recoveree.Email,
                 Subject = "Hidrogen - Reset your password",
                 Body = emailTemplate
@@ -289,9 +281,9 @@ namespace Hidrogen.Controllers {
 
             if (await _userService.SetAccountConfirmationToken(hidrogenian)) {
                 string emailTemplate;
-                using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
+                using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
                     emailTemplate = reader.ReadToEnd();
-                };
+                }
 
                 emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
                 emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
@@ -343,15 +335,15 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
             string emailTemplate;
-            using (StreamReader reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordResetConfirmation.html")) {
+            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordResetConfirmation.html")) {
                 emailTemplate = reader.ReadToEnd();
-            };
+            }
 
-            var FullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", FullName);
+            var fullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
 
             var accountActivationEmail = new EmailParamVM {
-                ReceiverName = FullName,
+                ReceiverName = fullName,
                 ReceiverAddress = recovery.Email,
                 Subject = "Hidrogen - New password has set",
                 Body = emailTemplate
@@ -369,9 +361,9 @@ namespace Hidrogen.Controllers {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
             HttpContext.Session.Clear();
 
-            var verification = await _googleReCaptchaService.IsHumanRegistration(auth.CaptchaToken);
-            if (!verification.Result)
-                return new JsonResult(verification);
+            //var verification = await _googleReCaptchaService.IsHumanRegistration(auth.CaptchaToken);
+            //if (!verification.Result)
+                //return new JsonResult(verification);
 
             var validation = auth.VerifyAuthenticationData();
             if (validation.Count != 0) {

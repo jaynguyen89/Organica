@@ -12,16 +12,17 @@ return [
     ],
     'Datasources' => [
         'default' => [
-            'host' => 'localhost',
-            'username' => 'nlkp',
-            'password' => 'water',
-            'database' => 'water',
+            'host' => '69.90.66.140',
+            'port' => 3306,
+            'username' => 'jayde421_uwater',
+            'password' => 'ThanhPhuc311211!',
+            'database' => 'jayde421_water',
             'url' => env('DATABASE_URL', null),
         ],
         'test' => [
-            'host' => 'localhost',
-            'username' => 'nlkp',
-            'password' => 'water',
+            'host' => '69.90.66.140',
+            'username' => 'jayde421_uwater',
+            'password' => 'ThanhPhuc311211!',
             'database' => 'water'
         ],
     ],

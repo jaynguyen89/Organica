@@ -1,10 +1,9 @@
-﻿using HelperLibrary;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.Models;
 using Hidrogen.ViewModels.Address.Generic;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Hidrogen.ViewModels.Address {
 

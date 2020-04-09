@@ -6,7 +6,7 @@ namespace HelperLibrary {
 
         public enum RESULTS {
             FAILED, SUCCESS, INTERRUPTED
-        };
+        }
 
         public enum FILTER_RESULT {
             INVALID_AUTHENTICATION,
@@ -91,7 +91,7 @@ namespace HelperLibrary {
             NOT_EXTENDED = 510,
             NETWORK_AUTHENTICATION_REQUIRED = 511,
             INVALID_SSL_CERTIFICATE = 526
-        };
+        }
 
         public enum DATE_FORMATS {
             [StringValue("yyyy/MM/dd hh:mm:ss")]

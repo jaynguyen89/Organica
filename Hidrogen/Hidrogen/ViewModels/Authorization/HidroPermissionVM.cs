@@ -1,5 +1,4 @@
 ﻿using Hidrogen.Models;
-using System;
 
 namespace Hidrogen.ViewModels.Authorization {
 

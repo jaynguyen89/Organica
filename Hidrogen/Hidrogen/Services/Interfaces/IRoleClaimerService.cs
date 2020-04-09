@@ -1,5 +1,4 @@
-﻿using Hidrogen.ViewModels.Authorization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Hidrogen.Services.Interfaces {
 

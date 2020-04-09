@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hidrogen.Models
+﻿namespace Hidrogen.Models
 {
     public partial class RawLocation
     {

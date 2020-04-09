@@ -37,8 +37,18 @@ namespace HelperLibrary.Common {
         }
 
         public static Dictionary<string, string> API_TOKEN_TARGETS = new Dictionary<string, string> {
-            { "", "" },
-            { "", "" }
+            { "save_avatar", "Avatar/saveAvatar" },
+            { "replace_avatar", "Avatar/replaceAvatar" },
+            { "remove_avatar", "Avatar/removeAvatar" }
+        };
+
+        public static Dictionary<string, string> CONTENT_TYPES = new Dictionary<string, string> {
+            { "json", "application/json" },
+            { "form", "multipart/form-data" },
+            { "xml", "application/xml" },
+            { "mixed", "multipart/mixed" },
+            { "alt", "multipart/alternative" },
+            { "base64", "application/base64" }
         };
     }
 }

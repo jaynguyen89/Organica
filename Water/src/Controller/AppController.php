@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
 use Cake\ORM\TableRegistry;
@@ -26,31 +27,61 @@ class AppController extends Controller {
 
     public function beforeFilter(EventInterface $event) {
         parent::beforeFilter($event);
+        Configure::write('debug', false);
+    }
+    
+    public function verifyApiKey() {
         $result = '';
 
         $apiKey = array_key_exists('apikey', $_REQUEST) ? $_REQUEST['apikey'] : null;
-        if ($apiKey == null) $result = self::RESULTS['NO_KEY'];
-
+        if ($apiKey == null) $result = 'NO_KEY';
+        
         $dbKey = TableRegistry::getTableLocator()->get('Tokens')
-            ->find()->where(['TokenString' => $apiKey])->first();
+            ->find()->where(['TokenString' => $apiKey == null ? '' : $apiKey])->first();
 
-        if ($dbKey == null) $result = self::RESULTS['NOT_FOUND'];
-
-        try {
-            $expiryTime = (new Datetime($dbKey->TimeStamp))->modify('+' . $dbKey->Life . ' minutes');
-        } catch (Exception $e) {
-            $expiryTime = $dbKey->TimeStamp->DateTime::modify('+' . $dbKey->Life . ' minutes');
+        if ($dbKey == null) $result = 'NOT_FOUND';
+        elseif ($dbKey->TimeStamp->modify('+' . $dbKey->Life . ' minutes') < new DateTime())
+            $result = 'EXPIRED';
+        else {
+            $queryCtrlr = $this->request->getParam('controller');
+            $queryAction = $this->request->getParam('action');
+    
+            $tokens = explode('/', $dbKey->Target);
+            if (strtolower($queryCtrlr) != strtolower($tokens[0]) || strtolower($queryAction) != strtolower($tokens[1]))
+                $result = 'RETARGET';
         }
-
-        if ($expiryTime < new DateTime()) $result = self::RESULTS['EXPIRED'];
-
-        $queryCtrlr = $this->request->getParam('controller');
-        $queryAction = $this->request->getParam('action');
-
-        $tokens = explode('/', $dbKey->Target);
-        if ($queryCtrlr != $tokens[0] || $queryAction != $tokens[1]) $result = self::RESULTS['RETARGET'];
-
-        if ($result != '') $this->redirect(['controller' => 'Access', 'action' => 'filterResult', $result]);
+        
+        return $result;
+    }
+    
+    public function filterResult($result) {
+        $message = array();
+        
+        if ($result == 'NO_KEY')
+            $message = [
+                'error' => true,
+                'errorMessage' => 'Unable to read the API Key from request. Please reload page and try again.'
+            ];
+                
+        if ($result == 'NOT_FOUND')
+            $message = [
+                'error' => true,
+                'errorMessage' => 'The API key from request matches nothing in our records. Please check again.'
+            ];
+                
+        if ($result == 'EXPIRED')
+            $message = [
+                'error' => true,
+                'errorMessage' => 'The API Key from your request seems to be expired. Please reload page and try again.'
+            ];
+                
+        if ($result == 'RETARGET')
+            $message = [
+                'error' => true,
+                'errorMessage' => 'Your request falls outside our scope. Please reload page and try again.'
+            ];
+                
+        return $message;
     }
 
     /**
@@ -89,21 +120,21 @@ class AppController extends Controller {
         if (!in_array($image['type'], $allowTypes))
             $message = [
                 'error' => true,
-                'message' => 'The photo is not of expected type. Expected: JPG, JPEG, PNG, GIF.'
+                'errorMessage' => 'The photo is not of expected type. Expected: JPG, JPEG, PNG, GIF.'
             ];
 
         if ($image['type'] == 'image/gif') {
             if ($image['size'] > 3000000)
                 $message = [
                     'error' => true,
-                    'message' => 'The GIF photo is too big. Max size allowed: 3MB.'
+                    'errorMessage' => 'The GIF photo is too big. Max size allowed: 3MB.'
                 ];
         }
         else {
             if ($image['size'] > $size)
                 $message = [
                     'error' => true,
-                    'message' => 'The photo is too big. Max size allowed: ' . $size . 'MB.'
+                    'errorMessage' => 'The photo is too big. Max size allowed: ' . $size . 'MB.'
                 ];
         }
 
@@ -151,7 +182,7 @@ class AppController extends Controller {
         } catch (Exception $e) {
             $message = [
                 'error' => true,
-                'message' => 'An error occurred while attempting to save new image. Please try again.'
+                'errorMessage' => 'An error occurred while attempting to save new image. Please try again.'
             ];
         }
 
@@ -191,7 +222,7 @@ class AppController extends Controller {
     public function removeImageData($imageName, $isAvatar = false, $album = null) {
         $message = array();
         try {
-            $currentDbImage = TableRegistry::getTableLocator()->get('Photos')->find()->where(['PhotoName' => $imageName, 'IsAvatar' => $isAvatar])->first();
+            $currentDbImage = TableRegistry::getTableLocator()->get('Photos')->find()->where(['PhotoName' => $imageName])->first();
             TableRegistry::getTableLocator()->get('Photos')->delete($currentDbImage);
 
             unlink(
@@ -201,7 +232,7 @@ class AppController extends Controller {
         } catch (Exception $e) {
             $message = [
                 'error' => true,
-                'message' => 'An error occurred while attempting to replace your image. Please try again.'
+                'errorMessage' => 'An error occurred while attempting to replace your image. Please try again.'
             ];
         }
 

@@ -2,7 +2,7 @@
 
 namespace WaterLibrary.Models
 {
-    public partial class Photos
+    public class Photos
     {
         public Photos()
         {

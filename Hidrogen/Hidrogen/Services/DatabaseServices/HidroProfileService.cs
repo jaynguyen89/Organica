@@ -1,12 +1,12 @@
-﻿using Hidrogen.DbContexts;
+﻿using System;
+using System.Threading.Tasks;
+using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -23,23 +23,24 @@ namespace Hidrogen.Services.DatabaseServices {
             _dbContext = dbContext;
         }
 
-        public async Task<bool?> DeleteAvatarInformation(int profileId) {
-            _logger.LogInformation("HidroProfileService.GetPublicProfileFor - profileId=" + profileId);
+        public async Task<string> DeleteAvatarInformation(int hidrogenianId) {
+            _logger.LogInformation("HidroProfileService.GetPublicProfileFor - profileId=" + hidrogenianId);
 
-            var dbProfile = await _dbContext.HidroProfile.FindAsync(profileId);
+            var dbProfile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenianId);
             if (dbProfile == null) return null;
 
+            var avatarInfo = dbProfile.AvatarInformation;
             dbProfile.AvatarInformation = null;
             _dbContext.HidroProfile.Update(dbProfile);
 
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.GetPublicProfileFor - Error: " + e.ToString());
-                return false;
+                _logger.LogError("HidroProfileService.GetPublicProfileFor - Error: " + e);
+                return string.Empty;
             }
 
-            return true;
+            return avatarInfo;
         }
 
         public async Task<HidroProfileVM> GetPublicProfileFor(int hidrogenianId) {
@@ -65,7 +66,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.InsertProfileForNewlyCreatedHidrogenian - Error: " + e.ToString());
+                _logger.LogError("HidroProfileService.InsertProfileForNewlyCreatedHidrogenian - Error: " + e);
                 return false;
             }
 
@@ -75,7 +76,9 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<bool?> UpdateHidrogenianAvatar(HidroProfileVM profile) {
             _logger.LogInformation("HidroProfileService.UpdateHidrogenianAvatar - Service starts.");
 
-            var dbProfile = await _dbContext.HidroProfile.FindAsync(profile.Id);
+            HidroProfile dbProfile;
+            if (profile.Id != 0) dbProfile = await _dbContext.HidroProfile.FindAsync(profile.Id);
+            else dbProfile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == profile.HidrogenianId);
             if (dbProfile == null) return null;
 
             dbProfile.AvatarInformation = JsonConvert.SerializeObject(profile.Avatar);
@@ -84,7 +87,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.UpdateHidrogenianAvatar - Error: " + e.ToString());
+                _logger.LogError("HidroProfileService.UpdateHidrogenianAvatar - Error: " + e);
                 return false;
             }
 
@@ -103,7 +106,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.UpdatePublicProfile - Error: " + e.ToString());
+                _logger.LogError("HidroProfileService.UpdatePublicProfile - Error: " + e);
                 return false;
             }
 

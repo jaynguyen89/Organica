@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using System;
 using BCrypt;
-using System;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
+using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.ViewModels.Authentication;
-using HelperLibrary;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Primitives;
 
 namespace Hidrogen.Services {
 
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public sealed class HidroActionFilter : ActionFilterAttribute {
 
         private string _defaultRole = "Guest";

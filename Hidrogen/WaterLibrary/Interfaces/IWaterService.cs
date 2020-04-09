@@ -30,5 +30,20 @@ namespace WaterLibrary.Interfaces {
         /// Useful when user deletes an article or close a thread. One of the 2 string arguments must be empty.
         /// </summary>
         Task<bool> DeleteUserAlbum(int hidrogenianId, string galleryFolderName = "", string attachmentFolderName = "");
+
+        /// <summary>
+        /// Send HttpClient POST request to Water API. Returns null on error, otherwise, an instance of AvatarResultVM.
+        /// </summary>
+        Task<AvatarResultVM> SendSaveAvatarRequestToWater(AssetFormVM uploading);
+        
+        /// <summary>
+        /// Send HttpClient DELETE request to Water API. Returns null on error, otherwise, an instance of AvatarResultVM.
+        /// </summary>
+        Task<AvatarResultVM> SendDeleteAvatarRequestToWater(string apiKey, string photoName);
+        
+        /// <summary>
+        /// Send HttpClient POST request to Water API. Returns null on error, otherwise, an instance of AvatarResultVM.
+        /// </summary>
+        Task<AvatarResultVM> SendReplaceAvatarRequestToWater(AssetReplaceVM uploading);
     }
 }

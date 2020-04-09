@@ -1,4 +1,7 @@
-﻿using HelperLibrary;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
@@ -6,9 +9,6 @@ using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Payment;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Services.DatabaseServices {
@@ -49,7 +49,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("PaymentService.AddAccountBalance - Error: " + e.ToString());
+                _logger.LogError("PaymentService.AddAccountBalance - Error: " + e);
                 return null;
             }
 
@@ -74,7 +74,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("PaymentService.DeletePaymentMethodFor - Error: " + e.ToString());
+                _logger.LogError("PaymentService.DeletePaymentMethodFor - Error: " + e);
                 return false;
             }
 
@@ -106,7 +106,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("PaymentService.InsertNewPaymentMethod - Error: " + e.ToString());
+                _logger.LogError("PaymentService.InsertNewPaymentMethod - Error: " + e);
                 return null;
             }
 
@@ -140,7 +140,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("PaymentService.UpdatePaymentMethods - Error: " + e.ToString());
+                _logger.LogError("PaymentService.UpdatePaymentMethods - Error: " + e);
                 return new KeyValuePair<bool, PaymentDetailVM>(true, null);
             }
 

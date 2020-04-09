@@ -18,7 +18,7 @@ namespace Hidrogen.ViewModels.Account {
         public List<int> VerifyPassword(string password = null) {
             if (string.IsNullOrEmpty(NewPassword) || string.IsNullOrWhiteSpace(NewPassword) ||
                 string.IsNullOrEmpty(PasswordConfirm) || string.IsNullOrWhiteSpace(PasswordConfirm))
-                return new List<int>() { 0 };
+                return new List<int> { 0 };
 
             var errors = new List<int>();
 

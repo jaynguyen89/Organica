@@ -5,9 +5,12 @@ import ActivationStore from '../account-claimation/account-activation/redux/redu
 import RecoveryStore from '../account-claimation/password-recovery/redux/reducer';
 import AuthenticationStore from '../authentication/redux/reducer';
 
+import AvatarStore from '../helpers/water/avatar/reducer';
+
 export default combineReducers({
     RegistrationStore,
     ActivationStore,
     RecoveryStore,
-    AuthenticationStore
+    AuthenticationStore,
+    AvatarStore
 });

@@ -2,7 +2,7 @@
 
 namespace WaterLibrary.Models
 {
-    public partial class Tokens
+    public class Tokens
     {
         public int TokenId { get; set; }
         public string TokenString { get; set; }

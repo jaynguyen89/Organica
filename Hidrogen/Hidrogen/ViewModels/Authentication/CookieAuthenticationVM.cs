@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Hidrogen.ViewModels.Authentication {
+﻿namespace Hidrogen.ViewModels.Authentication {
 
     public class CookieAuthenticationVM {
 

@@ -23,3 +23,6 @@ export type T_LOAD_AUTH_USER = typeof LOAD_AUTH_USER;
 
 export const LOAD_AUTH_USER_FAILED = 'LOAD_AUTH_USER_FAILED';
 export type T_LOAD_AUTH_USER_FAILED = typeof LOAD_AUTH_USER_FAILED;
+
+export const SET_USER_AVATAR = 'SET_USER_AVATAR';
+export type T_SET_USER_AVATAR = typeof SET_USER_AVATAR;

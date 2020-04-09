@@ -31,19 +31,19 @@ const UsualSignIn = (props : any) => {
         captchaToken : CONSTANTS.EMPTY
     });
 
-    const [shouldEnableBtn, setShouldEnableBtn] = React.useState(false);
+    const [shouldEnableBtn, setShouldEnableBtn] = React.useState(true/*false*/);
     const [status, setStatus] = React.useState({ messages : CONSTANTS.EMPTY, type : CONSTANTS.EMPTY } as IStatus);
 
     React.useEffect(() => {
-        setShouldEnableBtn(
-            (!_.isEmpty(account.email) || !_.isEmpty(account.username)) &&
+        setShouldEnableBtn(true
+            /*(!_.isEmpty(account.email) || !_.isEmpty(account.username)) &&
             !_.isEmpty(account.password) &&
-            !_.isEmpty(account.captchaToken)
+            !_.isEmpty(account.captchaToken)*/
         );
     }, [account]);
 
     React.useEffect(() => {
-        setShouldEnableBtn(shouldEnableBtn && !props.authSending);
+        setShouldEnableBtn(true/*shouldEnableBtn && !props.authSending*/);
         displayAuthMessages(props, setStatus);
     }, [props]);
 
@@ -109,9 +109,9 @@ const UsualSignIn = (props : any) => {
                         <div className='col s12'>
                             <div className='row'>
                                 <div className='col s12'>
-                                    <ReCAPTCHA
+                                    {/* <ReCAPTCHA
                                         sitekey='6LeXhN4UAAAAAHKW6-44VxtUVMYSlMPj04WRoC8z'
-                                        onChange={ (e: any) => setAccountAsync('captcha', e) } />
+                                        onChange={ (e: any) => setAccountAsync('captcha', e) } /> */}
                                 </div>
                                 <div className='col s12'>
                                     <button className='btn' style={{ marginTop:'20px' }}

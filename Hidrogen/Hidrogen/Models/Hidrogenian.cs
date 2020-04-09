@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Hidrogen.Models
 {
-    public partial class Hidrogenian
+    public class Hidrogenian
     {
         public Hidrogenian()
         {

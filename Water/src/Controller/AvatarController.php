@@ -8,19 +8,25 @@ class AvatarController extends AppController {
     private const IMAGE_SIZE = 3000000; //3MB
 
     public function saveAvatar() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $result = $this->verifyApiKey();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $image = array();
         if (array_key_exists('image', $_FILES))
             $image = $_FILES['image'];
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
-
         $message = array();
-        if (!empty($image))
-            $message = $this->checkImageExif($image, self::IMAGE_SIZE);
+        if (!empty($image)) $message = $this->checkImageExif($image, self::IMAGE_SIZE);
         if (!empty($message)) {
             $response = $response->withStringBody(json_encode($message));
             return $response;
@@ -42,34 +48,47 @@ class AvatarController extends AppController {
             $this->persistImageData($avatar_newName, $hidrogenianId, WWW_ROOT.'files'.DS.'avatars'.DS, true);
             $message = [
                 'error' => false,
-                'message' => $avatar_newName
+                'errorMessage' => null,
+                'result' => [
+                    'name' => $avatar_newName,
+                    'location' => WWW_ROOT.'files'.DS.'avatars'.DS
+                ]
             ];
         }
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process your request due to missing data.'
+                'errorMessage' => 'Unable to process your request due to missing data.',
+                'result' => null
             ];
 
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('image', 'message'));
+        return $response;
+        //$this->set(compact('image', 'message'));
     }
 
 
     public function replaceAvatar() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $result = $this->verifyApiKey();
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $currentAvatar = array_key_exists('current', $_REQUEST) ? $_REQUEST['current'] : null;
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $newAvatar = array_key_exists('replaceBy', $_FILES) ? $_FILES['replaceBy'] : null;
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
-
         if ($currentAvatar != null && $newAvatar != null && $hidrogenianId != null) {
-            $message = $this->removeImageData($currentAvatar);
+            $message = $this->removeImageData($currentAvatar, true);
             if (!empty($message)) {
                 $response = $response->withStringBody(json_encode($message));
                 return $response;
@@ -94,29 +113,42 @@ class AvatarController extends AppController {
             $this->persistImageData($avatar_newName, $hidrogenianId, WWW_ROOT.'files'.DS.'avatars'.DS, true);
             $message = [
                 'error' => false,
-                'message' => $avatar_newName
+                'errorMessage' => null,
+                'result' => [
+                    'name' => $avatar_newName,
+                    'location' => WWW_ROOT.'files'.DS.'avatars'.DS    
+                ]
             ];
         }
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process your request due to missing data.'
+                'errorMessage' => 'Unable to process your request due to missing data.',
+                'result' => null
             ];
 
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('currentAvatar', 'newAvatar', 'message'));
+        return $response;
+        //$this->set(compact('currentAvatar', 'newAvatar', 'message'));
     }
 
 
     public function removeAvatar() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['delete']);
-
-        $imageName = array_key_exists('image', $_REQUEST) ? $_REQUEST['image'] : null;
-
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
         $response = $this->response;
         $response = $response->withType('application/json');
+        
+        $message = array();
+        $result = $this->verifyApiKey();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
+        
+        $imageName = array_key_exists('image', $_REQUEST) ? $_REQUEST['image'] : null;
 
         if ($imageName != null) {
             $message = $this->removeImageData($imageName, true);
@@ -125,16 +157,17 @@ class AvatarController extends AppController {
                 return $response;
             }
 
-            $message = ['error' => false];
+            $message = ['error' => false, 'errorMessage' => null, 'result' => null];
         }
         else
             $message = [
                 'error' => true,
-                'message' => 'No data to process your request.'
+                'errorMessage' => 'No data to process your request.',
+                'result' => null
             ];
 
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('message', 'imageName'));
+        return $response;
+        //$this->set(compact('message', 'imageName'));
     }
 }

@@ -6,3 +6,7 @@ D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary
 D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\WaterLibrary.pdb
 D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.dll
 D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.pdb
+D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\HelperLibrary.dll
+D:\Workspace\Organica\Hidrogen\WaterLibrary\bin\Debug\netcoreapp3.1\HelperLibrary.pdb
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.csproj.CopyComplete
+D:\Workspace\Organica\Hidrogen\WaterLibrary\obj\Debug\netcoreapp3.1\WaterLibrary.csproj.CoreCompileInputs.cache

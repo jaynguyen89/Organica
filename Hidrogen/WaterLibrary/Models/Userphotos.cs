@@ -1,6 +1,6 @@
 ﻿namespace WaterLibrary.Models
 {
-    public partial class Userphotos
+    public class Userphotos
     {
         public int Id { get; set; }
         public int? PhotoId { get; set; }

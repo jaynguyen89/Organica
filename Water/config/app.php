@@ -115,10 +115,11 @@ return [
             'cacheMetadata' => true,
             'log' => false,
             'quoteIdentifiers' => false,
-            'host' => 'localhost',
-            'username' => 'nlkp',
-            'password' => 'water',
-            'database' => 'water'
+            'host' => '69.90.66.140',
+            'port' => 3306,
+            'username' => 'jayde421_uwater',
+            'password' => 'ThanhPhuc311211!',
+            'database' => 'jayde421_water'
         ],
         'test' => [
             'className' => Connection::class,
@@ -131,10 +132,11 @@ return [
             'quoteIdentifiers' => false,
             'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-            'host' => 'localhost',
-            'username' => 'nlkp',
-            'password' => 'water',
-            'database' => 'water'
+            'host' => '69.90.66.140',
+            'port' => 3306,
+            'username' => 'jayde421_uwater',
+            'password' => 'ThanhPhuc311211!',
+            'database' => 'jayde421_water'
         ],
     ],
     'Log' => [

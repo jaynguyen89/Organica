@@ -1,11 +1,11 @@
-﻿using static HelperLibrary.HidroEnums;
-using HelperLibrary.Common;
-using System;
-using Hidrogen.Models;
-using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
-using HelperLibrary;
 using System.Text.RegularExpressions;
+using HelperLibrary;
+using HelperLibrary.Common;
+using Hidrogen.Models;
+using WaterLibrary.ViewModels;
+using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.ViewModels {
 
@@ -174,7 +174,7 @@ namespace Hidrogen.ViewModels {
         //Reprocess the FamilyName before checking
         public List<int> VerifyFamilyName() {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
-                return new List<int>() { 11 };
+                return new List<int> { 11 };
 
             FamilyName = HelperProvider.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
@@ -193,7 +193,7 @@ namespace Hidrogen.ViewModels {
         //Reprocess the GivenName before checking
         public List<int> VerifyGivenName() {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
-                return new List<int>() { 14 };
+                return new List<int> { 14 };
 
             GivenName = HelperProvider.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
@@ -251,11 +251,16 @@ namespace Hidrogen.ViewModels {
 
     public class AvatarVM {
 
-        public string Id { get; set; }
-
         public string Name { get; set; }
 
         public string Location { get; set; }
+
+        public static implicit operator AvatarVM(ResultVM r) {
+            return new AvatarVM {
+                Name = r.Name,
+                Location = r.Location
+            };
+        }
     }
 
     public class ProfileBirth {

@@ -1,18 +1,18 @@
-﻿using Hidrogen.Models;
-using Hidrogen.Services.Interfaces;
-using Microsoft.Extensions.Logging;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BCrypt;
-using Microsoft.EntityFrameworkCore;
-using System;
-using Hidrogen.ViewModels.Authentication;
 using HelperLibrary;
 using HelperLibrary.Common;
-using System.Linq;
-using Hidrogen.ViewModels.Authorization;
-using Newtonsoft.Json;
 using Hidrogen.DbContexts;
+using Hidrogen.Models;
+using Hidrogen.Services.Interfaces;
+using Hidrogen.ViewModels.Authentication;
+using Hidrogen.ViewModels.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -49,7 +49,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 try {
                     await _dbContext.SaveChangesAsync();
                 } catch (Exception e) {
-                    _logger.LogError("AuthenticationService.ActivateHidrogenianAccount - Error: " + e.ToString());
+                    _logger.LogError("AuthenticationService.ActivateHidrogenianAccount - Error: " + e);
                     return new KeyValuePair<bool, bool?>(true, null);
                 }
 
@@ -80,7 +80,7 @@ namespace Hidrogen.Services.DatabaseServices {
                               where rc.HidrogenianId == hidrogenian.Id
                               select r.RoleName).FirstOrDefaultAsync();
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.AuthenticateHidrogenian - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.AuthenticateHidrogenian - Error: " + e);
                 return new KeyValuePair<bool, AuthenticatedUser>(false, null);
             }
 
@@ -104,7 +104,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 Email = hidrogenian.Email,
                 UserName = hidrogenian.UserName,
                 FullName = profile.GivenName + ' ' + profile.FamilyName,
-                Avatar = avatar.Name,
+                Avatar = avatar?.Name,
                 ExpirationTime = expirationTime
             };
 
@@ -130,7 +130,7 @@ namespace Hidrogen.Services.DatabaseServices {
                               where rc.HidrogenianId == dbHidrogenian.Id
                               select r.RoleName).FirstOrDefaultAsync();
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.AuthenticateWithCookie - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.AuthenticateWithCookie - Error: " + e);
                 return new KeyValuePair<bool, AuthenticatedUser>(false, null);
             }
 
@@ -201,7 +201,7 @@ namespace Hidrogen.Services.DatabaseServices {
             var timestamp = DateTime.UtcNow;
             var unixTimestamp = ((DateTimeOffset)timestamp).ToUnixTimeSeconds();
 
-            var cookieAuthToken = auth.AuthToken + auth.Role + unixTimestamp.ToString();
+            var cookieAuthToken = auth.AuthToken + auth.Role + unixTimestamp;
             var hashResult = GenerateHashedPasswordAndSalt(cookieAuthToken);
 
             var dbHidrogenian = await _dbContext.Hidrogenian.FindAsync(auth.UserId);
@@ -212,7 +212,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.GenerateCookieAuthData - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.GenerateCookieAuthData - Error: " + e);
                 return null;
             }
 
@@ -243,7 +243,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.Email == email));
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.IsEmailAddressAvailable - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.IsEmailAddressAvailable - Error: " + e);
                 return null;
             }
 
@@ -257,7 +257,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.UserName.ToLower() == username.ToLower()));
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.IsUserNameAvailable - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.IsUserNameAvailable - Error: " + e);
                 return null;
             }
 
@@ -290,7 +290,7 @@ namespace Hidrogen.Services.DatabaseServices {
                 try {
                     await _dbContext.SaveChangesAsync();
                 } catch (Exception e) {
-                    _logger.LogError("AuthenticationService.ReplaceAccountPassword - Error: " + e.ToString());
+                    _logger.LogError("AuthenticationService.ReplaceAccountPassword - Error: " + e);
                     return new KeyValuePair<bool, bool?>(true, false);
                 }
 
@@ -311,7 +311,7 @@ namespace Hidrogen.Services.DatabaseServices {
 
             if (dbHidrogenian == null) return new KeyValuePair<string, string>(null, null);
 
-            var tempPassword = HelperProvider.GenerateTemporaryPassword(15);
+            var tempPassword = HelperProvider.GenerateRandomString(15);
             var hashedResult = GenerateHashedPasswordAndSalt(tempPassword);
 
             dbHidrogenian.PasswordHash = hashedResult.Key;
@@ -327,7 +327,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("AuthenticationService.SetTempPasswordAndRecoveryToken - Error: " + e.ToString());
+                _logger.LogError("AuthenticationService.SetTempPasswordAndRecoveryToken - Error: " + e);
                 return new KeyValuePair<string, string>(string.Empty, null);
             }
 

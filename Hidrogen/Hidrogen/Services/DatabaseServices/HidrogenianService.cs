@@ -1,12 +1,12 @@
-﻿using Hidrogen.DbContexts;
+﻿using System;
+using System.Threading.Tasks;
+using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -53,7 +53,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidrogenianService.InserNewHidrogenian - Error: " + e.ToString());
+                _logger.LogError("HidrogenianService.InserNewHidrogenian - Error: " + e);
                 return null;
             }
 
@@ -73,7 +73,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidrogenianService.RemoveNewlyInsertedHidrogenian - Error: " + e.ToString());
+                _logger.LogError("HidrogenianService.RemoveNewlyInsertedHidrogenian - Error: " + e);
                 return false;
             }
 
@@ -93,7 +93,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidrogenianService.RemoveTwoFaSecretKeyFor - Error: " + e.ToString());
+                _logger.LogError("HidrogenianService.RemoveTwoFaSecretKeyFor - Error: " + e);
                 return false;
             }
 
@@ -112,7 +112,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidrogenianService.SaveTwoFaSecretKeyFor - Error: " + e.ToString());
+                _logger.LogError("HidrogenianService.SaveTwoFaSecretKeyFor - Error: " + e);
                 return false;
             }
 
@@ -132,7 +132,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidrogenianService.SetAccountConfirmationToken - Error: " + e.ToString());
+                _logger.LogError("HidrogenianService.SetAccountConfirmationToken - Error: " + e);
                 return false;
             }
 

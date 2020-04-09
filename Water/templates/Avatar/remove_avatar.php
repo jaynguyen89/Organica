@@ -1,4 +1,4 @@
-<form method='delete' action='/water/avatar/remove-avatar'>
+<form method='delete' action='/avatar/remove-avatar'>
     <input type="text" name="image" id="image" />
     <input type="submit" value="submit" />
 </form>

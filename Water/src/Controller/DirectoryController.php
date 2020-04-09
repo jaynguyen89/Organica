@@ -9,8 +9,19 @@ class DirectoryController extends AppController {
 
     //Param $dir is the path to folder
     public function cleanEmptyDirectories() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['delete']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['delete']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $dir = array_key_exists('directory', $_REQUEST) ? $_REQUEST['directory'] : null;
 
@@ -18,16 +29,24 @@ class DirectoryController extends AppController {
         $this->cleanDirInternal($filesFolder);
 
         $message = ['error' => false];
-        $response = $this->response;
-
-        $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
+        return $response;
     }
 
     public function deleteUserDirectoriesAndFilesUnsafe() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['delete']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['delete']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
 
@@ -55,19 +74,25 @@ class DirectoryController extends AppController {
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process your request due to missing data.'
+                'errorMessage' => 'Unable to process your request due to missing data.'
             ];
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
+        return $response;
     }
 
     //Need review
     public function safeDeleteAlbum() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['delete']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['delete']);
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $album = array_key_exists('album', $_REQUEST) ? $_REQUEST['album'] : null;
@@ -97,13 +122,11 @@ class DirectoryController extends AppController {
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process your request due to missing data.'
+                'errorMessage' => 'Unable to process your request due to missing data.'
             ];
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
+        return $response;
     }
 
     private function deleteAvatarUnsafe($hidrogenianId) {

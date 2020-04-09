@@ -1,12 +1,12 @@
-﻿using HelperLibrary.Common;
+﻿using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace HelperLibrary.Services {
 

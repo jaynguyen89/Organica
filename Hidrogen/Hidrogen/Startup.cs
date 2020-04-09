@@ -1,3 +1,4 @@
+using System;
 using HelperLibrary;
 using Hidrogen.Services;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using WaterLibrary.Services;
 
 namespace Hidrogen {

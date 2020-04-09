@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hidrogen.Models
+﻿namespace Hidrogen.Models
 {
-    public partial class RoleClaimer
+    public class RoleClaimer
     {
         public int Id { get; set; }
         public int HidrogenianId { get; set; }

@@ -1,14 +1,14 @@
-﻿using Hidrogen.DbContexts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -43,7 +43,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting hidroAddress: " + e.ToString());
+                _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting hidroAddress: " + e);
                 return null;
             }
 
@@ -61,7 +61,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroAddressService.RemoveHidroAddress - Error: " + e.ToString());
+                _logger.LogError("HidroAddressService.RemoveHidroAddress - Error: " + e);
                 return false;
             }
 
@@ -115,7 +115,7 @@ namespace Hidrogen.Services.DatabaseServices {
 
                 }
             } catch (Exception e) {
-                _logger.LogError("HidroAddressService.RetrieveAddressesForHidrogenian - Error: " + e.ToString());
+                _logger.LogError("HidroAddressService.RetrieveAddressesForHidrogenian - Error: " + e);
                 return null;
             }
 
@@ -140,7 +140,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroAddressService.UpdateHidroAddress - Error: " + e.ToString());
+                _logger.LogError("HidroAddressService.UpdateHidroAddress - Error: " + e);
                 return new KeyValuePair<bool?, IGenericAddressVM>(true, null);
             }
 
@@ -168,7 +168,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting rawLocation: " + e.ToString());
+                _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting rawLocation: " + e);
                 return null;
             }
 

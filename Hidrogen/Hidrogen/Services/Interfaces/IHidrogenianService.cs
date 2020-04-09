@@ -1,6 +1,6 @@
-﻿using Hidrogen.ViewModels;
+﻿using System.Threading.Tasks;
+using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.Interfaces {
 

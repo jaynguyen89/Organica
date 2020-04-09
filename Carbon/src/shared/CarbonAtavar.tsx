@@ -11,7 +11,7 @@ const CarbonAvatar = (props: any) => {
     return (
         (
             props.auth && props.auth.avatar &&
-            <img className='avatar-round' src={ props.auth.avatar || CONSTANTS.EMPTY } width={ props.size } />
+            <img className='avatar-round responsive-img' src={ 'https://water.jaydeveloper.com/files/avatars/' + props.auth.avatar } width={ props.size } />
         ) || (
             props.auth && <img className='avatar-round' src={ getGravatarURL(props.auth.email || CONSTANTS.EMPTY, props.size) } />
         )

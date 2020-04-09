@@ -69,7 +69,7 @@ class ResponseEmitter implements EmitterInterface
         $line = 0;
         if (headers_sent($file, $line)) {
             $message = "Unable to emit headers. Headers sent in file=$file line=$line";
-            trigger_error($message, E_USER_WARNING);
+            //trigger_error($message, E_USER_WARNING);
         }
 
         $this->emitStatusLine($response);

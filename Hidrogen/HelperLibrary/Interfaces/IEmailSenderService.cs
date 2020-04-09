@@ -1,6 +1,6 @@
-﻿using HelperLibrary.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using HelperLibrary.ViewModels;
 
 namespace HelperLibrary.Interfaces {
 

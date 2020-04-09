@@ -11,8 +11,19 @@ class AttachmentController extends AppController {
 
     //Use Thread's ID for Container here
     public function saveAttachments() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $container = array_key_exists('container', $_REQUEST) ? $_REQUEST['container'] : null;
@@ -44,40 +55,53 @@ class AttachmentController extends AppController {
                     $this->reduceImageSize($atmPath.$photo_newName);
 
                 $this->persistImageData($photo_newName, $hidrogenianId, $atmPath);
-                array_push($dbAtmNames, $photo_newName);
+                array_push($dbAtmNames, [
+                    'name' => $photo_newName,
+                    'location' => $atmPath    
+                ]);
             }
 
             $message = [
                 'error' => !(!empty($dbAtmNames) && empty($oversizedAtms) && empty($failedAtms)),
-                'imageNames' => $dbAtmNames,
-                'fails' => $failedAtms,
-                'oversizes' => $oversizedAtms
+                'errorMessage' => !(!empty($dbAtmNames) && empty($oversizedAtms) && empty($failedAtms)) ? 'interrupted' : null,
+                'result' => [
+                    'images' => $dbAtmNames,
+                    'fails' => $failedAtms,
+                    'oversizes' => $oversizedAtms
+                ]
             ];
         }
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process request due to missing data.'
+                'errorMessage' => 'Unable to process request due to missing data.',
+                'result' => null
             ];
 
-        $response = $this->response;
-        $response = $response->withType('application/json');
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('attachments', 'message'));
+        return $response;
+        //$this->set(compact('attachments', 'message'));
     }
 
 
     public function removeAttachments() {
-        //$this->autoRender = false;
-        //$this->request->allowMethod(['post']);
+        $this->autoRender = false;
+        $this->request->allowMethod(['post']);
+        
+        $response = $this->response;
+        $response = $response->withType('application/json');
+        
+        $response = $this->response;
+        $message = array();
+        if (strlen($result) != 0) {
+            $message = $this->filterResult($result);
+            $response->withStringBody(json_encode($message));
+            return $response;
+        }
 
         $hidrogenianId = array_key_exists('hidrogenianId', $_REQUEST) ? $_REQUEST['hidrogenianId'] : null;
         $container = array_key_exists('container', $_REQUEST) ? $_REQUEST['container'] : null;
         $removals = array_key_exists('removals', $_REQUEST) ? $_REQUEST['removals'] : null;
-
-        $response = $this->response;
-        $response = $response->withType('application/json');
 
         $message = array();
         $failedRemovals = array();
@@ -97,7 +121,7 @@ class AttachmentController extends AppController {
                 ', [$hidrogenianId, $removal])->fetch('assoc');
 
                 if ($counter['PCount'] == 1) {
-                    $message = $this->removeImageData($removal, $container);
+                    $message = $this->removeImageData($removal, false, $container);
                     if (!empty($message)) array_push($failedRemovals, $removal);
                 }
                 else array_push($unknownRemovals, $removal);
@@ -106,17 +130,21 @@ class AttachmentController extends AppController {
         else
             $message = [
                 'error' => true,
-                'message' => 'Unable to process request due to missing data.'
+                'errorMessage' => 'Unable to process request due to missing data.',
+                'result' => null
             ];
 
         $message = (!empty($message)) ? $message : [
             'error' => false,
-            'fails' => $failedRemovals,
-            'unknowns' => $unknownRemovals
+            'errorMessage' => null,
+            'result' => [
+                'fails' => $failedRemovals,
+                'unknowns' => $unknownRemovals
+            ]
         ];
         $response = $response->withStringBody(json_encode($message));
-        //return $response;
-        $this->set(compact('removals', 'message'));
+        return $response;
+        //$this->set(compact('removals', 'message'));
     }
 
     private function createContainerForAtms($hidrogenianId, $container) {

@@ -1,5 +1,5 @@
-﻿using HelperLibrary.ViewModels;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using HelperLibrary.ViewModels;
 
 namespace HelperLibrary.Interfaces {
 

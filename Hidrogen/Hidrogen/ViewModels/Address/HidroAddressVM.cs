@@ -1,5 +1,5 @@
-﻿using Hidrogen.ViewModels.Address.Generic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Hidrogen.ViewModels.Address.Generic;
 
 namespace Hidrogen.ViewModels.Address {
 

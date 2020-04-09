@@ -1,13 +1,12 @@
-﻿using HelperLibrary;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
 using HelperLibrary.Common;
 using Hidrogen.ViewModels.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Attributes {
 
@@ -22,11 +21,11 @@ namespace Hidrogen.Attributes {
             policy = policy.Trim().Replace(HidroConstants.WHITE_SPACE, string.Empty);
 
             if (string.IsNullOrEmpty(policy) || string.IsNullOrWhiteSpace(policy))
-                throw new System.Exception("HidroAuthorize.Constructor - No permission given.");
+                throw new Exception("HidroAuthorize.Constructor - No permission given.");
 
             var stringPermissions = policy.Split(",");
             if (stringPermissions.Length == 0 || stringPermissions.Length != PERM_QTY)
-                throw new System.Exception("HidroAuthorize.Constructor - Permission tokens error.");
+                throw new Exception("HidroAuthorize.Constructor - Permission tokens error.");
 
             RequiredPermissions = new HidroPermissionVM {
                 AllowCreate = stringPermissions[0] == "1",

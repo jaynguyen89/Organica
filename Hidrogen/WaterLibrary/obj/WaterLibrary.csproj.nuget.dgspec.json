@@ -4,17 +4,17 @@
     "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj": {}
   },
   "projects": {
-    "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj": {
+    "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\HelperLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj",
-        "projectName": "WaterLibrary",
-        "projectPath": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj",
+        "projectUniqueName": "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\HelperLibrary.csproj",
+        "projectName": "HelperLibrary",
+        "projectPath": "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\HelperLibrary.csproj",
         "packagesPath": "C:\\Users\\lovea\\.nuget\\packages\\",
-        "outputPath": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\obj\\",
+        "outputPath": "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Microsoft\\Xamarin\\NuGet\\"
+          "D:\\Microsoft\\Xamarin\\NuGet"
         ],
         "configFilePaths": [
           "C:\\Users\\lovea\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -42,6 +42,92 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.5.1, )"
+            },
+            "Microsoft.AspNet.WebApi.Client": {
+              "target": "Package",
+              "version": "[5.2.7, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[2.5.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj",
+        "projectName": "WaterLibrary",
+        "projectPath": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\WaterLibrary.csproj",
+        "packagesPath": "C:\\Users\\lovea\\.nuget\\packages\\",
+        "outputPath": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\lovea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\HelperLibrary.csproj": {
+                "projectPath": "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\HelperLibrary.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[3.1.3, )"
+            },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
               "version": "[3.1.2, )"
@@ -70,7 +156,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

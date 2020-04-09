@@ -1,10 +1,9 @@
-﻿using HelperLibrary;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.Models;
 using Hidrogen.ViewModels.Address.Generic;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Hidrogen.ViewModels.Address {
 
@@ -59,11 +58,11 @@ namespace Hidrogen.ViewModels.Address {
 
         public List<int> VerifySuburb() {
             var errors = new List<int>();
-            if (Suburb == null) return new List<int>() { 12 };
+            if (Suburb == null) return new List<int> { 12 };
 
             Suburb = Suburb.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrWhiteSpace(Suburb))
-                return new List<int>() { 12 };
+                return new List<int> { 12 };
 
             Suburb = HelperProvider.CapitalizeFirstLetterOfEachWord(Suburb);
 
@@ -80,11 +79,11 @@ namespace Hidrogen.ViewModels.Address {
 
         public List<int> VerifyPostcode() {
             var errors = new List<int>();
-            if (Postcode == null) return new List<int>() { 15 };
+            if (Postcode == null) return new List<int> { 15 };
 
             Postcode = Postcode.Trim().Replace(HidroConstants.WHITE_SPACE, string.Empty);
             if (string.IsNullOrWhiteSpace(Postcode))
-                return new List<int>() { 15 };
+                return new List<int> { 15 };
 
             var lenTest = new Regex(@".{1,10}");
             if (!lenTest.IsMatch(Postcode))
@@ -99,11 +98,11 @@ namespace Hidrogen.ViewModels.Address {
 
         public List<int> VerifyState() {
             var errors = new List<int>();
-            if (State == null) return new List<int>() { 18 };
+            if (State == null) return new List<int> { 18 };
 
             State = State.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrWhiteSpace(State))
-                return new List<int>() { 18 };
+                return new List<int> { 18 };
 
             State = HelperProvider.CapitalizeFirstLetterOfEachWord(State);
 

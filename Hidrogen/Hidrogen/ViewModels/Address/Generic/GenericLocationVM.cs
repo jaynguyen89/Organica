@@ -1,7 +1,7 @@
-﻿using HelperLibrary;
-using HelperLibrary.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using HelperLibrary;
+using HelperLibrary.Common;
 
 namespace Hidrogen.ViewModels.Address.Generic {
 
@@ -44,11 +44,11 @@ namespace Hidrogen.ViewModels.Address.Generic {
 
         public List<int> VerifyStreetAddress() {
             var errors = new List<int>();
-            if (StreetAddress == null) return new List<int>() { 2 };
+            if (StreetAddress == null) return new List<int> { 2 };
 
             StreetAddress = StreetAddress.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrWhiteSpace(StreetAddress))
-                return new List<int>() { 2 };
+                return new List<int> { 2 };
 
             StreetAddress = HelperProvider.CapitalizeFirstLetterOfEachWord(StreetAddress);
 
@@ -88,11 +88,11 @@ namespace Hidrogen.ViewModels.Address.Generic {
 
         public List<int> VerifyCountry() {
             var errors = new List<int>();
-            if (Country == null) return new List<int>() { 7 };
+            if (Country == null) return new List<int> { 7 };
 
             Country = Country.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
             if (string.IsNullOrWhiteSpace(Country))
-                return new List<int>() { 7 };
+                return new List<int> { 7 };
 
             Country = HelperProvider.CapitalizeFirstLetterOfEachWord(Country);
 

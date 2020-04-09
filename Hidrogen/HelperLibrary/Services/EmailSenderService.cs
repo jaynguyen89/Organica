@@ -1,12 +1,12 @@
-﻿using HelperLibrary.Interfaces;
-using HelperLibrary.ViewModels;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using HelperLibrary.Common;
+using HelperLibrary.Interfaces;
+using HelperLibrary.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace HelperLibrary.Services {
 
@@ -45,7 +45,7 @@ namespace HelperLibrary.Services {
                 await _emailPusher.SendMailAsync(_message);
                 _message = new MailMessage();
             } catch (Exception ex) {
-                _logger.LogError("EmailSenderService.SendEmail - Error: " + ex.ToString());
+                _logger.LogError("EmailSenderService.SendEmail - Error: " + ex);
                 return false;
             }
 
@@ -62,7 +62,7 @@ namespace HelperLibrary.Services {
                     _message = new MailMessage();
                 }
             } catch (Exception ex) {
-                _logger.LogError("EmailSenderService.SendEmail - Error: " + ex.ToString());
+                _logger.LogError("EmailSenderService.SendEmail - Error: " + ex);
                 return false;
             }
 

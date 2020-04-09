@@ -1,9 +1,8 @@
-﻿using HelperLibrary.Common;
-using Hidrogen.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using HelperLibrary.Common;
+using Hidrogen.Models;
 
 namespace Hidrogen.ViewModels.Account {
 
@@ -34,7 +33,8 @@ namespace Hidrogen.ViewModels.Account {
             };
         }
 
-        private static readonly List<string> INVALIDS = new List<string>() {
+        private static readonly List<string> INVALIDS = new List<string>
+        {
             "--", "_@", "-@", ".-", "-.", "._", "_.", " ", "@_", "@-", "__", "..", "_-", "-_"
         };
 
@@ -43,7 +43,7 @@ namespace Hidrogen.ViewModels.Account {
             Email = Email.Trim().ToLower();
 
             if (string.IsNullOrEmpty(Email) || string.IsNullOrWhiteSpace(Email))
-                return new List<int>() { 0 };
+                return new List<int> { 0 };
 
             var errors = new List<int>();
 
@@ -67,7 +67,7 @@ namespace Hidrogen.ViewModels.Account {
         //Only "trim" whitespaces in the UserName, keep the resulted string as is
         public List<int> VerifyUserName() {
             if (string.IsNullOrEmpty(UserName) || string.IsNullOrWhiteSpace(UserName))
-                return new List<int>() { 4 };
+                return new List<int> { 4 };
 
             UserName = UserName.Trim();
             var errors = new List<int>();

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\lovea\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\lovea\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Hidrogen.-1889333993.00" t="ExcludeRecursive" />
+    <e p="D:\Workspace\Organica\Hidrogen" t="IncludeFlat">
+      <e p="HelperLibrary" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Common" t="Include">
+          <e p="HidroAttributes.cs" t="Include" />
+          <e p="HidroConstants.cs" t="Include" />
+          <e p="HidroEnums.cs" t="Include" />
+        </e>
+        <e p="HelperLibrary.csproj" t="IncludeRecursive" />
+        <e p="HelperProvider.cs" t="Include" />
+        <e p="Interfaces" t="Include">
+          <e p="IEmailSenderService.cs" t="Include" />
+          <e p="IGoogleReCaptchaService.cs" t="Include" />
+        </e>
+        <e p="IServiceCollectionExtension.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="HelperLibrary.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Services" t="Include">
+          <e p="EmailSenderService.cs" t="Include" />
+          <e p="GoogleReCaptchaService.cs" t="Include" />
+        </e>
+        <e p="ViewModels" t="Include">
+          <e p="EmailParamVM.cs" t="Include" />
+          <e p="ReCaptchaVerification.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Hidrogen" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="Attributes" t="Include">
+          <e p="HidroActionFilter.cs" t="Include" />
+          <e p="HidroAuthorize.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="AccountController.cs" t="Include" />
+          <e p="AddressController.cs" t="Include" />
+          <e p="AuthenticationController.cs" t="Include" />
+          <e p="PaymentController.cs" t="Include" />
+          <e p="PreferenceController.cs" t="Include" />
+          <e p="ProfileController.cs" t="Include" />
+          <e p="WaterController.cs" t="Include" />
+        </e>
+        <e p="DbContexts" t="Include">
+          <e p="HidrogenDbContext.cs" t="Include" />
+          <e p="ManualDbContext.cs" t="Include" />
+        </e>
+        <e p="Hidrogen.csproj" t="IncludeRecursive" />
+        <e p="HtmlTemplates" t="Include">
+          <e p="AccountActivation.html" t="Include" />
+          <e p="AccountActivationConfirmation.html" t="Include" />
+          <e p="AccountDeactivated.html" t="Include" />
+          <e p="AccountRevived.html" t="Include" />
+          <e p="EmailChanged.html" t="Include" />
+          <e p="EmailChangedConfirmation.html" t="Include" />
+          <e p="PasswordReset.html" t="Include" />
+          <e p="PasswordResetConfirmation.html" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="FineLocation.cs" t="Include" />
+          <e p="HidroAddress.cs" t="Include" />
+          <e p="Hidrogenian.cs" t="Include" />
+          <e p="HidroProfile.cs" t="Include" />
+          <e p="HidroRole.cs" t="Include" />
+          <e p="HidroSetting.cs" t="Include" />
+          <e p="HidroTheme.cs" t="Include" />
+          <e p="PaymentMethod.cs" t="Include" />
+          <e p="RawLocation.cs" t="Include" />
+          <e p="RoleClaimer.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="Hidrogen.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="PartialModels" t="Include">
+          <e p="HidroProfile.cs" t="Include" />
+          <e p="PaymentMethod.cs" t="Include" />
+          <e p="RawLocation.cs" t="Include" />
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+        <e p="Services" t="Include">
+          <e p="DatabaseServices" t="Include">
+            <e p="AccountService.cs" t="Include" />
+            <e p="AuthenticationService.cs" t="Include" />
+            <e p="HidroAddressService.cs" t="Include" />
+            <e p="HidrogenianService.cs" t="Include" />
+            <e p="HidroProfileService.cs" t="Include" />
+            <e p="HidroRoleService.cs" t="Include" />
+            <e p="PaymentService.cs" t="Include" />
+            <e p="RoleClaimerService.cs" t="Include" />
+          </e>
+          <e p="HostedServices" t="Include">
+            <e p="Class.cs" t="Include" />
+          </e>
+          <e p="Interfaces" t="Include">
+            <e p="IAccountService.cs" t="Include" />
+            <e p="IAuthenticationService.cs" t="Include" />
+            <e p="IHidroAddressService.cs" t="Include" />
+            <e p="IHidrogenianService.cs" t="Include" />
+            <e p="IHidroProfileService.cs" t="Include" />
+            <e p="IHidroRoleService.cs" t="Include" />
+            <e p="IPaymentService.cs" t="Include" />
+            <e p="IRoleClaimerService.cs" t="Include" />
+          </e>
+          <e p="IServiceCollectionExtension.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="ViewModels" t="Include">
+          <e p="Account" t="Include">
+            <e p="AccountIdentityVM.cs" t="Include" />
+            <e p="AccountSecurityVM.cs" t="Include" />
+            <e p="PreferenceVM.cs" t="Include" />
+            <e p="TimeStampVM.cs" t="Include" />
+            <e p="TwoFaVM.cs" t="Include" />
+          </e>
+          <e p="Address" t="Include">
+            <e p="Generic" t="Include">
+              <e p="GenericLocationVM.cs" t="Include" />
+              <e p="IGenericAddressVM.cs" t="Include" />
+            </e>
+            <e p="HidroAddressVM.cs" t="Include" />
+            <e p="LocalAddressVM.cs" t="Include" />
+            <e p="LocalLocationVM.cs" t="Include" />
+            <e p="StandardAddressVM.cs" t="Include" />
+            <e p="StandardLocationVM.cs" t="Include" />
+          </e>
+          <e p="Authentication" t="Include">
+            <e p="AccountActivationVM.cs" t="Include" />
+            <e p="AuthenticatedUser.cs" t="Include" />
+            <e p="AuthenticationVM.cs" t="Include" />
+            <e p="CookieAuthenticationVM.cs" t="Include" />
+            <e p="PasswordResetVM.cs" t="Include" />
+            <e p="RecoveryVM.cs" t="Include" />
+            <e p="RegistrationVM.cs" t="Include" />
+          </e>
+          <e p="Authorization" t="Include">
+            <e p="HidroPermissionVM.cs" t="Include" />
+            <e p="HidroRoleVM.cs" t="Include" />
+            <e p="RoleClaimerVM.cs" t="Include" />
+            <e p="TemporaryPermissionVM.cs" t="Include" />
+          </e>
+          <e p="HidrogenianVM.cs" t="Include" />
+          <e p="HidroProfileVM.cs" t="Include" />
+          <e p="Payment" t="Include">
+            <e p="PaymentDetailVM.cs" t="Include" />
+            <e p="TransactionDetailVM.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Hidrogen.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="WaterLibrary" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DbContexts" t="Include">
+          <e p="WaterDbContext.cs" t="Include" />
+          <e p="WaterManualContext.cs" t="Include" />
+        </e>
+        <e p="Interfaces" t="Include">
+          <e p="IWaterService.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="Photos.cs" t="Include" />
+          <e p="Tokens.cs" t="Include" />
+          <e p="Userphotos.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="WaterLibrary.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Services" t="Include">
+          <e p="IServiceCollectionExtension.cs" t="Include" />
+          <e p="WaterService.cs" t="Include" />
+        </e>
+        <e p="ViewModels" t="Include">
+          <e p="AssetReplaceVM.cs" t="Include" />
+          <e p="AvatarResultVM.cs" t="Include" />
+          <e p="Generic" t="Include">
+            <e p="AssetFormVM.cs" t="Include" />
+            <e p="WaterResultVM.cs" t="Include" />
+          </e>
+          <e p="TokenVM.cs" t="Include" />
+        </e>
+        <e p="WaterLibrary.csproj" t="IncludeRecursive" />
+      </e>
+    </e>
+  </component>
+</project>

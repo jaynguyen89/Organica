@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hidrogen.Models
+﻿namespace Hidrogen.Models
 {
-    public partial class FineLocation
+    public class FineLocation
     {
         public int Id { get; set; }
         public string BuildingName { get; set; }

@@ -1,15 +1,14 @@
 import axios from 'axios';
-
-axios.defaults.timeout = 10000; //10 seconds
 axios.defaults.withCredentials = true; //include all cookies
 
 const LOCAL_ENDPOINT = 'https://localhost:5001/';
 
-const sendRequestForResult = (action: string, auth: any, data: any, method = 'POST') => {
+export const sendRequestForResult = (action: string, auth: any, data: any, method = 'POST') => {
     if (auth == null)
         auth = sessionStorage.getItem('authToken');
-
+        
     const requestOptions = {
+        timeout : 10000, // 10 seconds
         method : method,
         url : LOCAL_ENDPOINT + action,
         headers : {
@@ -18,7 +17,7 @@ const sendRequestForResult = (action: string, auth: any, data: any, method = 'PO
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         },
-        body : (method !== 'GET' && data != null) ? JSON.stringify(data) : null
+        data : method === 'POST' ? JSON.stringify(data) : null
     };
 
     const response = axios(requestOptions).then((result: any) => {
@@ -31,4 +30,25 @@ const sendRequestForResult = (action: string, auth: any, data: any, method = 'PO
     return response;
 };
 
-export default sendRequestForResult;
+export const sendWaterRequest = (action: string, formData: any, method = 'POST') => {
+    const requestOptions = {
+        timeout : 30000, // 30 seconds
+        method : method,
+        url : LOCAL_ENDPOINT + action,
+        headers : {
+            'Authorization': 'Bearer ' + sessionStorage.getItem('authToken'),
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json',
+        },
+        data : formData
+    };
+
+    const response = axios(requestOptions).then((result: any) => {
+        if (result.status !== 200)
+            return result.json().then((error: any) => { throw error; })
+        else
+            return result.data;
+    });
+    
+    return response;
+}

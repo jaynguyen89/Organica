@@ -1,10 +1,10 @@
-﻿using Hidrogen.DbContexts;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Hidrogen.DbContexts;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Account;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Hidrogen.Services.DatabaseServices {
 
@@ -69,7 +69,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogInformation("AccountService.ReverseIdentityChanges - Error: " + e.ToString());
+                _logger.LogInformation("AccountService.ReverseIdentityChanges - Error: " + e);
                 return false;
             }
 
@@ -102,7 +102,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("AccountService.UpdateIdentityForHidrogenian - Error: " + e.ToString());
+                _logger.LogError("AccountService.UpdateIdentityForHidrogenian - Error: " + e);
                 return new KeyValuePair<bool, KeyValuePair<AccountIdentityVM, AccountIdentityVM>?>(true, null);
             }
 
@@ -122,7 +122,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("AccountService.UpdatePasswordForAccount - Error: " + e.ToString());
+                _logger.LogError("AccountService.UpdatePasswordForAccount - Error: " + e);
                 return false;
             }
 

@@ -1,5 +1,5 @@
-﻿using Hidrogen.ViewModels;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Hidrogen.ViewModels;
 
 namespace Hidrogen.Services.Interfaces {
 
@@ -23,7 +23,7 @@ namespace Hidrogen.Services.Interfaces {
         /// <summary>
         /// Returns null indicating profile not found with the given data, returns true indicating successful deletion, otherwise returns false.
         /// </summary>
-        Task<bool?> DeleteAvatarInformation(int profileId);
+        Task<string> DeleteAvatarInformation(int hidrogenianId);
 
         /// <summary>
         /// Returns null indicating profile not found with the given data, returns true indicating successful updating, otherwise returns false.

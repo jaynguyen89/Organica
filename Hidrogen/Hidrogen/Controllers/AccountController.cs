@@ -1,4 +1,7 @@
-﻿using Google.Authenticator;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Google.Authenticator;
 using HelperLibrary;
 using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
@@ -10,9 +13,6 @@ using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Controllers {
@@ -199,7 +199,7 @@ namespace Hidrogen.Controllers {
             var validation = await _reCaptchaService.IsHumanRegistration(twoFa.CaptchaToken);
             if (!validation.Result) return new JsonResult(validation);
 
-            var secretKey = HelperProvider.GenerateTemporaryPassword(12);
+            var secretKey = HelperProvider.GenerateRandomString(12);
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 
             var saved = await _userService.SaveTwoFaSecretKeyFor(twoFa.Id, secretKey);

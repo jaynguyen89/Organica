@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using HelperLibrary;
-using HelperLibrary.Common;
 
 namespace Hidrogen.ViewModels.Authentication {
 
@@ -27,7 +25,8 @@ namespace Hidrogen.ViewModels.Authentication {
 
         public string CaptchaToken { get; set; } //also for resetting password
 
-        private static readonly List<string> INVALIDS = new List<string>() {
+        private static readonly List<string> INVALIDS = new List<string>
+        {
             "--", "_@", "-@", ".-", "-.", "._", "_.", " ", "@_", "@-", "__", "..", "_-", "-_"
         };
 
@@ -36,7 +35,7 @@ namespace Hidrogen.ViewModels.Authentication {
             Email = Email.Trim().ToLower();
 
             if (string.IsNullOrEmpty(Email) || string.IsNullOrWhiteSpace(Email))
-                return new List<int>() { 0 };
+                return new List<int> { 0 };
 
             var errors = new List<int>();
 
@@ -60,7 +59,7 @@ namespace Hidrogen.ViewModels.Authentication {
         //Only "trim" whitespaces in the UserName, keep the resulted string as is
         public List<int> VerifyUserName() {
             if (string.IsNullOrEmpty(UserName) || string.IsNullOrWhiteSpace(UserName))
-                return new List<int>() { 4 };
+                return new List<int> { 4 };
 
             UserName = UserName.Trim();
             var errors = new List<int>();
@@ -83,7 +82,7 @@ namespace Hidrogen.ViewModels.Authentication {
         public List<int> VerifyPassword(string password = null) {
             if (string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(Password) ||
                 string.IsNullOrEmpty(PasswordConfirm) || string.IsNullOrWhiteSpace(PasswordConfirm))
-                return new List<int>() { 8 };
+                return new List<int> { 8 };
 
             var errors = new List<int>();
 
@@ -119,7 +118,7 @@ namespace Hidrogen.ViewModels.Authentication {
         //Reprocess the FamilyName before checking
         public List<int> VerifyFamilyName() {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
-                return new List<int>() { 16 };
+                return new List<int> { 16 };
 
             FamilyName = HelperProvider.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
@@ -138,7 +137,7 @@ namespace Hidrogen.ViewModels.Authentication {
         //Reprocess the GivenName before checking
         public List<int> VerifyGivenName() {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
-                return new List<int>() { 19 };
+                return new List<int> { 19 };
 
             GivenName = HelperProvider.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();

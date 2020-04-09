@@ -1,9 +1,9 @@
-﻿using HelperLibrary.Common;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using HelperLibrary.Common;
 using static HelperLibrary.Common.HidroAttributes;
 
 namespace HelperLibrary {
@@ -12,10 +12,11 @@ namespace HelperLibrary {
 
         private static Random random = new Random();
 
-        public static string GenerateTemporaryPassword(int length) {
-            const string CHARS = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890!@#$%^&*_+.";
+        public static string GenerateRandomString(int length, bool includeSpecialChars = true) {
+            const string SCHARS = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890!@#$%^&*_+.";
+            const string NCHARS = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn";
             var password = new string(
-                Enumerable.Repeat(CHARS, length)
+                Enumerable.Repeat(includeSpecialChars ? SCHARS : NCHARS, length)
                           .Select(p => p[random.Next(p.Length)])
                           .ToArray()
             );

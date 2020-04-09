@@ -1,7 +1,4 @@
-﻿using Hidrogen.Models;
-using System;
-
-namespace Hidrogen.ViewModels.Authorization {
+﻿namespace Hidrogen.ViewModels.Authorization {
 
     public class HidroRoleVM {
 

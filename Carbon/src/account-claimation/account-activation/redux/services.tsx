@@ -1,4 +1,4 @@
-import sendRequestForResult from '../../../providers/serviceProvider';
+import { sendRequestForResult } from '../../../providers/serviceProvider';
 const CONTROLLER = 'authentication/';
 
 export const activateHidrogenianAccount = (activator: any) => {
