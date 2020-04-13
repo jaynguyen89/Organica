@@ -1,4 +1,5 @@
-﻿using static HelperLibrary.Common.HidroAttributes;
+﻿using System.Runtime.Serialization;
+using static HelperLibrary.Common.HidroAttributes;
 
 namespace HelperLibrary {
 
@@ -13,10 +14,6 @@ namespace HelperLibrary {
             AUTHENTICATION_EXPIRED,
             ACCESS_CONTROL_DENIED,
             INSUFFICIENT_PERMISSION
-        }
-
-        public enum GENDERS {
-            MALE, FEMALE, OTHER
         }
 
         public enum PAYMENT_METHODS {

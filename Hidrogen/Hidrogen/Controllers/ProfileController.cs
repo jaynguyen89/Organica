@@ -50,10 +50,10 @@ namespace Hidrogen.Controllers {
             return await UpdateHidrogenianAvatarInternally(uploading.HidrogenianId, uploading.ApiKey, response.Result);
         }
 
-        [HttpGet("get-public-profile/{hidrogenianId}")]
+        [HttpGet("get-private-profile/{hidrogenianId}")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
-        public async Task<JsonResult> RetrievePublicProfile(int hidrogenianId) {
+        public async Task<JsonResult> RetrievePrivateProfile(int hidrogenianId) {
             _logger.LogInformation("ProfileController.RetrievePublicProfile - Service starts.");
 
             var profile = await _profileService.GetPublicProfileFor(hidrogenianId);
@@ -100,11 +100,11 @@ namespace Hidrogen.Controllers {
                                  : new JsonResult(new { Result = RESULTS.SUCCESS, Message = "Your avatar has been removed successfully." });
         }
 
-        [HttpPost("update-profile")]
+        [HttpPost("update-private-profile")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
-        public async Task<JsonResult> UpdatePublicProfile(HidroProfileVM profile) {
-            _logger.LogInformation("ProfileController.UpdatePublicProfile - Service starts.");
+        public async Task<JsonResult> UpdatePrivateProfile(HidroProfileVM profile) {
+            _logger.LogInformation("ProfileController.UpdatePrivateProfile - Service starts.");
 
             var verification = VerifyProfileData(profile);
             if (verification.Count != 0) {
@@ -112,7 +112,7 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var result = await _profileService.UpdatePublicProfile(profile);
+            var result = await _profileService.UpdatePrivateProfile(profile);
 
             return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "No profile found with the given data. Unable to update." }) : (
                 result.Value ? new JsonResult(new { Result = RESULTS.SUCCESS })
@@ -152,7 +152,7 @@ namespace Hidrogen.Controllers {
             errors.AddRange(profile.VerifyEthnicity());
             errors.AddRange(profile.VerifyJobTitle());
             errors.AddRange(profile.VerifyWebsite());
-            errors.AddRange(profile.VerifyIntroduciton());
+            errors.AddRange(profile.VerifyIntroduction());
 
             return errors;
         }

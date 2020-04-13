@@ -28,6 +28,6 @@ namespace Hidrogen.Services.Interfaces {
         /// <summary>
         /// Returns null indicating profile not found with the given data, returns true indicating successful updating, otherwise returns false.
         /// </summary>
-        Task<bool?> UpdatePublicProfile(HidroProfileVM profile);
+        Task<bool?> UpdatePrivateProfile(HidroProfileVM profile);
     }
 }

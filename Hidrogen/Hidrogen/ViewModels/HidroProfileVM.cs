@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using WaterLibrary.ViewModels;
 using static HelperLibrary.HidroEnums;
 
@@ -24,8 +26,8 @@ namespace Hidrogen.ViewModels {
         public AvatarVM Avatar { get; set; } //Use for updating/removing avatar
 
         public ProfileBirth Birthday { get; set; }
-
-        public GENDERS Gender { get; set; }
+        
+        public int Gender { get; set; }
 
         public string Ethnicity { get; set; }
 
@@ -43,9 +45,8 @@ namespace Hidrogen.ViewModels {
                 HidrogenianId = profile.HidrogenianId,
                 FamilyName = profile.FamilyName,
                 GivenName = profile.GivenName,
-                Avatar = profile.ProcessAvatarInfo(),
                 Birthday = profile.ProduceBirthValues(),
-                Gender = profile.ProduceGenderEnum(),
+                Gender = !profile.Gender.HasValue ? 2 : (profile.Gender.Value ? 1 : 0),
                 Ethnicity = profile.Ethnicity,
                 Company = profile.Company,
                 JobTitle = profile.JobTitle,
@@ -123,7 +124,8 @@ namespace Hidrogen.ViewModels {
             if (JobTitle == null) return errors;
 
             JobTitle = JobTitle.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
-            if (string.IsNullOrEmpty(JobTitle) || string.IsNullOrWhiteSpace(JobTitle)) {
+            if (string.IsNullOrEmpty(JobTitle) || string.IsNullOrWhiteSpace(JobTitle))
+            {
                 JobTitle = null;
                 return errors;
             }
@@ -160,7 +162,7 @@ namespace Hidrogen.ViewModels {
             return errors;
         }
 
-        public List<int> VerifyIntroduciton() {
+        public List<int> VerifyIntroduction() {
             var errors = new List<int>();
             if (SelfIntroduction == null) return errors;
 
@@ -174,7 +176,7 @@ namespace Hidrogen.ViewModels {
         //Reprocess the FamilyName before checking
         public List<int> VerifyFamilyName() {
             if (string.IsNullOrEmpty(FamilyName) || string.IsNullOrWhiteSpace(FamilyName))
-                return new List<int> { 11 };
+                return new List<int> {11};
 
             FamilyName = HelperProvider.CapitalizeFirstLetterOfEachWord(FamilyName.Trim());
             var errors = new List<int>();
@@ -193,7 +195,7 @@ namespace Hidrogen.ViewModels {
         //Reprocess the GivenName before checking
         public List<int> VerifyGivenName() {
             if (string.IsNullOrEmpty(GivenName) || string.IsNullOrWhiteSpace(GivenName))
-                return new List<int> { 14 };
+                return new List<int> {14};
 
             GivenName = HelperProvider.CapitalizeFirstLetterOfEachWord(GivenName.Trim());
             var errors = new List<int>();
@@ -249,7 +251,7 @@ namespace Hidrogen.ViewModels {
         }
     }
 
-    public class AvatarVM {
+public class AvatarVM {
 
         public string Name { get; set; }
 

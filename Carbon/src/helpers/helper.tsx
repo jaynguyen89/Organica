@@ -15,6 +15,16 @@ export const CONSTANTS = {
     INTERRUPTED : 2
 };
 
+export const GENDERS = ['Other', 'Male', 'Female'];
+
+export const ModalOptions = {
+    opacity : 0.8,
+    inDuration : 200,
+    outDuration : 200,
+    startingTop : '50%',
+    endingTop : '20%'
+};
+
 export function sessionWatcher() {
     if (sessionStorage.getItem('expirationTime') &&
         Number(sessionStorage.getItem('expirationTime')) < moment().unix()

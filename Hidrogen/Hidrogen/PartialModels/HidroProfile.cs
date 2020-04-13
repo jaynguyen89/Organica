@@ -22,17 +22,12 @@ namespace Hidrogen.Models {
             };
         }
 
-        public GENDERS ProduceGenderEnum() {
-            return !Gender.HasValue ? GENDERS.OTHER : (
-                    Gender.Value ? GENDERS.MALE : GENDERS.FEMALE
-                );
-        }
-
         public static implicit operator HidroProfile(HidroProfileVM profile) {
             return new HidroProfile {
+                HidrogenianId = profile.HidrogenianId,
                 FamilyName = profile.FamilyName,
                 GivenName = profile.GivenName,
-                Gender = profile.Gender == GENDERS.OTHER ? null : (bool?)(profile.Gender == GENDERS.MALE),
+                Gender = profile.Gender == 0 ? (bool?)null : (profile.Gender == 1),
                 DateOfBith = profile.Birthday.Birth,
                 Ethnicity = profile.Ethnicity,
                 Company = profile.Company,

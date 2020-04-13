@@ -26,3 +26,20 @@ export const checkAvatarUploadResult = (
             isUploading : false
         });
 }
+
+export const checkProfileResult = (result: any, setStatus: any) => {
+    if (!result.profileUpdating && !result.updateSuccess && _.isEmpty(result.newProfile))
+        return false;
+
+    if (!result.profileUpdating && !result.updateSuccess && !_.isEmpty(result.newProfile) && result.newProfile.hasOwnProperty('stack')) {
+        setStatus({ messages : 'Unable to update your profile due to network connection lost. Please check your network.', type : 'error' });
+        return false;
+    }
+
+    if (!result.profileUpdating && result.updateSuccess && !_.isEmpty(result.newProfile) && result.newProfile.hasOwnProperty('result') && result.newProfile.result === 0) {
+        setStatus({ messages : 'An error occurred while attempting to update your profile. Please try again.', type : 'error' });
+        return false;
+    }
+    
+    return true;
+}

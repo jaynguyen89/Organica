@@ -12,9 +12,9 @@ namespace Hidrogen.Controllers {
     [ApiController]
     [Route("payment")]
     public class PaymentController {
-
-        public readonly ILogger<PaymentController> _logger;
-        public readonly IPaymentService _paymentService;
+        
+        private readonly ILogger<PaymentController> _logger;
+        private readonly IPaymentService _paymentService;
 
         public PaymentController(
             ILogger<PaymentController> logger,

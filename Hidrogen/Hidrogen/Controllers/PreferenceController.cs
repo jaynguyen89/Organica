@@ -7,9 +7,9 @@ namespace Hidrogen.Controllers {
     [ApiController]
     [Route("preference")]
     public class PreferenceController {
-
-        public readonly ILogger<PreferenceController> _logger;
-        public readonly IAccountService _accountService;
+        
+        private readonly ILogger<PreferenceController> _logger;
+        private readonly IAccountService _accountService;
 
         public PreferenceController(
             ILogger<PreferenceController> logger,

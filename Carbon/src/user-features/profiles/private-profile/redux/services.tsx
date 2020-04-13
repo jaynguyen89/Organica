@@ -1,11 +1,12 @@
 import { sendRequestForResult } from '../../../../providers/serviceProvider';
+import { IProfile } from './constants';
 
 let PROFILE_CONTROLLER = 'profile/';
 
-export const updateAvatarToHidrogen = (profile: any) => {
-    return sendRequestForResult(PROFILE_CONTROLLER + 'update-avatar', null, profile, 'PUT');
+export const retrievePrivateProfile = (hidrogenianId: number) => {
+    return sendRequestForResult(PROFILE_CONTROLLER + 'get-private-profile/' + hidrogenianId, null, null, 'GET');
 }
 
-export const removeAvatarFromHidrogen = (profileId: number) => {
-    return sendRequestForResult(PROFILE_CONTROLLER + 'remove-avatar/' + profileId, null, null, 'DELETE');
+export const updatePrivateProfile = (profile: IProfile) => {
+    return sendRequestForResult(PROFILE_CONTROLLER + 'update-private-profile', null, profile, 'POST');
 }

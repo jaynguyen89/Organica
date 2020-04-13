@@ -58,6 +58,13 @@
     margin: 0;
 }
 
+.self-intro-box {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border: 0.5px solid #49A9D6;
+    border-radius: 4px;
+}
+
 .last-col {
     margin: 10px 0;
 }
@@ -92,6 +99,20 @@
 
 .address-row:hover {
     background-color: #EEE;
+}
+
+.add-address-row {
+    background-color: #EA8F61;
+    text-align: center;
+    text-transform: uppercase;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+}
+
+.add-address-row:hover {
+    background-color: #EFA681;
+    cursor: pointer;
 }
 
 .address-map {

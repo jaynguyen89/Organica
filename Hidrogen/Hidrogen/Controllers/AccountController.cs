@@ -20,9 +20,9 @@ namespace Hidrogen.Controllers {
     [ApiController]
     [Route("account")]
     public class AccountController {
-
-        public readonly ILogger<AccountController> _logger;
-        public readonly IAccountService _accountService;
+        
+        private readonly ILogger<AccountController> _logger;
+        private readonly IAccountService _accountService;
         private readonly IAuthenticationService _authService;
         private readonly IHidrogenianService _userService;
         private readonly IHidroProfileService _profileService;
@@ -70,7 +70,7 @@ namespace Hidrogen.Controllers {
             var secretKey = await _accountService.RetrieveTwoFaSecretKeyFor(twoFa.Id);
             if (secretKey == null) return new JsonResult(new { Result =RESULTS.FAILED, Message = "Error occurred while looking for your Two-Factor Authentication." });
 
-            if (secretKey.Length == 0) new JsonResult(new { Result = RESULTS.SUCCESS });
+            if (secretKey.Length == 0) return new JsonResult(new { Result = RESULTS.SUCCESS });
 
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
             var authenticator = tfa.GenerateSetupCode(

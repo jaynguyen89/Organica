@@ -94,19 +94,28 @@ namespace Hidrogen.Services.DatabaseServices {
             return true;
         }
 
-        public async Task<bool?> UpdatePublicProfile(HidroProfileVM profile) {
-            _logger.LogInformation("HidroProfileService.UpdatePublicProfile - Service starts.");
+        public async Task<bool?> UpdatePrivateProfile(HidroProfileVM profile) {
+            _logger.LogInformation("HidroProfileService.UpdatePrivateProfile - Service starts.");
 
             var dbProfile = await _dbContext.HidroProfile.FindAsync(profile.Id);
             if (dbProfile == null) return null;
 
-            dbProfile = profile;
+            dbProfile.FamilyName = profile.FamilyName;
+            dbProfile.GivenName = profile.GivenName;
+            dbProfile.Gender = profile.Gender == 0 ? (bool?) null : (profile.Gender == 1);
+            dbProfile.DateOfBith = profile.Birthday.Birth;
+            dbProfile.Ethnicity = profile.Ethnicity;
+            dbProfile.Company = profile.Company;
+            dbProfile.JobTitle = profile.JobTitle;
+            dbProfile.PersonalWebsite = profile.Website;
+            dbProfile.SelfIntroduction = profile.SelfIntroduction;
+            
             _dbContext.HidroProfile.Update(dbProfile);
 
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.UpdatePublicProfile - Error: " + e);
+                _logger.LogError("HidroProfileService.UpdatePrivateProfile - Error: " + e);
                 return false;
             }
 

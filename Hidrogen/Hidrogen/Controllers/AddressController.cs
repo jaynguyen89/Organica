@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
-using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,9 +13,9 @@ namespace Hidrogen.Controllers {
     [ApiController]
     [Route("address")]
     public class AddressController {
-
-        public readonly ILogger<AddressController> _logger;
-        public readonly IHidroAddressService _addressService;
+        
+        private readonly ILogger<AddressController> _logger;
+        private readonly IHidroAddressService _addressService;
 
         public AddressController(
             ILogger<AddressController> logger,
@@ -108,17 +107,14 @@ namespace Hidrogen.Controllers {
             errors.AddRange(location.VerifyCountry());
             errors.AddRange(location.VerifyNote());
 
-            StandardLocationVM sAddress;
-            LocalLocationVM lAddress;
-
             if (address.IsStandard) {
-                sAddress = address._sAddress;
+                var sAddress = address._sAddress;
                 errors.AddRange(sAddress.VerifySuburb());
                 errors.AddRange(sAddress.VerifyPostcode());
                 errors.AddRange(sAddress.VerifyState());
             }
             else {
-                lAddress = address._lAddress;
+                var lAddress = address._lAddress;
                 errors.AddRange(lAddress.VerifyGroup());
                 errors.AddRange(lAddress.VerifyLane());
                 errors.AddRange(lAddress.VerifyQuarter());

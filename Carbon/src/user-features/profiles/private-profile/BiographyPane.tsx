@@ -14,6 +14,7 @@ import CarbonPreloader from '../../../shared/CarbonPreloader';
 
 import { checkApiKeyResult, checkAvatarUploadResult } from './utility';
 import { loadAuthenticatedUser } from '../../../authentication/redux/actions';
+import { retrievePrivateProfile } from './redux/actions';
 import {
     retrieveApiKey,
     uploadAvatarToWater,
@@ -25,7 +26,8 @@ const mapStateToProps = (state: any) => ({
     user : state.AuthenticationStore.authUser,
     apiKey : state.AvatarStore.apiKey,
     avatar : state.AvatarStore.avatarResult,
-    removed : state.AvatarStore.deleteResult
+    removed : state.AvatarStore.deleteResult,
+    profileResult : state.ProfileStore.getProfile
 });
 
 const mapDispatchToProps = {
@@ -33,7 +35,8 @@ const mapDispatchToProps = {
     uploadAvatarToWater,
     loadAuthenticatedUser,
     replaceAvatarInWater,
-    deleteAvatarInWater
+    deleteAvatarInWater,
+    retrievePrivateProfile
 };
 
 const APIKEY_ACTIONS = {
@@ -62,12 +65,26 @@ const BiographyPane = (props: any) => {
         hasImage : false,
         isUploading : false
     });
+
+    const [shouldShowBioForm, setShouldShowBioForm] = React.useState(false);
   
     const avatarPreview = avatar.map((file:any) => (
         <div key={ file.name }>
             <img src={ file.preview } className='responsive-img' alt={ file.name } />
         </div>
     ));
+
+    React.useEffect(() => {
+        const { retrievePrivateProfile } = props;
+        retrievePrivateProfile(props.user.userId);
+    }, []);
+
+    React.useEffect(() => {
+        if (props.profileResult.isUpdated) {
+            const { retrievePrivateProfile } = props;
+            retrievePrivateProfile(props.user.userId);
+        }
+    }, [props.profileResult.isUpdated]);
 
     React.useEffect(() => {
         checkApiKeyResult(props.apiKey, setStatus, setApiKey);
@@ -226,8 +243,13 @@ const BiographyPane = (props: any) => {
                 }
             </div>
             <div className='col m9 s12'>
-                <BiographyShow />
-                <BiographyForm />
+                {
+                    (
+                        shouldShowBioForm &&
+                        <BiographyForm showBioForm={ setShouldShowBioForm } />
+                    ) ||
+                    <BiographyShow showBioForm={ setShouldShowBioForm } />
+                }
             </div>
         </div>
     );
