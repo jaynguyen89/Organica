@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Hidrogen.Models
 {
@@ -10,7 +11,7 @@ namespace Hidrogen.Models
         public string CitizenCardNumber { get; set; }
         public DateTime? CitizenCardIssuedDate { get; set; }
         public string AvatarInformation { get; set; }
-        public DateTime? DateOfBith { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public bool? Gender { get; set; }
         public string Ethnicity { get; set; }
         public string FamilyName { get; set; }

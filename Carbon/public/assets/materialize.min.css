@@ -3202,7 +3202,7 @@ span.badge.new {
 }
 
 span.badge.new:after {
-    content: " new"
+    content: ""
 }
 
 span.badge[data-badge-caption]::after {

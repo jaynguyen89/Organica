@@ -1,6 +1,9 @@
-﻿namespace Hidrogen.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Hidrogen.Models
 {
-    public class HidroSetting
+    public partial class HidroSetting
     {
         public int Id { get; set; }
         public int HidrogenianId { get; set; }

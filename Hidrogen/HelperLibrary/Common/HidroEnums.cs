@@ -40,7 +40,7 @@ namespace HelperLibrary {
             IM_USED = 226,
             MULTIPLE_CHOICES = 300,
             MOVED_PERMANENTLY = 301,
-            FOUND = 302, //reviously Moved Temporarily
+            FOUND = 302, //previously Moved Temporarily
             SEE_OTHER = 303,
             NOT_MODIFIED = 304,
             USE_PROXY = 305,

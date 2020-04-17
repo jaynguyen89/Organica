@@ -14,7 +14,7 @@ import CarbonPreloader from '../../../shared/CarbonPreloader';
 
 import { checkApiKeyResult, checkAvatarUploadResult } from './utility';
 import { loadAuthenticatedUser } from '../../../authentication/redux/actions';
-import { retrievePrivateProfile } from './redux/actions';
+import { retrievePrivateProfile } from './redux/biography/actions';
 import {
     retrieveApiKey,
     uploadAvatarToWater,
@@ -75,8 +75,10 @@ const BiographyPane = (props: any) => {
     ));
 
     React.useEffect(() => {
-        const { retrievePrivateProfile } = props;
-        retrievePrivateProfile(props.user.userId);
+        if (props.user) {
+            const { retrievePrivateProfile } = props;
+            retrievePrivateProfile(props.user.userId);
+        }
     }, []);
 
     React.useEffect(() => {

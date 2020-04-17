@@ -13,9 +13,7 @@ namespace Hidrogen.ViewModels.Address.Generic {
 
         public string AlternateAddress { get; set; }
 
-        public string Country { get; set; }
-
-        public string Note { get; set; }
+        public CountryVM Country { get; set; }
 
         public abstract string ProduceNormalizedAddress();
 
@@ -56,7 +54,7 @@ namespace Hidrogen.ViewModels.Address.Generic {
             if (!lenTest.IsMatch(StreetAddress))
                 errors.Add(3);
 
-            var rx = new Regex(@"^[A-Za-z\d\-.,'() ]*$");
+            var rx = new Regex(@"^[A-Za-z\d\-/.,'() ]*$");
             if (!rx.IsMatch(StreetAddress))
                 errors.Add(4);
 
@@ -86,50 +84,6 @@ namespace Hidrogen.ViewModels.Address.Generic {
             return errors;
         }
 
-        public List<int> VerifyCountry() {
-            var errors = new List<int>();
-            if (Country == null) return new List<int> { 7 };
-
-            Country = Country.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
-            if (string.IsNullOrWhiteSpace(Country))
-                return new List<int> { 7 };
-
-            Country = HelperProvider.CapitalizeFirstLetterOfEachWord(Country);
-
-            var lenTest = new Regex(@".{1,40}");
-            if (!lenTest.IsMatch(Country))
-                errors.Add(8);
-
-            var rx = new Regex(@"^[A-Za-z'.\- ]*$");
-            if (!rx.IsMatch(Country))
-                errors.Add(9);
-
-            return errors;
-        }
-
-        public List<int> VerifyNote() {
-            var errors = new List<int>();
-            if (Note == null) return errors;
-
-            Note = Note.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
-            if (string.IsNullOrWhiteSpace(Note)) {
-                Note = null;
-                return errors;
-            }
-
-            Note = HelperProvider.CapitalizeFirstLetterOfEachWord(Note);
-
-            var lenTest = new Regex(@".{1,250}");
-            if (!lenTest.IsMatch(Note))
-                errors.Add(10);
-
-            var rx = new Regex(@"^[A-Za-z\d'.,\-() ]*$");
-            if (!rx.IsMatch(Note))
-                errors.Add(11);
-
-            return errors;
-        }
-
         public List<string> GenerateErrorMessages(List<int> errors) {
             var messages = new List<string>();
 
@@ -145,15 +99,6 @@ namespace Hidrogen.ViewModels.Address.Generic {
             //For AlternateAddress
             if (errors.Contains(5)) messages.Add("Alternate Address is too long. Max 50 characters.");
             if (errors.Contains(6)) messages.Add("Alternate Address can only contain these special characters: -.,'()");
-            
-            //For Country
-            if (errors.Contains(7)) messages.Add("Country is missing. This field is required.");
-            if (errors.Contains(8)) messages.Add("Country is too long. Max 40 characters.");
-            if (errors.Contains(9)) messages.Add("Country can only contain these special characters: '.-");
-            
-            //For Note
-            if (errors.Contains(10)) messages.Add("Address Note is too long. Max 250 characters.");
-            if (errors.Contains(11)) messages.Add("Address Note can only contain these special characters: '.,-()");
             
             //For Suburb
             if (errors.Contains(12)) messages.Add("Suburb is missing. This field is required.");

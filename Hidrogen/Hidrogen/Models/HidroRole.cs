@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Hidrogen.Models
 {
-    public class HidroRole
+    public partial class HidroRole
     {
         public HidroRole()
         {

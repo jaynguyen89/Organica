@@ -19,7 +19,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class AuthenticationService : IAuthenticationService {
 
         private readonly ILogger<AuthenticationService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
@@ -62,8 +62,8 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateHidrogenian(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationService.AuthenticateHidrogenian - Service starts.");
 
-            Hidrogenian hidrogenian = null;
-            var role = string.Empty;
+            Hidrogenian hidrogenian;
+            string role;
             try {
                 hidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
                     h => (auth.Email != null ? h.Email == auth.Email
@@ -114,8 +114,8 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationService.AuthenticateWithCookie - Service starts.");
 
-            Hidrogenian dbHidrogenian = null;
-            var role = string.Empty;
+            Hidrogenian dbHidrogenian;
+            string role;
             try {
                 dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
                     h => h.CookieToken != null && h.CookieToken == cookie.CookieToken &&
@@ -239,7 +239,7 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<bool?> IsEmailAddressAvailable(string email) {
             _logger.LogInformation("AuthenticationService.IsEmailAddressAvailable - Service starts.");
 
-            var available = true;
+            bool available;
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.Email == email));
             } catch (Exception e) {
@@ -253,7 +253,7 @@ namespace Hidrogen.Services.DatabaseServices {
         public async Task<bool?> IsUserNameAvailable(string username) {
             _logger.LogInformation("AuthenticationService.IsUserNameAvailable - Service starts.");
 
-            var available = true;
+            bool available;
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.UserName.ToLower() == username.ToLower()));
             } catch (Exception e) {

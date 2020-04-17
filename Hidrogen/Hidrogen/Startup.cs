@@ -13,14 +13,12 @@ using WaterLibrary.Services;
 namespace Hidrogen {
 
     public class Startup {
-
-        public IConfiguration Configuration { get; }
-
+        
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
-
 
         public void ConfigureServices(IServiceCollection services) {
 
@@ -39,7 +37,6 @@ namespace Hidrogen {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.IsEssential = true;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                //options.Cookie.Name = "HidrogenCookieData";
             });
 
             services.AddHttpContextAccessor();
@@ -48,7 +45,6 @@ namespace Hidrogen {
             services.RegisterCommonServices();
             services.RegisterWaterServices();
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
 
@@ -63,8 +59,6 @@ namespace Hidrogen {
                 });
 
             app.UseSecurityHeaders(securityPolicies);
-
-            //app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseRouting();
 
@@ -80,13 +74,12 @@ namespace Hidrogen {
 
             app.UseCookiePolicy();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                //endpoints.MapControllerRoute(
-                //    name: "default",
-                //    pattern: "{controller}/{action}/{id?}"
-                //);
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller}/{action}/{id?}"
+                );
             });
         }
     }

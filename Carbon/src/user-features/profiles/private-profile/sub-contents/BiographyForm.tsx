@@ -8,11 +8,11 @@ import M from 'materialize-css';
 import CKEditor from '@ckeditor/ckeditor5-react';
 import InlineEditor from '@ckeditor/ckeditor5-build-inline';
 
-import { IBioForm, VOID_PROFILE } from '../redux/constants';
+import { IBioForm, VOID_PROFILE } from '../redux/biography/constants';
 import { CONSTANTS, GENDERS } from '../../../../helpers/helper';
 import CarbonAlert, { IStatus } from '../../../../shared/CarbonAlert';
 
-import { updatePrivateProfile, bioShowShouldUpdate } from '../redux/actions';
+import { updatePrivateProfile, bioShowShouldUpdate } from '../redux/biography/actions';
 import { checkProfileResult } from '../utility';
 
 const mapStateToProps = (state: any) => ({
@@ -33,7 +33,7 @@ const BiographyForm = (props : IBioForm) => {
     const [shouldCloseBioForm, setShouldCloseBioForm] = React.useState(false);
 
     React.useEffect(() => {
-        M.FormSelect.init($('select'), {});
+        M.FormSelect.init($('#gender'), {});
 
         M.Datepicker.init($('#birthday'), {
             format : 'dd mmm yyyy',
@@ -123,6 +123,7 @@ const BiographyForm = (props : IBioForm) => {
                         )
                     }
                 </select>
+                <label htmlFor='gender'>Gender</label>
             </div>
             <div className='input-field col l4 m6 s12'>
                 <i className='fas fa-calendar-alt prefix hidro-primary-icon'></i>

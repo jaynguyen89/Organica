@@ -33,3 +33,41 @@ INSERT INTO [dbo].[HidroRole] (
 ) VALUES (4, 'Admintrator', 'Administrators have the right to manage Supporters and Moderators including their permissions and actions.');
 
 SET IDENTITY_INSERT [dbo].[HidroRole] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[Country] ON;
+
+--The countries
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (1, 'Australia', 'AUS', 'Oceania', 'AUD', 'Australian Dollar');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (2, 'Viet Nam', 'VNA', 'South-East Asia', 'VND', 'Vietnam Dong');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (3, 'America', 'USA', 'North America', 'USD', 'American Dollar');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (4, 'Canada', 'CAN', 'North America', 'CAD', 'Canadian Dollar');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (5, 'China', 'CH', 'East Asia', 'CNY', 'Chinese Yuan');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (6, 'Japan', 'JP', 'East Asia', 'JPY', 'Japanese Yen');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (7, 'France', 'FR', 'Western Europe', 'EUR', 'Euro');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (8, 'United Kingdom', 'GB', 'North-West Europe', 'GBP', 'Pound Sterling');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (9, 'Korea', 'KR', 'East Asia', 'KRW', 'Korean Won');
+INSERT INTO [dbo].[Country] (
+	Id, CountryName, CountryCode, Continent, CurrencyCode, CurrencyName
+) VALUES (10, 'Nigeria', 'NG', 'West Africa', 'NGN', 'Nigerian Naira');
+
+
+SET IDENTITY_INSERT [dbo].[Country] OFF;

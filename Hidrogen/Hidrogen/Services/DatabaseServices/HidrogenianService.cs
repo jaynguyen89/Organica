@@ -13,7 +13,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class HidrogenianService : IHidrogenianService {
 
         private readonly ILogger<HidrogenianService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public HidrogenianService(
             ILogger<HidrogenianService> logger,

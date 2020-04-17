@@ -22,8 +22,8 @@ namespace Hidrogen.ViewModels.Address {
             var street = string.IsNullOrEmpty(StreetAddress) ? string.Empty : StreetAddress + ", ";
             var suburb = string.IsNullOrEmpty(Suburb) ? string.Empty : Suburb + ", ";
             var state = string.IsNullOrEmpty(State) ? string.Empty : State + " ";
-            var post = string.IsNullOrEmpty(Postcode) ? string.Empty : Postcode + ",";
-            var country = string.IsNullOrEmpty(Country) ? string.Empty : Country;
+            var post = string.IsNullOrEmpty(Postcode) ? string.Empty : Postcode + ", ";
+            var country = string.IsNullOrEmpty(Country.Name) ? string.Empty : Country.Name;
 
             return $"{building}{street}{suburb}{state}{post}{country}";
         }
@@ -37,8 +37,11 @@ namespace Hidrogen.ViewModels.Address {
                 Suburb = location.Suburb,
                 State = location.State,
                 Postcode = location.Postcode,
-                Country = location.Country,
-                Note = location.Note
+                Country = new CountryVM {
+                    Id = location.CountryId,
+                    Name = location.Country.CountryName,
+                    Code = location.Country.CountryCode
+                }
             };
         }
 
@@ -51,8 +54,11 @@ namespace Hidrogen.ViewModels.Address {
                 Suburb = location.Suburb,
                 State = location.State,
                 Postcode = location.Postcode,
-                Country = location.Country,
-                Note = location.Note
+                Country = new CountryVM {
+                    Id = location.CountryId,
+                    Name = location.Country.CountryName,
+                    Code = location.Country.CountryCode
+                }
             };
         }
 

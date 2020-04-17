@@ -16,7 +16,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class PaymentService : IPaymentService {
 
         private readonly ILogger<PaymentService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public PaymentService(
             ILogger<PaymentService> logger,

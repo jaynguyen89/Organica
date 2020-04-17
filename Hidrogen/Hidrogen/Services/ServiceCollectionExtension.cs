@@ -1,16 +1,17 @@
 ﻿using Hidrogen.DbContexts;
 using Hidrogen.Services.DatabaseServices;
 using Hidrogen.Services.Interfaces;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hidrogen.Services {
 
-    public static class IServiceCollectionExtension {
+    public static class ServiceCollectionExtension {
 
         public static IServiceCollection RegisterHidrogenServices(this IServiceCollection services) {
-
             //Register all services here
-            services.AddSingleton<HidrogenDbContext>();
+            services.AddScoped<HidrogenDbContext>();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHidrogenianService, HidrogenianService>();
@@ -20,6 +21,7 @@ namespace Hidrogen.Services {
             services.AddScoped<IHidroAddressService, HidroAddressService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<ICountryService, CountryService>();
 
             return services;
         }

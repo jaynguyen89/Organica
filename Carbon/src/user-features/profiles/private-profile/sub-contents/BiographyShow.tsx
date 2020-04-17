@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import CarbonPreloader from '../../../../shared/CarbonPreloader';
 import CarbonAlert from '../../../../shared/CarbonAlert';
 
-import { IBioShow, IProfile } from '../redux/constants';
+import { IBioShow, IProfile } from '../redux/biography/constants';
 import { CONSTANTS, GENDERS } from '../../../../helpers/helper';
 
 const mapStateToProps = (state: any) => ({

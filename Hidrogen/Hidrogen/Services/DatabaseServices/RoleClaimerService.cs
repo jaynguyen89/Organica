@@ -10,7 +10,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class RoleClaimerService : IRoleClaimerService {
 
         private readonly ILogger<RoleClaimerService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public RoleClaimerService(
             ILogger<RoleClaimerService> logger,

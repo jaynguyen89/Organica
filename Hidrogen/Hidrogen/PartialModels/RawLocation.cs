@@ -19,8 +19,7 @@ namespace Hidrogen.Models {
                 Town = location.Town,
                 Province = location.Province,
                 City = location.City,
-                Country = location.Country,
-                Note = location.Note
+                CountryId = location.Country.Id
             };
         }
 
@@ -32,8 +31,7 @@ namespace Hidrogen.Models {
                 Suburb = location.Suburb,
                 Postcode = location.Postcode,
                 State = location.State,
-                Country = location.Country,
-                Note = location.Note
+                CountryId = location.Country.Id
             };
         }
     }

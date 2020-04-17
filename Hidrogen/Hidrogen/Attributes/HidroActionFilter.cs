@@ -32,39 +32,40 @@ namespace Hidrogen.Services {
 
             if (((string)xsrfToken) != sessionXsrfToken && !string.IsNullOrEmpty(sessionXsrfToken)) {
                 context.Result = new RedirectToActionResult("FilterResult", "Authentication", new { result = "XsrfTokenMismatched" });
-                return;
             }
+            else {
+                request.Headers.TryGetValue("Authorization", out StringValues headerAuth);
 
-            request.Headers.TryGetValue("Authorization", out StringValues headerAuth);
-                
-            string authToken;
-            try {
-                authToken = ((string)headerAuth).Split(HidroConstants.WHITE_SPACE)[1];
-            } catch (IndexOutOfRangeException) {
-                authToken = string.Empty;
-            }
-
-            var userSession = GetUserSession(session);
-            //When user has signed in
-            if (!string.IsNullOrEmpty(userSession.AuthToken) && userSession.ExpirationTime != 0 &&
-                userSession.UserId != 0 && !string.IsNullOrEmpty(userSession.Role))
-            {
-                if (userSession.AuthToken == authToken) {
-                    var current = ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds();
-                    if (userSession.ExpirationTime <= current)
-                        context.Result = new RedirectToActionResult("FilterResult", "Authentication", new { result = HidroEnums.FILTER_RESULT.AUTHENTICATION_EXPIRED });
-
-                    var allowSuperUser = _defaultRole.ToLower() != "customer" && HidroConstants.GetRoleHierrachy(userSession.Role.ToLower()) > HidroConstants.GetRoleHierrachy(_defaultRole.ToLower());
-                    var allowCustomer = _defaultRole.ToLower() == "customer" && (_defaultRole.ToLower() == userSession.Role.ToLower() || _defaultRole.ToLower() != "guest");
-
-                    if (allowSuperUser == false && allowCustomer == false)
-                        context.Result = new RedirectToActionResult("FilterResult", "Authentication", new { result = HidroEnums.FILTER_RESULT.ACCESS_CONTROL_DENIED });
+                string authToken;
+                try {
+                    authToken = ((string) headerAuth).Split(HidroConstants.WHITE_SPACE)[1];
                 }
-                else
-                    context.Result = new RedirectToActionResult("FilterResult", "Authentication", new { result = HidroEnums.FILTER_RESULT.INVALID_AUTHENTICATION });
-            } //When _defaultRole == "Guest"
-            else if (_defaultRole.ToLower() != "guest")
-                context.Result = new RedirectToActionResult("FilterResult", "Authentication", new { result = HidroEnums.FILTER_RESULT.ACCESS_CONTROL_DENIED });
+                catch (IndexOutOfRangeException) {
+                    authToken = string.Empty;
+                }
+
+                var userSession = GetUserSession(session);
+                //When user has signed in
+                if (!string.IsNullOrEmpty(userSession.AuthToken) && userSession.ExpirationTime != 0 &&
+                    userSession.UserId != 0 && !string.IsNullOrEmpty(userSession.Role)) {
+                    if (userSession.AuthToken == authToken) {
+                        var current = ((DateTimeOffset) DateTime.UtcNow).ToUnixTimeSeconds();
+                        if (userSession.ExpirationTime <= current)
+                            context.Result = new RedirectToActionResult("FilterResult", "Authentication", new {result = HidroEnums.FILTER_RESULT.AUTHENTICATION_EXPIRED});
+
+                        var allowSuperUser = _defaultRole.ToLower() != "customer" &&
+                                             HidroConstants.GetRoleHierrachy(userSession.Role.ToLower()) > HidroConstants.GetRoleHierrachy(_defaultRole.ToLower());
+                        var allowCustomer = _defaultRole.ToLower() == "customer" && (_defaultRole.ToLower() == userSession.Role.ToLower() || _defaultRole.ToLower() != "guest");
+
+                        if (allowSuperUser == false && allowCustomer == false)
+                            context.Result = new RedirectToActionResult("FilterResult", "Authentication", new {result = HidroEnums.FILTER_RESULT.ACCESS_CONTROL_DENIED});
+                    }
+                    else
+                        context.Result = new RedirectToActionResult("FilterResult", "Authentication", new {result = HidroEnums.FILTER_RESULT.INVALID_AUTHENTICATION});
+                } //When _defaultRole == "Guest"
+                else if (_defaultRole.ToLower() != "guest")
+                    context.Result = new RedirectToActionResult("FilterResult", "Authentication", new {result = HidroEnums.FILTER_RESULT.ACCESS_CONTROL_DENIED});
+            }
         }
 
         public override void OnActionExecuted(ActionExecutedContext context) {

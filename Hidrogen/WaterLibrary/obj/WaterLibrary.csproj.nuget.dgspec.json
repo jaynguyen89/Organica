@@ -14,7 +14,7 @@
         "outputPath": "D:\\Workspace\\Organica\\Hidrogen\\HelperLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Microsoft\\Xamarin\\NuGet"
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\lovea\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -92,7 +92,7 @@
         "outputPath": "D:\\Workspace\\Organica\\Hidrogen\\WaterLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "D:\\Microsoft\\Xamarin\\NuGet"
+          "D:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\lovea\\AppData\\Roaming\\NuGet\\NuGet.Config",

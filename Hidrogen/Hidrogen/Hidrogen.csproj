@@ -27,5 +27,22 @@
     <Folder Include="HtmlTemplates\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="ViewModels\Address\HidroAddressVM.cs" />
+    <Compile Remove="Services\ModelBinders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Services\ModelBinders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Services\ModelBinders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Services\ModelBinders\**" />
+  </ItemGroup>
+
 
 </Project>

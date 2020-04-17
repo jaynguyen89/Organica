@@ -30,28 +30,41 @@ const initialState : IProfileStore = {
 };
 
 const reducer = produce((draft, action) => {
-    resetStore(draft);
-
     switch (action.type) {
         case profileConstants.GET_PRIVATE_PROFILE_BEGIN:
             draft.getProfile.profileRetrieving = true;
+            draft.getProfile.retrieveSuccess = false;
+            draft.getProfile.profileResult = null;
+            draft.getProfile.isUpdated = false;
+
+            draft.updateProfile.profileUpdating = false;
+            draft.updateProfile.updateSuccess = false;
+            draft.updateProfile.newProfile = null;
             return;
         case profileConstants.GET_PRIVATE_PROFILE_FAILED:
+            draft.getProfile.profileRetrieving = false;
             draft.getProfile.retrieveSuccess = false;
             draft.getProfile.profileResult = action.error;
+            draft.getProfile.isUpdated = false;
             return;
         case profileConstants.GET_PRIVATE_PROFILE_SUCCESS:
+            draft.getProfile.profileRetrieving = false;
             draft.getProfile.retrieveSuccess = true;
             draft.getProfile.profileResult = action.payload;
+            draft.getProfile.isUpdated = false;
             return;
         case profileConstants.UPDATE_PRIVATE_PROFILE_BEGIN:
             draft.updateProfile.profileUpdating = true;
+            draft.updateProfile.updateSuccess = false;
+            draft.updateProfile.newProfile = null;
             return;
         case profileConstants.UPDATE_PRIVATE_PROFILE_FAILED:
+            draft.updateProfile.profileUpdating = false;
             draft.updateProfile.updateSuccess = false;
             draft.updateProfile.newProfile = action.error;
             return;
         case profileConstants.UPDATE_PRIVATE_PROFILE_SUCCESS:
+            draft.updateProfile.profileUpdating = false;
             draft.updateProfile.updateSuccess = true;
             draft.updateProfile.newProfile = action.payload;
             return;
@@ -64,14 +77,3 @@ const reducer = produce((draft, action) => {
 }, initialState);
 
 export default reducer;
-
-const resetStore = (draft: any) => {
-    draft.getProfile.profileRetrieving = false;
-    draft.getProfile.retrieveSuccess = false;
-    draft.getProfile.profileResult = null;
-    draft.getProfile.isUpdated = false;
-
-    draft.updateProfile.profileUpdating = false;
-    draft.updateProfile.updateSuccess = false;
-    draft.updateProfile.newProfile = null;
-}

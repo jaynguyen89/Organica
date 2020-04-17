@@ -14,6 +14,7 @@ namespace Hidrogen.DbContexts
         {
         }
 
+        public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<FineLocation> FineLocation { get; set; }
         public virtual DbSet<HidroAddress> HidroAddress { get; set; }
         public virtual DbSet<HidroProfile> HidroProfile { get; set; }
@@ -27,6 +28,19 @@ namespace Hidrogen.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Country>(entity =>
+            {
+                entity.Property(e => e.Continent).HasMaxLength(30);
+
+                entity.Property(e => e.CountryCode).HasMaxLength(5);
+
+                entity.Property(e => e.CountryName).HasMaxLength(50);
+
+                entity.Property(e => e.CurrencyCode).HasMaxLength(5);
+
+                entity.Property(e => e.CurrencyName).HasMaxLength(30);
+            });
+
             modelBuilder.Entity<FineLocation>(entity =>
             {
                 entity.Property(e => e.AlternateAddress).HasMaxLength(50);
@@ -37,17 +51,13 @@ namespace Hidrogen.DbContexts
 
                 entity.Property(e => e.Commute).HasMaxLength(40);
 
-                entity.Property(e => e.Country).HasMaxLength(40);
-
                 entity.Property(e => e.District).HasMaxLength(40);
 
-                entity.Property(e => e.Group).HasMaxLength(3);
+                entity.Property(e => e.Group).HasMaxLength(30);
 
                 entity.Property(e => e.Hamlet).HasMaxLength(40);
 
                 entity.Property(e => e.Lane).HasMaxLength(10);
-
-                entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.Postcode).HasMaxLength(10);
 
@@ -64,10 +74,19 @@ namespace Hidrogen.DbContexts
                 entity.Property(e => e.Town).HasMaxLength(40);
 
                 entity.Property(e => e.Ward).HasMaxLength(40);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.FineLocation)
+                    .HasForeignKey(d => d.CountryId)
+                    .HasConstraintName("FK_FineLocation_Country");
             });
 
             modelBuilder.Entity<HidroAddress>(entity =>
             {
+                entity.Property(e => e.LastUpdated).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Title).HasMaxLength(30);
+
                 entity.HasOne(d => d.Hidrogenian)
                     .WithMany(p => p.HidroAddress)
                     .HasForeignKey(d => d.HidrogenianId)
@@ -315,17 +334,13 @@ namespace Hidrogen.DbContexts
 
                 entity.Property(e => e.Commute).HasMaxLength(40);
 
-                entity.Property(e => e.Country).HasMaxLength(40);
-
                 entity.Property(e => e.District).HasMaxLength(40);
 
-                entity.Property(e => e.Group).HasMaxLength(3);
+                entity.Property(e => e.Group).HasMaxLength(30);
 
                 entity.Property(e => e.Hamlet).HasMaxLength(40);
 
                 entity.Property(e => e.Lane).HasMaxLength(10);
-
-                entity.Property(e => e.Note).HasMaxLength(255);
 
                 entity.Property(e => e.Postcode).HasMaxLength(10);
 
@@ -342,6 +357,11 @@ namespace Hidrogen.DbContexts
                 entity.Property(e => e.Town).HasMaxLength(40);
 
                 entity.Property(e => e.Ward).HasMaxLength(40);
+
+                entity.HasOne(d => d.Country)
+                    .WithMany(p => p.RawLocation)
+                    .HasForeignKey(d => d.CountryId)
+                    .HasConstraintName("FK_RawLocation_Country");
             });
 
             modelBuilder.Entity<RoleClaimer>(entity =>

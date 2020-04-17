@@ -1,4 +1,4 @@
-import { sendRequestForResult } from '../../../../providers/serviceProvider';
+import { sendRequestForResult } from '../../../../../providers/serviceProvider';
 import { IProfile } from './constants';
 
 let PROFILE_CONTROLLER = 'profile/';

@@ -13,7 +13,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class HidroProfileService : IHidroProfileService {
 
         private readonly ILogger<HidroProfileService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public HidroProfileService(
             ILogger<HidroProfileService> logger,
@@ -103,7 +103,7 @@ namespace Hidrogen.Services.DatabaseServices {
             dbProfile.FamilyName = profile.FamilyName;
             dbProfile.GivenName = profile.GivenName;
             dbProfile.Gender = profile.Gender == 0 ? (bool?) null : (profile.Gender == 1);
-            dbProfile.DateOfBith = profile.Birthday.Birth;
+            dbProfile.DateOfBirth = profile.Birthday.Birth;
             dbProfile.Ethnicity = profile.Ethnicity;
             dbProfile.Company = profile.Company;
             dbProfile.JobTitle = profile.JobTitle;

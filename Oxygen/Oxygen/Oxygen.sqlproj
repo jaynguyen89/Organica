@@ -139,6 +139,7 @@
     <Build Include="core\tables\HidroAddress.sql" />
     <Build Include="core\tables\FineLocation.sql" />
     <Build Include="core\tables\PaymentMethod.sql" />
+    <Build Include="core\tables\Country.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Oxygen-Dev.publish.xml" />

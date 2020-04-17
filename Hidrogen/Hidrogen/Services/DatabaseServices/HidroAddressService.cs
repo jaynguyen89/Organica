@@ -15,7 +15,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class HidroAddressService : IHidroAddressService {
 
         private readonly ILogger<HidroAddressService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public HidroAddressService(
             ILogger<HidroAddressService> logger,
@@ -34,9 +34,10 @@ namespace Hidrogen.Services.DatabaseServices {
             var hidrogenianAddress = new HidroAddress {
                 HidrogenianId = hidrogenianId,
                 LocationId = rawLocation.Id,
+                Title = address.Title,
                 IsRefined = false,
-                IsPrimaryAddress = address.IsPrimary,
-                IsDeliveryAddress = address.ForDelivery
+                IsPrimaryAddress = false,
+                IsDeliveryAddress = false
             };
 
             _dbContext.HidroAddress.Add(hidrogenianAddress);
@@ -48,6 +49,7 @@ namespace Hidrogen.Services.DatabaseServices {
             }
 
             address.Id = hidrogenianAddress.Id;
+            var country = await _dbContext.Country.FindAsync(address.IsStandard ? address.sAddress.Country.Id : address.lAddress.Country.Id);
             return address;
         }
 
@@ -82,6 +84,7 @@ namespace Hidrogen.Services.DatabaseServices {
 
                     if (address.IsRefined) {
                         fineLocation = await _dbContext.FineLocation.FindAsync(address.LocationId.Value);
+                        fineLocation.Country = await _dbContext.Country.FindAsync(fineLocation.CountryId);
 
                         if (fineLocation.IsStandard) {
                             var standardFineAddress = (StandardAddressVM)fineLocation;
@@ -98,6 +101,7 @@ namespace Hidrogen.Services.DatabaseServices {
                     }
                     else {
                         rawLocation = await _dbContext.RawLocation.FindAsync(address.LocationId.Value);
+                        rawLocation.Country = await _dbContext.Country.FindAsync(rawLocation.CountryId);
 
                         if (rawLocation.IsStandard) {
                             var standardRawLocation = (StandardAddressVM)rawLocation;
@@ -132,9 +136,11 @@ namespace Hidrogen.Services.DatabaseServices {
             if (rawLocation == null) return new KeyValuePair<bool?, IGenericAddressVM>(false, null);
 
             dbAddress.LocationId = rawLocation.Id;
-            dbAddress.IsDeliveryAddress = address.ForDelivery;
-            dbAddress.IsPrimaryAddress = address.IsPrimary;
+            dbAddress.Title = address.Title;
+            dbAddress.IsDeliveryAddress = false;
+            dbAddress.IsPrimaryAddress = false;
             dbAddress.IsRefined = false;
+            dbAddress.LastUpdated = DateTime.UtcNow;
 
             _dbContext.HidroAddress.Update(dbAddress);
             try {
@@ -144,11 +150,53 @@ namespace Hidrogen.Services.DatabaseServices {
                 return new KeyValuePair<bool?, IGenericAddressVM>(true, null);
             }
 
-            if (address.IsStandard) address._sAddress.Id = rawLocation.Id;
-            else address._lAddress.Id = rawLocation.Id;
+            if (address.IsStandard) address.sAddress.Id = rawLocation.Id;
+            else address.lAddress.Id = rawLocation.Id;
 
             address.IsRefined = false;
             return new KeyValuePair<bool?, IGenericAddressVM>(true, address);
+        }
+
+        public async Task<bool?> SetFieldDataForAddress(AddressSetterVM data) {
+            _logger.LogInformation("HidroAddressService.SetFieldDataForAddress - AddressId=" + data.Id);
+
+            var hidrogenianAddresses = await _dbContext.HidroAddress
+                .Where(a => a.HidrogenianId == data.HidrogenianId).ToListAsync();
+
+            var addressesToUpdate = new List<HidroAddress>();
+            foreach (var address in hidrogenianAddresses) {
+                if (address.Id == data.Id) {
+                    address.IsDeliveryAddress = data.Field == nameof(address.IsDeliveryAddress);
+                    address.IsPrimaryAddress = data.Field == nameof(address.IsPrimaryAddress);
+                    
+                    addressesToUpdate.Add(address);
+                    continue;
+                }
+
+                switch (data.Field) {
+                    case nameof(address.IsDeliveryAddress) when address.IsDeliveryAddress:
+                        address.IsDeliveryAddress = false;
+                        break;
+                    case nameof(address.IsPrimaryAddress) when address.IsPrimaryAddress:
+                        address.IsPrimaryAddress = false;
+                        break;
+                }
+
+                addressesToUpdate.Add(address);
+            }
+
+            if (addressesToUpdate.Count != 2) return null;
+            
+            _dbContext.HidroAddress.UpdateRange(addressesToUpdate);
+            try {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e) {
+                _logger.LogError("HidroAddressService.SetFieldDataForAddress - Error: " + e);
+                return false;
+            }
+
+            return true;
         }
 
         private async Task<RawLocation> InsertRawLocation(IGenericAddressVM address) {
@@ -156,11 +204,11 @@ namespace Hidrogen.Services.DatabaseServices {
 
             RawLocation rawLocation;
             if (address.IsStandard) {
-                rawLocation = address._sAddress;
+                rawLocation = address.sAddress;
                 rawLocation.IsStandard = address.IsStandard;
             }
             else {
-                rawLocation = address._lAddress;
+                rawLocation = address.lAddress;
                 rawLocation.IsStandard = address.IsStandard;
             }
 

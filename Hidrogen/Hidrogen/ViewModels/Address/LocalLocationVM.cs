@@ -44,7 +44,7 @@ namespace Hidrogen.ViewModels.Address {
             var town = string.IsNullOrEmpty(Town) ? string.Empty : Town + ", ";
             var city = string.IsNullOrEmpty(City) ? string.Empty : City + ", ";
             var province = string.IsNullOrEmpty(Province) ? string.Empty : Province + ", ";
-            var country = string.IsNullOrEmpty(Country) ? string.Empty : Country;
+            var country = string.IsNullOrEmpty(Country.Name) ? string.Empty : Country.Name;
 
             return $"{building}{street}{lane}{quarter}{group}{hamlet}{commute}{ward}{district}{town}{city}{province}{country}";
         }
@@ -65,8 +65,11 @@ namespace Hidrogen.ViewModels.Address {
                 Town = location.Town,
                 Province = location.Province,
                 City = location.City,
-                Country = location.Country,
-                Note = location.Note
+                Country = new CountryVM {
+                    Id = location.CountryId,
+                    Name = location.Country.CountryName,
+                    Code = location.Country.CountryCode
+                }
             };
         }
 
@@ -86,8 +89,11 @@ namespace Hidrogen.ViewModels.Address {
                 Town = location.Town,
                 Province = location.Province,
                 City = location.City,
-                Country = location.Country,
-                Note = location.Note
+                Country = new CountryVM {
+                    Id = location.CountryId,
+                    Name = location.Country.CountryName,
+                    Code = location.Country.CountryCode
+                }
             };
         }
 
@@ -104,7 +110,7 @@ namespace Hidrogen.ViewModels.Address {
             if (!HelperProvider.IsNumber(Group))
                 errors.Add(21);
 
-            if (Group.Length > 3)
+            if (Group.Length > 30)
                 errors.Add(22);
 
             return errors;

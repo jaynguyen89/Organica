@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../../../../helpers/helper";
+import { CONSTANTS } from "../../../../../helpers/helper";
 
 export const GET_PRIVATE_PROFILE_BEGIN = 'GET_PRIVATE_PROFILE_BEGIN';
 export type T_GET_PRIVATE_PROFILE_BEGIN = typeof GET_PRIVATE_PROFILE_BEGIN;

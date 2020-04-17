@@ -1,4 +1,7 @@
-﻿namespace Hidrogen.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Hidrogen.Models
 {
     public partial class RawLocation
     {
@@ -19,8 +22,9 @@
         public string Province { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Country { get; set; }
+        public int CountryId { get; set; }
         public bool IsStandard { get; set; }
-        public string Note { get; set; }
+
+        public virtual Country Country { get; set; }
     }
 }

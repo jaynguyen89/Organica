@@ -1,68 +1,104 @@
 import React from 'react';
-import M from 'materialize-css';
-import $ from 'jquery';
+import { connect } from 'react-redux';
+import _ from 'lodash';
 
-import GoogleMapReact from 'google-map-react';
-import { ModalOptions } from '../../../helpers/helper';
+import AddressMap from './sub-contents/AddressMap';
+import AddressList from './sub-contents/AddressList';
+import CarbonPreloader from '../../../shared/CarbonPreloader';
+import CarbonAlert, { IStatus } from '../../../shared/CarbonAlert';
 
-const AddressPane = () => {
+import { CONSTANTS } from '../../../helpers/helper';
+import { IAddress } from './redux/address/constants';
+
+import {
+    getAddressListFor,
+    getCountriesForDropdown
+} from './redux/address/actions';
+import { checkAddressAndCountryListRetrievingResult } from './utility';
+
+const mapStateToProps = (state: any) => ({
+    user : state.AuthenticationStore.authUser,
+    addressList : state.AddressStore.addressList,
+    countryList : state.AddressStore.countryList
+});
+
+const mapDispatchToProps = {
+    getAddressListFor,
+    getCountriesForDropdown
+};
+
+const AddressPane = (props : any) => {
+    const [anyError, setAnyError] = React.useState(false);
+    const [status, setStatus] = React.useState({ messages : CONSTANTS.EMPTY, type : CONSTANTS.EMPTY } as IStatus);
+
+    const [addresses, setAddresses] = React.useState([]);
+    const [countries, setCountries] = React.useState([]);
 
     React.useEffect(() => {
-        M.Modal.init($('.modal'), ModalOptions);
+        if (props.user) {
+            const {
+                getAddressListFor,
+                getCountriesForDropdown
+            } = props;
+            getAddressListFor(props.user.userId);
+            getCountriesForDropdown();
+        }
     }, []);
+
+    React.useEffect(() => {
+        let addressError = checkAddressAndCountryListRetrievingResult('address', props.addressList, setStatus);
+        let countryError = checkAddressAndCountryListRetrievingResult('country', props.countryList, setStatus);
+        
+        setAnyError(addressError || countryError);
+        if (!_.isEmpty(props.addressList.retrieveResult) && !_.isEmpty(props.countryList.retrieveResult)) {
+            setAddresses(props.addressList.retrieveResult.message);
+            setCountries(props.countryList.retrieveResult.message);
+        }
+    }, [props]);
+
+    const appendNewAddressOnSaveSuccess = (address: IAddress) => {
+        let clonedAddressList = _.cloneDeep(addresses);
+        clonedAddressList.push(address);
+
+        setStatus({ messages : 'Your new address has been saved. You can now set it as Primary or for Delivery.', type : 'success' });
+        setAddresses(clonedAddressList);
+    }
 
     return (
         <div className='row'>
             <h6 className='content-caption'>
                 <i className='fas fa-user-circle hidro-primary-icon'></i>&nbsp;&nbsp;Addresses
             </h6>
-            <div className='col l3 m6 s12'>
-                <div className='address-list'>
-                    <div className='add-address-row modal-trigger' data-target='address-form'>
-                        <i className='fas fa-plus-circle'></i>&nbsp;New address
-                    </div>
-                    <div className='address-row'>
-                        <div className='ribbon ribbon-primary'>Primary</div>
-                        <h6>Address Title</h6>
-                        <p>Ap.5, Bldg 12A, Block 1B, 111 Somewhere Street, Somewhere Place, VIC 3020</p>
-                        <a className='address-edit'><i className='fas fa-edit'></i></a>
-                        <a className='address-delete'><i className='fas fa-trash red-text darken-4'></i></a>
-                    </div>
-                </div>
-            </div>
-            <div className='col l9 m6 s0'>
-                <div className='address-map'>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key: 'AIzaSyCHwksVRlz52XzP6BNf_Js8EdFta3xCgSs' }}
-                        defaultCenter={{
-                            lat: 59.95,
-                            lng: 30.33
-                        }}
-                        defaultZoom={ 10 }>
-                        <Marker
-                            lat={59.955413}
-                            lng={30.337844}
-                            text='My Marker'/>
-                    </GoogleMapReact>
-                </div>
-            </div>
 
-            <div id='address-form' className='modal'>
-                <div className='modal-content'>
-                    <h4>Add Address</h4>
-                    <p>This is a modal.</p>
+            {
+                (props.addressList.isRetrieving ||
+                props.countryList.isRetrieving) &&
+                <div className='row center'>
+                    <CarbonPreloader />
                 </div>
-            </div>
+            }
+
+            <CarbonAlert { ...status } />
+            {
+                !anyError &&
+                <>
+                    <div className='col l3 m6 s12'>
+                        <AddressList
+                            user={ props.user }
+                            addresses={ addresses }
+                            countries={ countries }
+                            onSaveSuccess={ appendNewAddressOnSaveSuccess } />
+                    </div>
+                    <div className='col l9 m6 s0'>
+                        <AddressMap />
+                    </div>
+                </>
+            }
         </div>
     );
 }
 
-export default AddressPane;
-
-interface IMarker {
-    lat: number,
-    lng: number,
-    text: string
-};
-
-const Marker = ({ lat,lng,text }: IMarker) => <div>{text}</div>;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddressPane);

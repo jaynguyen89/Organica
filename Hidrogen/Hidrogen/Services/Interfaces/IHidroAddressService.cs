@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
 
 namespace Hidrogen.Services.Interfaces {
@@ -26,5 +27,10 @@ namespace Hidrogen.Services.Interfaces {
         /// When Key == true, Value == null if database updating address failed, otherwise, Value is the updated address.
         /// </summary>
         Task<KeyValuePair<bool?, IGenericAddressVM>> UpdateHidroAddress(IGenericAddressVM address);
+        
+        /// <summary>
+        /// Returns null if no address found, false if database update failed, otherwise true.
+        /// </summary>
+        Task<bool?> SetFieldDataForAddress(AddressSetterVM data);
     }
 }

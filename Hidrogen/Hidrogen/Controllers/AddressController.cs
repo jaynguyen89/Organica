@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
+using Hidrogen.ViewModels;
+using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -37,22 +39,25 @@ namespace Hidrogen.Controllers {
                                        : new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
         }
 
-        [HttpPost("add-address/{hidrogenianId}")]
+        [HttpPost("add-address")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("1,0,0,0,0,0,0,0")]
-        public async Task<JsonResult> AddNewAddressFor(
-            [FromQuery] int hidrogenianId,
-            [FromBody] IGenericAddressVM address
-        ) {
-            _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + hidrogenianId);
+        public async Task<JsonResult> AddNewAddressFor(AddressBinderVM binder) {
+            _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + binder.HidrogenianId);
+
+            IGenericAddressVM address;
+            if (binder.LocalAddress == null) address = binder.StandardAddress;
+            else address = binder.LocalAddress;
 
             var verification = VerifyAddress(address);
+            verification.AddRange(address.VerifyTitle());
             if (verification.Count != 0) {
-                var messages = address._lAddress.GenerateErrorMessages(verification);
+                var messages = binder.LocalAddress == null ? address.sAddress.GenerateErrorMessages(verification)
+                                                                      : address.lAddress.GenerateErrorMessages(verification);
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var rawAddress = await _addressService.InsertRawAddressFor(hidrogenianId, address);
+            var rawAddress = await _addressService.InsertRawAddressFor(binder.HidrogenianId, address);
 
             return rawAddress == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while saving your address. Please try again." })
                                       : new JsonResult(new { Result = RESULTS.SUCCESS, Message = rawAddress });
@@ -74,12 +79,18 @@ namespace Hidrogen.Controllers {
         [HttpPut("update-address")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
-        public async Task<JsonResult> UpdateHidrogenianAddress(IGenericAddressVM address) {
+        public async Task<JsonResult> UpdateHidrogenianAddress(AddressBinderVM binder) {
+            IGenericAddressVM address;
+            if (binder.LocalAddress == null) address = binder.StandardAddress;
+            else address = binder.LocalAddress;
+            
             _logger.LogInformation("AddressController.UpdateHidrogenianAddress - addressId=" + address.Id);
 
             var verification = VerifyAddress(address);
+            verification.AddRange(address.VerifyTitle());
             if (verification.Count != 0) {
-                var messages = address._lAddress.GenerateErrorMessages(verification);
+                var messages = binder.LocalAddress == null ? address.sAddress.GenerateErrorMessages(verification)
+                                                                      : address.lAddress.GenerateErrorMessages(verification);
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
@@ -92,29 +103,40 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to update the address details. Please try again." });
 
             if (updateResult.Value == null)
-                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try agian." });
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try again." });
 
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value });
+        }
+        
+        [HttpPut("set-address-field")]
+        [HidroActionFilter("Customer")]
+        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        public async Task<JsonResult> SetAddressAsPrimaryOrDeliveryFor(AddressSetterVM data) {
+            _logger.LogInformation("AddressController.SetAddressAsPrimaryFor - Service starts.");
+
+            var result = await _addressService.SetFieldDataForAddress(data);
+            
+            return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find the address with given data. Please check again." })
+                                    : (result.Value ? new JsonResult(new { Result = RESULTS.SUCCESS })
+                                                    : new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update the address. Please try again." }));
         }
 
         private List<int> VerifyAddress(IGenericAddressVM address) {
             var errors = new List<int>();
-            var location = address.IsStandard ? address._sAddress : (GenericLocationVM)address._lAddress;
+            var location = address.IsStandard ? address.sAddress : (GenericLocationVM)address.lAddress;
 
             errors.AddRange(location.VerifyBuildingName());
             errors.AddRange(location.VerifyStreetAddress());
             errors.AddRange(location.VerifyAltAddress());
-            errors.AddRange(location.VerifyCountry());
-            errors.AddRange(location.VerifyNote());
 
             if (address.IsStandard) {
-                var sAddress = address._sAddress;
+                var sAddress = address.sAddress;
                 errors.AddRange(sAddress.VerifySuburb());
                 errors.AddRange(sAddress.VerifyPostcode());
                 errors.AddRange(sAddress.VerifyState());
             }
             else {
-                var lAddress = address._lAddress;
+                var lAddress = address.lAddress;
                 errors.AddRange(lAddress.VerifyGroup());
                 errors.AddRange(lAddress.VerifyLane());
                 errors.AddRange(lAddress.VerifyQuarter());

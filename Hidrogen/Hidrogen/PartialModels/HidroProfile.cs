@@ -13,12 +13,12 @@ namespace Hidrogen.Models {
         }
 
         public ProfileBirth ProduceBirthValues() {
-            return !DateOfBith.HasValue ? new ProfileBirth {
+            return !DateOfBirth.HasValue ? new ProfileBirth {
                 FriendlyBirth = HidroConstants.NA,
                 Birth = null
             } : new ProfileBirth {
-                FriendlyBirth = DateOfBith.Value.ToString(DATE_FORMATS.FULL_DATE_FRIENDLY.GetValue()),
-                Birth = DateOfBith.Value
+                FriendlyBirth = DateOfBirth.Value.ToString(DATE_FORMATS.FULL_DATE_FRIENDLY.GetValue()),
+                Birth = DateOfBirth.Value
             };
         }
 
@@ -28,7 +28,7 @@ namespace Hidrogen.Models {
                 FamilyName = profile.FamilyName,
                 GivenName = profile.GivenName,
                 Gender = profile.Gender == 0 ? (bool?)null : (profile.Gender == 1),
-                DateOfBith = profile.Birthday.Birth,
+                DateOfBirth = profile.Birthday.Birth,
                 Ethnicity = profile.Ethnicity,
                 Company = profile.Company,
                 JobTitle = profile.JobTitle,

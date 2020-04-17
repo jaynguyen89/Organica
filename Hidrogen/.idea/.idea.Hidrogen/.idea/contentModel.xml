@@ -46,6 +46,7 @@
           <e p="AccountController.cs" t="Include" />
           <e p="AddressController.cs" t="Include" />
           <e p="AuthenticationController.cs" t="Include" />
+          <e p="CountryController.cs" t="Include" />
           <e p="PaymentController.cs" t="Include" />
           <e p="PreferenceController.cs" t="Include" />
           <e p="ProfileController.cs" t="Include" />
@@ -67,6 +68,7 @@
           <e p="PasswordResetConfirmation.html" t="Include" />
         </e>
         <e p="Models" t="Include">
+          <e p="Country.cs" t="Include" />
           <e p="FineLocation.cs" t="Include" />
           <e p="HidroAddress.cs" t="Include" />
           <e p="Hidrogenian.cs" t="Include" />
@@ -98,6 +100,7 @@
           <e p="DatabaseServices" t="Include">
             <e p="AccountService.cs" t="Include" />
             <e p="AuthenticationService.cs" t="Include" />
+            <e p="CountryService.cs" t="Include" />
             <e p="HidroAddressService.cs" t="Include" />
             <e p="HidrogenianService.cs" t="Include" />
             <e p="HidroProfileService.cs" t="Include" />
@@ -111,6 +114,7 @@
           <e p="Interfaces" t="Include">
             <e p="IAccountService.cs" t="Include" />
             <e p="IAuthenticationService.cs" t="Include" />
+            <e p="ICountryService.cs" t="Include" />
             <e p="IHidroAddressService.cs" t="Include" />
             <e p="IHidrogenianService.cs" t="Include" />
             <e p="IHidroProfileService.cs" t="Include" />
@@ -118,7 +122,7 @@
             <e p="IPaymentService.cs" t="Include" />
             <e p="IRoleClaimerService.cs" t="Include" />
           </e>
-          <e p="IServiceCollectionExtension.cs" t="Include" />
+          <e p="ServiceCollectionExtension.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
         <e p="ViewModels" t="Include">
@@ -130,16 +134,17 @@
             <e p="TwoFaVM.cs" t="Include" />
           </e>
           <e p="Address" t="Include">
+            <e p="AddressSetterVM.cs" t="Include" />
             <e p="Generic" t="Include">
               <e p="GenericLocationVM.cs" t="Include" />
               <e p="IGenericAddressVM.cs" t="Include" />
             </e>
-            <e p="HidroAddressVM.cs" t="Include" />
             <e p="LocalAddressVM.cs" t="Include" />
             <e p="LocalLocationVM.cs" t="Include" />
             <e p="StandardAddressVM.cs" t="Include" />
             <e p="StandardLocationVM.cs" t="Include" />
           </e>
+          <e p="AddressBinderVM.cs" t="Include" />
           <e p="Authentication" t="Include">
             <e p="AccountActivationVM.cs" t="Include" />
             <e p="AuthenticatedUser.cs" t="Include" />
@@ -155,6 +160,7 @@
             <e p="RoleClaimerVM.cs" t="Include" />
             <e p="TemporaryPermissionVM.cs" t="Include" />
           </e>
+          <e p="CountryVM.cs" t="Include" />
           <e p="HidrogenianVM.cs" t="Include" />
           <e p="HidroProfileVM.cs" t="Include" />
           <e p="Payment" t="Include">

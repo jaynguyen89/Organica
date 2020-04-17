@@ -67,9 +67,14 @@ namespace Hidrogen.Controllers {
                     Message = "You do not have the permission to perform this action. Please close this page.",
                     Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
                 }),
-                _ => new JsonResult(new {
+                FILTER_RESULT.AUTHENTICATION_EXPIRED => new JsonResult(new {
                     Result = RESULTS.FAILED,
                     Message = "Your session has expired. Please login again to continue!",
+                    Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
+                }),
+                _ => new JsonResult(new {
+                    Result = RESULTS.FAILED,
+                    Message = "Unable to verify the authenticity of your requests. Please login again.",
                     Error = HTTP_STATUS_CODES.PROXY_AUTHENTICATION_REQUIRED
                 })
             };

@@ -7,6 +7,7 @@ const ALERT_CLASS = {
     'error' : 'red darken-4',
     'success' : 'green darken-4',
     'warning' : 'yellow darken-4',
+    'info' : 'grey darken-2'
 };
 
 export interface IStatus {
@@ -18,7 +19,7 @@ export interface IStatus {
 
 const CarbonAlert = ({ messages, error, type, persistent } : IStatus) => {
     React.useEffect(() => {
-        if (!persistent)
+        if (persistent != undefined)
             setTimeout(() => {
                 $('.card-panel').hide();
             }, 120000);
@@ -36,10 +37,15 @@ const CarbonAlert = ({ messages, error, type, persistent } : IStatus) => {
         {
             messages && messages.length !== 0 &&
             <div className={ 'card-panel ' + (ALERT_CLASS as any)[type] }>
-                <i className="fas fa-times right alert-close" onClick={ hideAlert }></i>
+                {
+                    !persistent &&
+                    <i className="fas fa-times right alert-close" onClick={ hideAlert }></i>
+                }
+                
                 {
                     error != undefined && <h6>Error: { error }</h6>
                 }
+                
                 {
                     (
                         _.isString(messages) && <span>{ messages }</span>
