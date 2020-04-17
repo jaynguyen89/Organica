@@ -137,9 +137,9 @@
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/GenericLocationVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardAddressVM.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardLocationVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalLocationVM.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" />
       </list>
     </option>
   </component>
@@ -207,6 +207,7 @@
       <workItem from="1586836620895" duration="7517000" />
       <workItem from="1586911061876" duration="11513000" />
       <workItem from="1586996358205" duration="36858000" />
+      <workItem from="1587112484102" duration="15000" />
     </task>
     <servers />
   </component>
@@ -373,14 +374,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Hidrogen/Services/ModelBinders/AddressModelBinder.cs</url>
           <line>31</line>
-          <properties documentPath="$PROJECT_DIR$/Hidrogen/Services/ModelBinders/AddressModelBinder.cs" initialLine="36">
-            <startOffsets>
-              <option value="1061" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1119" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="$PROJECT_DIR$/Hidrogen/Services/ModelBinders/AddressModelBinder.cs" initialLine="36" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">

@@ -49,7 +49,6 @@ namespace Hidrogen.Services.DatabaseServices {
             }
 
             address.Id = hidrogenianAddress.Id;
-            var country = await _dbContext.Country.FindAsync(address.IsStandard ? address.sAddress.Country.Id : address.lAddress.Country.Id);
             return address;
         }
 
