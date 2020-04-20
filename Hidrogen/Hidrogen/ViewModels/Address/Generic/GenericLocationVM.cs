@@ -6,6 +6,8 @@ using HelperLibrary.Common;
 namespace Hidrogen.ViewModels.Address.Generic {
 
     public abstract class GenericLocationVM {
+        
+        public string PoBox { get; set; }
 
         public string BuildingName { get; set; }
 
@@ -84,6 +86,29 @@ namespace Hidrogen.ViewModels.Address.Generic {
             return errors;
         }
 
+        public List<int> VerifyPoBox() {
+            var errors = new List<int>();
+            if (PoBox == null) return errors;
+
+            PoBox = PoBox.Trim().Replace(HidroConstants.DOUBLE_SPACE, HidroConstants.WHITE_SPACE);
+            if (string.IsNullOrEmpty(PoBox) || string.IsNullOrWhiteSpace(PoBox)) {
+                PoBox = null;
+                return errors;
+            }
+
+            PoBox = PoBox.ToUpper();
+            
+            var lenTest = new Regex(@".{1,40}");
+            if (!lenTest.IsMatch(PoBox))
+                errors.Add(7);
+
+            var rx = new Regex(@"^[\w\d\s-]*$");
+            if (!rx.IsMatch(PoBox))
+                errors.Add(8);
+
+            return errors;
+        }
+
         public List<string> GenerateErrorMessages(List<int> errors) {
             var messages = new List<string>();
 
@@ -100,13 +125,21 @@ namespace Hidrogen.ViewModels.Address.Generic {
             if (errors.Contains(5)) messages.Add("Alternate Address is too long. Max 50 characters.");
             if (errors.Contains(6)) messages.Add("Alternate Address can only contain these special characters: -.,'()");
             
+            //For PoBox
+            if (errors.Contains(7)) messages.Add("PO Box is too long. Max 40 characters.");
+            if (errors.Contains(8)) messages.Add("PO Box should only contain alphabetical letters, numbers and hyphen.");
+            
+            //For PoBox
+            if (errors.Contains(9)) messages.Add("Title is too long. Max 30 characters.");
+            if (errors.Contains(10)) messages.Add("Title should only contain these special characters: '.-");
+            
             //For Suburb
             if (errors.Contains(12)) messages.Add("Suburb is missing. This field is required.");
             if (errors.Contains(13)) messages.Add("Suburb is too long. Max 50 characters.");
-            if (errors.Contains(14)) messages.Add("Suburb can only contains thesse special characters: '.-");
+            if (errors.Contains(14)) messages.Add("Suburb can only contains these special characters: '.-");
 
             //For Postcode
-            if (errors.Contains(15)) messages.Add("Postcode is missing. This field is requried.");
+            if (errors.Contains(15)) messages.Add("Postcode is missing. This field is required.");
             if (errors.Contains(16)) messages.Add("Postcode is too long. Max 10 characters.");
             if (errors.Contains(17)) messages.Add("Postcode can only contain digits.");
 
@@ -124,35 +157,35 @@ namespace Hidrogen.ViewModels.Address.Generic {
 
             //For Quarter
             if (errors.Contains(25)) messages.Add("Quarter is too long. Max 40 characters.");
-            if (errors.Contains(26)) messages.Add("Quarter is NOT allowed to have special characetrs.");
+            if (errors.Contains(26)) messages.Add("Quarter is NOT allowed to have special characters.");
 
             //For Hamlet
             if (errors.Contains(27)) messages.Add("Hamlet is too long. Max 40 characters.");
-            if (errors.Contains(28)) messages.Add("Hamlet is NOT allowed to have special characetrs.");
+            if (errors.Contains(28)) messages.Add("Hamlet is NOT allowed to have special characters.");
 
             //For Commute
             if (errors.Contains(29)) messages.Add("Commute is too long. Max 40 characters.");
-            if (errors.Contains(30)) messages.Add("Commute is NOT allowed to have special characetrs.");
+            if (errors.Contains(30)) messages.Add("Commute is NOT allowed to have special characters.");
 
             //For Ward
             if (errors.Contains(31)) messages.Add("Ward is too long. Max 40 characters.");
-            if (errors.Contains(32)) messages.Add("Ward is NOT allowed to have special characetrs.");
+            if (errors.Contains(32)) messages.Add("Ward is NOT allowed to have special characters.");
 
             //For District
             if (errors.Contains(33)) messages.Add("District is too long. Max 40 characters.");
-            if (errors.Contains(34)) messages.Add("District is NOT allowed to have special characetrs.");
+            if (errors.Contains(34)) messages.Add("District is NOT allowed to have special characters.");
 
             //For Town
             if (errors.Contains(35)) messages.Add("Town is too long. Max 40 characters.");
-            if (errors.Contains(36)) messages.Add("Town is NOT allowed to have special characetrs.");
+            if (errors.Contains(36)) messages.Add("Town is NOT allowed to have special characters.");
 
             //For Province
             if (errors.Contains(37)) messages.Add("Province is too long. Max 40 characters.");
-            if (errors.Contains(38)) messages.Add("Province is NOT allowed to have special characetrs.");
+            if (errors.Contains(38)) messages.Add("Province is NOT allowed to have special characters.");
 
             //For City
             if (errors.Contains(39)) messages.Add("City is too long. Max 40 characters.");
-            if (errors.Contains(40)) messages.Add("City is NOT allowed to have special characetrs.");
+            if (errors.Contains(40)) messages.Add("City is NOT allowed to have special characters.");
 
             return messages;
         }

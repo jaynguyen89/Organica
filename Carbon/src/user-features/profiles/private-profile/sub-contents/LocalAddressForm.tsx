@@ -26,29 +26,35 @@ const LocalAddressForm = (props: any) => {
             </div>
             <div className='input-field col l4 m6 s12'>
                 <i className='fas fa-building prefix hidro-primary-icon'></i>
+                <input id='l-address-pobox' type='text' value={ address.lAddress?.poBox as string }
+                    onChange={ (e: any) => props.updateAddress('local', 'pobox', e.target.value) } />
+                <label htmlFor='l-address-pobox'>PO Box</label>
+            </div>
+            <div className='input-field col l4 m6 s12'>
+                <i className='fas fa-building prefix hidro-primary-icon'></i>
                 <input id='l-address-building' type='text' value={ address.lAddress?.buildingName as string }
                     onChange={ (e: any) => props.updateAddress('local', 'building', e.target.value) } />
                 <label htmlFor='l-address-building'>Building Address</label>
             </div>
-            <div className='input-field col l4 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-road prefix hidro-primary-icon'></i>
                 <input id='l-address-lane' type='text' value={ address.lAddress?.lane as string }
                     onChange={ (e: any) => props.updateAddress('local', 'lane', e.target.value) } />
                 <label htmlFor='l-address-lane'>Lane</label>
             </div>
-            <div className='input-field col l4 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-home prefix hidro-primary-icon'></i>
                 <input id='l-address-street' type='text' value={ address.lAddress?.streetAddress }
                     onChange={ (e: any) => props.updateAddress('local', 'street', e.target.value) } />
                 <label htmlFor='l-address-street'>Street Address</label>
             </div>
-            <div className='input-field col l4 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-users prefix hidro-primary-icon'></i>
                 <input id='l-address-group' type='text' value={ address.lAddress?.group as string }
                     onChange={ (e: any) => props.updateAddress('local', 'group', e.target.value) } />
                 <label htmlFor='l-address-group'>Group</label>
             </div>
-            <div className='input-field col l4 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-torii-gate prefix hidro-primary-icon'></i>
                 <input id='l-address-quarter' type='text' value={ address.lAddress?.quarter as string }
                     onChange={ (e: any) => props.updateAddress('local', 'quarter', e.target.value) } />

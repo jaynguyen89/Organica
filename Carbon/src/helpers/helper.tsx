@@ -22,7 +22,8 @@ export const ModalOptions = {
     inDuration : 200,
     outDuration : 200,
     startingTop : '50%',
-    endingTop : '15%'
+    endingTop : '15%',
+    dismissible : false
 };
 
 export function sessionWatcher() {

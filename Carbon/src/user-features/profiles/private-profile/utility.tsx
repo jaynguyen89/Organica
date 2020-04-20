@@ -77,6 +77,7 @@ export const setAddressValues = (
     if (field === 'country') country = countries.filter((c: any) => c.id === +value);
 
     if (type === 'standard') {
+        if (field === 'pobox') setSelectedAddress({ ...selectedAddress, sAddress : { ...selectedAddress.sAddress, poBox : value } as IStandardLocation });
         if (field === 'building') setSelectedAddress({ ...selectedAddress, sAddress : { ...selectedAddress.sAddress, buildingName : value } as IStandardLocation });
         if (field === 'street') setSelectedAddress({ ...selectedAddress, sAddress : { ...selectedAddress.sAddress, streetAddress : value } as IStandardLocation });
         if (field === 'country') setSelectedAddress({ ...selectedAddress, sAddress : { ...selectedAddress.sAddress, country : { id : +value, name : country[0].name } as ICountry } as IStandardLocation });
@@ -87,6 +88,7 @@ export const setAddressValues = (
         if (field === 'postcode') setSelectedAddress({ ...selectedAddress, sAddress : { ...selectedAddress.sAddress, postcode : value } as IStandardLocation });
     }
     else {
+        if (field === 'pobox') setSelectedAddress({ ...selectedAddress, lAddress : { ...selectedAddress.lAddress, poBox : value } as ILocalLocation });
         if (field === 'building') setSelectedAddress({ ...selectedAddress, lAddress : { ...selectedAddress.lAddress, buildingName : value } as ILocalLocation });
         if (field === 'street') setSelectedAddress({ ...selectedAddress, lAddress : { ...selectedAddress.lAddress, streetAddress : value } as ILocalLocation });
         if (field === 'country') setSelectedAddress({ ...selectedAddress, lAddress : { ...selectedAddress.lAddress, country : { id : +value, name : country[0].name } as ICountry } as ILocalLocation });
@@ -113,6 +115,42 @@ export const checkAddressSavingResult = (result: any) => {
 
     if (!result.isSending && result.sendSuccess && !_.isEmpty(result.newAddress) && result.newAddress.result === 0)
         return result.newAddress.message;
+    
+    return CONSTANTS.EMPTY;
+}
+
+export const checkAddressUpdatingResult = (result: any) => {
+    if (result.isUpdating) return CONSTANTS.EMPTY;
+
+    if (!result.isUpdating && !result.updateSuccess && !_.isEmpty(result.updatedAddress) && result.updatedAddress.hasOwnProperty('stack'))
+        return 'Unable to update your address due to network lost. Please check your network connection.';
+
+    if (!result.isUpdating && result.updateSuccess && !_.isEmpty(result.updatedAddress) && result.updatedAddress.result !== 1)
+        return result.updatedAddress.message;
+    
+    return CONSTANTS.EMPTY;
+}
+
+export const checkAddressDeletingResult = (result: any) => {
+    if (result.isDeleting) return CONSTANTS.EMPTY;
+
+    if (!result.isDeleting && !result.deleteSuccess && !_.isEmpty(result.result) && result.result.hasOwnProperty('stack'))
+        return 'Unable to delete your address due to network lost. Please check your network connection.';
+
+    if (!result.isDeleting && result.deleteSuccess && !_.isEmpty(result.result) && result.result.result !== 1)
+        return result.result.message;
+    
+    return CONSTANTS.EMPTY;
+}
+
+export const checkAddressSetFieldResult = (result: any) => {
+    if (result.isSetting) return CONSTANTS.EMPTY;
+
+    if (!result.isSetting && !result.settingSuccess && !_.isEmpty(result.result) && result.result.hasOwnProperty('stack'))
+        return 'Unable to fulfil your request due to network lost. Please check your network connection.';
+
+    if (!result.isSetting && result.settingSuccess && !_.isEmpty(result.result) && result.result.result !== 1)
+        return result.result.message;
     
     return CONSTANTS.EMPTY;
 }

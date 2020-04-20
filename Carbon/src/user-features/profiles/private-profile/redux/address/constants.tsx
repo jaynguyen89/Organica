@@ -27,6 +27,33 @@ export type T_SAVE_NEW_ADDRESS_SUCCESS = typeof SAVE_NEW_ADDRESS_SUCCESS;
 export const SAVE_NEW_ADDRESS_FAILED = 'SAVE_NEW_ADDRESS_FAILED';
 export type T_SAVE_NEW_ADDRESS_FAILED = typeof SAVE_NEW_ADDRESS_FAILED;
 
+export const UPDATE_ADDRESS_BEGIN = 'UPDATE_ADDRESS_BEGIN';
+export type T_UPDATE_ADDRESS_BEGIN = typeof UPDATE_ADDRESS_BEGIN;
+
+export const UPDATE_ADDRESS_SUCCESS = 'UPDATE_ADDRESS_SUCCESS';
+export type T_UPDATE_ADDRESS_SUCCESS = typeof UPDATE_ADDRESS_SUCCESS;
+
+export const UPDATE_ADDRESS_FAILED = 'UPDATE_ADDRESS_FAILED';
+export type T_UPDATE_ADDRESS_FAILED = typeof UPDATE_ADDRESS_FAILED;
+
+export const SET_ADDRESS_FIELD_BEGIN = 'SET_ADDRESS_FIELD_BEGIN';
+export type T_SET_ADDRESS_FIELD_BEGIN = typeof SET_ADDRESS_FIELD_BEGIN;
+
+export const SET_ADDRESS_FIELD_SUCCESS = 'SET_ADDRESS_FIELD_SUCCESS';
+export type T_SET_ADDRESS_FIELD_SUCCESS = typeof SET_ADDRESS_FIELD_SUCCESS;
+
+export const SET_ADDRESS_FIELD_FAILED = 'SET_ADDRESS_FIELD_FAILED';
+export type T_SET_ADDRESS_FIELD_FAILED = typeof SET_ADDRESS_FIELD_FAILED;
+
+export const DELETE_ADDRESS_BEGIN = 'DELETE_ADDRESS_BEGIN';
+export type T_DELETE_ADDRESS_BEGIN = typeof DELETE_ADDRESS_BEGIN;
+
+export const DELETE_ADDRESS_SUCCESS = 'DELETE_ADDRESS_SUCCESS';
+export type T_DELETE_ADDRESS_SUCCESS = typeof DELETE_ADDRESS_SUCCESS;
+
+export const DELETE_ADDRESS_FAILED = 'DELETE_ADDRESS_FAILED';
+export type T_DELETE_ADDRESS_FAILED = typeof DELETE_ADDRESS_FAILED;
+
 export interface IAddressBinder {
     hidrogenianId : number,
     localAddress : object | null,
@@ -39,7 +66,15 @@ export interface IAddressList {
     countries : any,
     saveAddressFor : any,
     saveAddress : any,
-    onSaveSuccess : any
+    onSaveSuccess : any,
+    onUpdateSuccess : any,
+    onSetFieldOrDeleteSuccess : any,
+    updateAddressFor : any,
+    deleteAddress : any,
+    updateAddressField : any,
+    updating : any,
+    setField : any,
+    deleting : any
 };
 
 export interface IAddressForm {
@@ -51,7 +86,12 @@ export interface IAddressForm {
     setCurrentTab : any,
     saveAddress : any,
     closeModal : any,
-    saveError : string
+    actionError : string,
+    isUpdating : Boolean
+}
+
+export interface IAddressMap {
+    addresses : any
 }
 
 export interface ICountry {
@@ -65,6 +105,7 @@ export interface ICountry {
 
 interface IGenericLocation {
     id : number,
+    poBox : string | null,
     buildingName : string | null,
     streetAddress : string,
     alternateAddress : string | null,
@@ -103,6 +144,17 @@ export interface IAddress {
     normalizedAddress : string
 }
 
+export interface IFieldSetter {
+    id : number,
+    hidrogenianId : number,
+    field : string
+}
+
+export interface IPOBox {
+    id : number,
+    title : string
+}
+
 const VOID_COUNTRY = {
     id : 0,
     name : CONSTANTS.EMPTY,
@@ -114,6 +166,7 @@ const VOID_COUNTRY = {
 
 export const VOID_SLOCATION = {
     id : 0,
+    poBox : CONSTANTS.EMPTY,
     buildingName : CONSTANTS.EMPTY,
     streetAddress : CONSTANTS.EMPTY,
     alternateAddress : CONSTANTS.EMPTY,
@@ -125,6 +178,7 @@ export const VOID_SLOCATION = {
 
 export const VOID_LLOCATION = {
     id : 0,
+    poBox : CONSTANTS.EMPTY,
     buildingName : CONSTANTS.EMPTY,
     streetAddress : CONSTANTS.EMPTY,
     alternateAddress : CONSTANTS.EMPTY,

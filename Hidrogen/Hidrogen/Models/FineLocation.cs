@@ -7,6 +7,7 @@ namespace Hidrogen.Models
     {
         public int Id { get; set; }
         public string BuildingName { get; set; }
+        public string PoBoxNumber { get; set; }
         public string StreetAddress { get; set; }
         public string AlternateAddress { get; set; }
         public string Group { get; set; }

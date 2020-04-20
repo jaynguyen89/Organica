@@ -18,6 +18,7 @@ namespace Hidrogen.ViewModels.Address {
         public string State { get; set; }
 
         public override string ProduceNormalizedAddress() {
+            var po = string.IsNullOrEmpty(PoBox) ? string.Empty : PoBox + ", ";
             var building = string.IsNullOrEmpty(BuildingName) ? string.Empty : BuildingName + ", ";
             var street = string.IsNullOrEmpty(StreetAddress) ? string.Empty : StreetAddress + ", ";
             var suburb = string.IsNullOrEmpty(Suburb) ? string.Empty : Suburb + ", ";
@@ -25,12 +26,13 @@ namespace Hidrogen.ViewModels.Address {
             var post = string.IsNullOrEmpty(Postcode) ? string.Empty : Postcode + ", ";
             var country = string.IsNullOrEmpty(Country.Name) ? string.Empty : Country.Name;
 
-            return $"{building}{street}{suburb}{state}{post}{country}";
+            return $"{po}{building}{street}{suburb}{state}{post}{country}";
         }
 
         public static implicit operator StandardLocationVM(FineLocation location) {
             return new StandardLocationVM {
                 Id = location.Id,
+                PoBox = location.PoBoxNumber,
                 BuildingName = location.BuildingName,
                 StreetAddress = location.StreetAddress,
                 AlternateAddress = location.AlternateAddress,
@@ -48,6 +50,7 @@ namespace Hidrogen.ViewModels.Address {
         public static implicit operator StandardLocationVM(RawLocation location) {
             return new StandardLocationVM {
                 Id = location.Id,
+                PoBox = location.PoBoxNumber,
                 BuildingName = location.BuildingName,
                 StreetAddress = location.StreetAddress,
                 AlternateAddress = location.AlternateAddress,

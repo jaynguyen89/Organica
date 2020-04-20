@@ -6,6 +6,7 @@ namespace Hidrogen.Models {
 
         public static implicit operator RawLocation(LocalLocationVM location) {
             return new RawLocation {
+                PoBoxNumber = location.PoBox,
                 BuildingName = location.BuildingName,
                 StreetAddress = location.StreetAddress,
                 AlternateAddress = location.AlternateAddress,
@@ -25,6 +26,7 @@ namespace Hidrogen.Models {
 
         public static implicit operator RawLocation(StandardLocationVM location) {
             return new RawLocation {
+                PoBoxNumber = location.PoBox,
                 BuildingName = location.BuildingName,
                 StreetAddress = location.StreetAddress,
                 AlternateAddress = location.AlternateAddress,

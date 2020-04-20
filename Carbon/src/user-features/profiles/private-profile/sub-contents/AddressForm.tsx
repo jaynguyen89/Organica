@@ -15,20 +15,30 @@ const AddressForm = (props : IAddressForm) => {
     React.useEffect(() => {
         M.Tabs.init($('.tabs'), {
             duration : 200,
-            onShow : () => props.setCurrentTab(props.currentTab === 'standard' ? 'local' : 'standard')
+            onShow : () => props.setCurrentTab($('.active').attr('href')?.substr(1) || 'standard')
         });
     }, [props.currentTab]);
 
     React.useEffect(() => {
-        if (props.saveError.length !== 0)
-            setStatus({ messages : props.saveError, type : 'error' });
+        M.Tabs.getInstance(
+            document.querySelector('.tabs') as Element
+        ).select(props.currentTab);
+
+        M.Tabs.getInstance(
+            document.querySelector('.tabs') as Element
+        ).updateTabIndicator();
+    }, [props.address]);
+
+    React.useEffect(() => {
+        if (props.actionError.length !== 0)
+            setStatus({ messages : props.actionError, type : 'error' });
         else setStatus({} as IStatus);
-    }, [props.saveError]);
+    }, [props.actionError]);
 
     return (
         <div className='row'>
             <div className='col s12'>
-                <p className='header'>Select a format and go. We only save address of the format you are selecting.</p>
+                <p className='header'>Select a format and go. We only save address on the tab you are openning.</p>
                 <CarbonAlert { ...status } />
             </div>
             
@@ -50,7 +60,7 @@ const AddressForm = (props : IAddressForm) => {
 
             <div className='modal-footer'>
                 <div className='col s12'>
-                    <button className='btn left' onClick={ () => props.saveAddress() }>Save</button>
+                    <button className='btn left' onClick={ () => props.saveAddress() }>{ (props.isUpdating && 'Update') || 'Save' }</button>
                     <button className='btn right red' onClick={ () => props.closeModal() }>Cancel</button>
                 </div>
             </div>

@@ -6,18 +6,31 @@ import $ from 'jquery';
 
 import CarbonAlert from '../../../../shared/CarbonAlert';
 import AddressForm from '../sub-contents/AddressForm';
+import AddressRow from './AddressRow';
 
-import { IAddressList, IAddress, VOID_ADDRESS, VOID_LLOCATION, VOID_SLOCATION, IAddressBinder } from '../redux/address/constants';
-import { setAddressValues, checkAddressSavingResult } from '../utility';
+import { IAddressList, IAddress, VOID_ADDRESS, IAddressBinder, IFieldSetter } from '../redux/address/constants';
 import { ModalOptions, CONSTANTS } from '../../../../helpers/helper';
-import { saveAddressFor } from '../redux/address/actions';
+import { saveAddressFor, updateAddressFor, deleteAddress, updateAddressField } from '../redux/address/actions';
+import {
+    setAddressValues,
+    checkAddressSavingResult,
+    checkAddressUpdatingResult,
+    checkAddressDeletingResult,
+    checkAddressSetFieldResult
+} from '../utility';
 
 const mapStateToProps = (state: any) => ({
-    saveAddress : state.AddressStore.saveAddress
+    saveAddress : state.AddressStore.saveAddress,
+    updating : state.AddressStore.updateAddress,
+    setField : state.AddressStore.setField,
+    deleting : state.AddressStore.deleteAddress
 });
 
 const mapDispatchToProps = {
-    saveAddressFor
+    saveAddressFor,
+    updateAddressFor,
+    deleteAddress,
+    updateAddressField
 };
 
 const AddressList = (props : IAddressList) => {
@@ -25,17 +38,12 @@ const AddressList = (props : IAddressList) => {
     const [countries, setCountries] = React.useState([]);
     const [selectedAddress, setSelectedAddress] = React.useState(VOID_ADDRESS as IAddress);
     const [currentTab, setCurrentTab] = React.useState('standard');
+    const [isUpdating, setIsUpdating] = React.useState(false);
     const [readyToSave, setReadyToSave] = React.useState(false);
-    const [saveError, setSaveError] = React.useState(CONSTANTS.EMPTY);
+    const [actionResultError, setActionResultError] = React.useState(CONSTANTS.EMPTY);
 
     React.useEffect(() => {
         M.Modal.init($('.modal'), ModalOptions);
-
-        M.Dropdown.init($('.dropdown-trigger'), {
-            constrainWidth : false,
-            closeOnClick : true,
-            alignment : 'right'
-        });
     }, []);
 
     React.useEffect(() => {
@@ -65,14 +73,21 @@ const AddressList = (props : IAddressList) => {
 
     React.useEffect(() => {
         if (readyToSave) {
-            const { saveAddressFor } = props;
-
             let addressBinder : IAddressBinder = {
                 hidrogenianId : props.user.userId,
                 localAddress : currentTab === 'standard' ? null : selectedAddress,
                 standardAddress : currentTab === 'standard' ? selectedAddress : null
             };
-            saveAddressFor(addressBinder);
+
+            if (!isUpdating) {
+                const { saveAddressFor } = props;
+                saveAddressFor(addressBinder);
+            }
+            else {
+                const { updateAddressFor } = props;
+                updateAddressFor(addressBinder);
+            }
+
             setReadyToSave(false);
         }
     }, [readyToSave]);
@@ -89,18 +104,85 @@ const AddressList = (props : IAddressList) => {
             closeModalForm();
             setSelectedAddress(VOID_ADDRESS);
         }
-        else setSaveError(message);
+        else setActionResultError(message);
     }, [props.saveAddress]);
 
     const closeModalForm = () => {
         M.Modal.getInstance(
             document.querySelector('.modal') as Element
         ).close();
+        setIsUpdating(false);
+        setReadyToSave(false);
+        setSelectedAddress(VOID_ADDRESS);
+        setCurrentTab('standard');
     }
 
     const autoDetectAddress = () => {
         alert('auto detect address');
     }
+
+    const openModalForUpdateAddress = (address: IAddress) => {
+        setSelectedAddress(address);
+        M.Modal.getInstance(
+            document.querySelector('.modal') as Element
+        ).open();
+
+        setIsUpdating(true);
+        setCurrentTab(address.isStandard ? 'standard' : 'local');
+    }
+
+    React.useEffect(() => {
+        let result = checkAddressUpdatingResult(props.updating);
+        if (!_.isEmpty(props.updating.updatedAddress) &&
+            props.updating.updatedAddress.hasOwnProperty('result') &&
+            props.updating.updatedAddress.result === 1
+        ) {
+            let newAddress = props.updating.updatedAddress.message;
+
+            props.onUpdateSuccess(newAddress as IAddress);
+            closeModalForm();
+            setSelectedAddress(VOID_ADDRESS);
+        }
+        else setActionResultError(result);
+    }, [props.updating]);
+
+    const deleteAddress = (addressId: number) => {
+        if (window.confirm('The address will be deleted completely from your account. Continue?')) {
+            const { deleteAddress } = props;
+            deleteAddress(addressId);
+        }
+    }
+
+    React.useEffect(() => {
+        let result = checkAddressDeletingResult(props.deleting);
+        if (!_.isEmpty(props.deleting.result) &&
+            props.deleting.result.hasOwnProperty('result') &&
+            props.deleting.result.result === 1
+        ) {
+            props.onSetFieldOrDeleteSuccess(CONSTANTS.DELETE);
+            closeModalForm();
+        }
+        else setActionResultError(result);
+    }, [props.deleting]);
+
+    const setAddressAsPrimaryOrDelivery = (fieldSetter: IFieldSetter) => {
+        fieldSetter.hidrogenianId = props.user.userId;
+        const { updateAddressField } = props;
+
+        updateAddressField(fieldSetter);
+    }
+
+    React.useEffect(() => {
+        let result = checkAddressSetFieldResult(props.setField);
+        if (!_.isEmpty(props.setField.result) &&
+            props.setField.result.hasOwnProperty('result') &&
+            props.setField.result.result === 1
+        ) {
+            props.onSetFieldOrDeleteSuccess();
+            closeModalForm();
+        }
+        else setActionResultError(result);
+    }, [props.setField]);
 
     return (
         <>
@@ -120,7 +202,8 @@ const AddressList = (props : IAddressList) => {
                         detectAddress={ autoDetectAddress }
                         saveAddress={ saveAddress }
                         closeModal={ closeModalForm }
-                        saveError={ saveError } />
+                        actionError={ actionResultError }
+                        isUpdating={ isUpdating } />
                 </div>
             </div>
 
@@ -131,25 +214,13 @@ const AddressList = (props : IAddressList) => {
                         <CarbonAlert messages='You have added no address. Please add one by clicking the button above.'
                             type='info' persistent={ true } />
                     ) ||
-                    <div className='address-row'>
-                        <h6>
-                            Address Title
-                            <span className='new blue badge right'>Primary</span>
-                            <span className='new orange badge right'>Delivery</span>
-                        </h6>
-                        <p>Ap.5, Bldg 12A, Block 1B, 111 Somewhere Street, Somewhere Place, VIC 3020</p>
-                        <p style={{ fontSize:'12px' }}><b>Last update:</b> 23 Mar 2020 12:33PM</p>
-                        <a className='address-edit btn-floating blue dropdown-trigger' data-target='address-options'><i className='material-icons'>edit</i></a>
-                        <a className='address-delete btn-floating red'><i className='material-icons'>delete_forever</i></a>
-                    </div>
+                    addresses.map((address: IAddress) =>
+                        <AddressRow key={ address.id } address={ address }
+                            deleteAddress={ deleteAddress }
+                            updateAddress={ openModalForUpdateAddress }
+                            updateField={ setAddressAsPrimaryOrDelivery } />
+                    )
                 }
-
-                <ul id='address-options' className='dropdown-content'>
-                    <li><a href='#!'>Set as primary</a></li>
-                    <li><a href='#!'>Set as delivery</a></li>
-                    <li className='divider'></li>
-                    <li><a href='#!'>Edit</a></li>
-                </ul>
             </div>
         </>
     );

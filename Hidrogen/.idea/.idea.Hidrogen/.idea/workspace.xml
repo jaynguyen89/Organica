@@ -65,6 +65,7 @@
     <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/ManualDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/HidrogenDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/CountryVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -118,12 +119,9 @@
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroRoleService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" />
         <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroAddressService.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/AddressSetterVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/CountryVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/ICountryService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/PartialModels/RawLocation.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Startup.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/IServiceCollectionExtension.cs" />
@@ -134,12 +132,16 @@
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalAddressVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/IGenericAddressVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/ServiceCollectionExtension.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/AddressSetterVM.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroAddressService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/DbContexts/HidrogenDbContext.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/GenericLocationVM.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardAddressVM.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/PartialModels/RawLocation.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardLocationVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalLocationVM.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardAddressVM.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/GenericLocationVM.cs" />
       </list>
     </option>
   </component>
@@ -208,6 +210,10 @@
       <workItem from="1586911061876" duration="11513000" />
       <workItem from="1586996358205" duration="36858000" />
       <workItem from="1587112484102" duration="15000" />
+      <workItem from="1587201730301" duration="10388000" />
+      <workItem from="1587289109805" duration="604000" />
+      <workItem from="1587343784493" duration="956000" />
+      <workItem from="1587352106875" duration="7129000" />
     </task>
     <servers />
   </component>
@@ -248,26 +254,26 @@
     </state>
     <state width="538" height="408" key="DebuggerActiveHint/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1586417282846" />
     <state width="431" height="466" key="DebuggerActiveHint/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587098710919" />
-    <state width="1815" height="152" key="GridCell.Tab.0.bottom" timestamp="1587112215954">
+    <state width="1815" height="187" key="GridCell.Tab.0.bottom" timestamp="1587373783402">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>
-    <state width="1815" height="152" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
-    <state width="2088" height="276" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213480" />
-    <state width="1815" height="152" key="GridCell.Tab.0.center" timestamp="1587112215954">
+    <state width="1815" height="187" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
+    <state width="2088" height="187" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
+    <state width="1815" height="187" key="GridCell.Tab.0.center" timestamp="1587373783402">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>
-    <state width="1815" height="152" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
-    <state width="2088" height="276" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213480" />
-    <state width="1815" height="152" key="GridCell.Tab.0.left" timestamp="1587112215954">
+    <state width="1815" height="187" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
+    <state width="2088" height="187" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
+    <state width="1815" height="187" key="GridCell.Tab.0.left" timestamp="1587373783402">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>
-    <state width="1815" height="152" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
-    <state width="2088" height="276" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213480" />
-    <state width="1815" height="152" key="GridCell.Tab.0.right" timestamp="1587112215954">
+    <state width="1815" height="187" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
+    <state width="2088" height="187" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
+    <state width="1815" height="187" key="GridCell.Tab.0.right" timestamp="1587373783402">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>
-    <state width="1815" height="152" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
-    <state width="2088" height="276" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213480" />
+    <state width="1815" height="187" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
+    <state width="2088" height="187" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
     <state width="1815" height="152" key="GridCell.Tab.1.bottom" timestamp="1587112215954">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>
@@ -376,19 +382,6 @@
           <line>31</line>
           <properties documentPath="$PROJECT_DIR$/Hidrogen/Services/ModelBinders/AddressModelBinder.cs" initialLine="36" />
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs</url>
-          <line>45</line>
-          <properties documentPath="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" initialLine="45">
-            <startOffsets>
-              <option value="1792" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1894" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

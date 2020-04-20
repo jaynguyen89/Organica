@@ -16,6 +16,21 @@ interface IAddressStore {
         isSending : Boolean,
         sendSuccess : Boolean,
         newAddress : object | null
+    },
+    updateAddress : {
+        isUpdating : Boolean,
+        updateSuccess : Boolean,
+        updatedAddress : object | null
+    },
+    setField : {
+        isSetting : Boolean,
+        settingSuccess : Boolean,
+        result : object | null
+    },
+    deleteAddress : {
+        isDeleting : Boolean,
+        deleteSuccess : Boolean,
+        result : object | null
     }
 };
 
@@ -34,6 +49,21 @@ const initialState : IAddressStore = {
         isSending : false,
         sendSuccess : false,
         newAddress : null
+    },
+    updateAddress : {
+        isUpdating : false,
+        updateSuccess : false,
+        updatedAddress : null
+    },
+    setField : {
+        isSetting : false,
+        settingSuccess : false,
+        result : null
+    },
+    deleteAddress : {
+        isDeleting : false,
+        deleteSuccess : false,
+        result : null
     }
 };
 
@@ -83,6 +113,51 @@ const reducer = produce((draft, action) => {
             draft.saveAddress.isSending = false;
             draft.saveAddress.sendSuccess = true;
             draft.saveAddress.newAddress = action.payload;
+            return;
+        case addressConstants.UPDATE_ADDRESS_BEGIN:
+            draft.updateAddress.isUpdating = true;
+            draft.updateAddress.updateSuccess = false;
+            draft.updateAddress.updatedAddress = null;
+            return;
+        case addressConstants.UPDATE_ADDRESS_FAILED:
+            draft.updateAddress.isUpdating = false;
+            draft.updateAddress.updateSuccess = false;
+            draft.updateAddress.updatedAddress = action.error;
+            return;
+        case addressConstants.UPDATE_ADDRESS_SUCCESS:
+            draft.updateAddress.isUpdating = false;
+            draft.updateAddress.updateSuccess = true;
+            draft.updateAddress.updatedAddress = action.payload;
+            return;
+        case addressConstants.SET_ADDRESS_FIELD_BEGIN:
+            draft.setField.isSetting = true;
+            draft.setField.settingSuccess = false;
+            draft.setField.result = null;
+            return;
+        case addressConstants.SET_ADDRESS_FIELD_FAILED:
+            draft.setField.isSetting = false;
+            draft.setField.settingSuccess = false;
+            draft.setField.result = action.error;
+            return;
+        case addressConstants.SET_ADDRESS_FIELD_SUCCESS:
+            draft.setField.isSetting = false;
+            draft.setField.settingSuccess = true;
+            draft.setField.result = action.payload;
+            return;
+        case addressConstants.DELETE_ADDRESS_BEGIN:
+            draft.deleteAddress.isDeleting = true;
+            draft.deleteAddress.deleteSuccess = false;
+            draft.deleteAddress.result = null;
+            return;
+        case addressConstants.DELETE_ADDRESS_FAILED:
+            draft.deleteAddress.isDeleting = false;
+            draft.deleteAddress.deleteSuccess = false;
+            draft.deleteAddress.result = action.error;
+            return;
+        case addressConstants.DELETE_ADDRESS_SUCCESS:
+            draft.deleteAddress.isDeleting = false;
+            draft.deleteAddress.deleteSuccess = true;
+            draft.deleteAddress.result = action.payload;
             return;
         default:
             return;

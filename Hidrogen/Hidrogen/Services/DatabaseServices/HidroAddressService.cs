@@ -52,21 +52,24 @@ namespace Hidrogen.Services.DatabaseServices {
             return address;
         }
 
-        public async Task<bool?> RemoveHidroAddress(int addressId) {
+        public async Task<KeyValuePair<bool, bool>?> RemoveHidroAddress(int addressId) {
             _logger.LogInformation("HidroAddressService.RemoveHidroAddress - addressId=" + addressId);
 
             var dbAddress = await _dbContext.HidroAddress.FindAsync(addressId);
             if (dbAddress == null) return null;
+            
+            if (dbAddress.IsPrimaryAddress || dbAddress.IsDeliveryAddress)
+                return new KeyValuePair<bool, bool>(false, false);
 
             _dbContext.HidroAddress.Remove(dbAddress);
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.RemoveHidroAddress - Error: " + e);
-                return false;
+                return new KeyValuePair<bool, bool>(true, false);
             }
 
-            return true;
+            return new KeyValuePair<bool, bool>(true, true);
         }
 
         public async Task<List<IGenericAddressVM>> RetrieveAddressesForHidrogenian(int hidrogenianId) {
@@ -165,8 +168,8 @@ namespace Hidrogen.Services.DatabaseServices {
             var addressesToUpdate = new List<HidroAddress>();
             foreach (var address in hidrogenianAddresses) {
                 if (address.Id == data.Id) {
-                    address.IsDeliveryAddress = data.Field == nameof(address.IsDeliveryAddress);
-                    address.IsPrimaryAddress = data.Field == nameof(address.IsPrimaryAddress);
+                    address.IsDeliveryAddress = string.Equals(data.Field, nameof(address.IsDeliveryAddress), StringComparison.CurrentCultureIgnoreCase);
+                    address.IsPrimaryAddress = string.Equals(data.Field, nameof(address.IsPrimaryAddress), StringComparison.CurrentCultureIgnoreCase);
                     
                     addressesToUpdate.Add(address);
                     continue;

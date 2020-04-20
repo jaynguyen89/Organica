@@ -59,6 +59,8 @@ namespace Hidrogen.DbContexts
 
                 entity.Property(e => e.Lane).HasMaxLength(10);
 
+                entity.Property(e => e.PoBoxNumber).HasMaxLength(40);
+
                 entity.Property(e => e.Postcode).HasMaxLength(10);
 
                 entity.Property(e => e.Province).HasMaxLength(40);
@@ -341,6 +343,8 @@ namespace Hidrogen.DbContexts
                 entity.Property(e => e.Hamlet).HasMaxLength(40);
 
                 entity.Property(e => e.Lane).HasMaxLength(10);
+
+                entity.Property(e => e.PoBoxNumber).HasMaxLength(40);
 
                 entity.Property(e => e.Postcode).HasMaxLength(10);
 

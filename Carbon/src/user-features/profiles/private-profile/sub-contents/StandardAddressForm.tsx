@@ -26,11 +26,17 @@ const StandardAddressForm = (props: any) => {
             </div>
             <div className='input-field col l4 m6 s12'>
                 <i className='fas fa-building prefix hidro-primary-icon'></i>
+                <input id='l-address-pobox' type='text' value={ address.sAddress?.poBox as string }
+                    onChange={ (e: any) => props.updateAddress('standard', 'pobox', e.target.value) } />
+                <label htmlFor='l-address-pobox'>PO Box</label>
+            </div>
+            <div className='input-field col l4 m6 s12'>
+                <i className='fas fa-building prefix hidro-primary-icon'></i>
                 <input id='s-address-building' type='text' value={ address.sAddress?.buildingName as string }
                     onChange={ (e: any) => props.updateAddress('standard', 'building', e.target.value) } />
                 <label htmlFor='s-address-building'>Building Address</label>
             </div>
-            <div className='input-field col l4 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-home prefix hidro-primary-icon'></i>
                 <input id='s-address-street' type='text' value={ address.sAddress?.streetAddress }
                     onChange={ (e: any) => props.updateAddress('standard', 'street', e.target.value) } />
@@ -64,7 +70,7 @@ const StandardAddressForm = (props: any) => {
                     }
                 </select>
             </div>
-            <div className='input-field col l12 m6 s12'>
+            <div className='input-field col m6 s12'>
                 <i className='fas fa-shoe-prints prefix hidro-primary-icon'></i>
                 <input id='s-address-alt' type='text' value={ address.sAddress?.alternateAddress as string }
                     onChange={ (e: any) => props.updateAddress('standard', 'alternate', e.target.value) } />

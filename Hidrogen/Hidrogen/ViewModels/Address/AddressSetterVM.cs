@@ -6,6 +6,6 @@
         
         public int HidrogenianId { get; set; }
         
-        public string Field { get; set; } //The field to set: IsPrimary or ForDelivery
+        public string Field { get; set; } //The field to set: IsPrimaryAddress or IsDeliveryAddress
     }
 }

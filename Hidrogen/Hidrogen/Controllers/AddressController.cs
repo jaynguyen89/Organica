@@ -70,13 +70,14 @@ namespace Hidrogen.Controllers {
             _logger.LogInformation("AddressController.RemoveHidrogenianAddress - addressId=" + addressId);
 
             var result = await _addressService.RemoveHidroAddress(addressId);
+            if (!result.HasValue) return new JsonResult(new { Result = RESULTS.FAILED, Message = "No address found with the given data. Please try again." });
+            if (!result.Value.Key) return new JsonResult(new { Result = RESULTS.FAILED, Message = "The address is currently set as either Primary or Delivery. Deletion cancelled." });
 
-            return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "No address found with the given data. Please try again." })
-                                    : (result.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to delete the address. Please try again." })
-                                                    : new JsonResult(new { Result = RESULTS.SUCCESS }));
+            return !result.Value.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to delete the address. Please try again." })
+                                       : new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
-        [HttpPut("update-address")]
+        [HttpPost("update-address")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdateHidrogenianAddress(AddressBinderVM binder) {
@@ -108,7 +109,7 @@ namespace Hidrogen.Controllers {
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value });
         }
         
-        [HttpPut("set-address-field")]
+        [HttpPost("set-address-field")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> SetAddressAsPrimaryOrDeliveryFor(AddressSetterVM data) {
@@ -126,6 +127,7 @@ namespace Hidrogen.Controllers {
             var location = address.IsStandard ? address.sAddress : (GenericLocationVM)address.lAddress;
 
             errors.AddRange(location.VerifyBuildingName());
+            errors.AddRange(location.VerifyPoBox());
             errors.AddRange(location.VerifyStreetAddress());
             errors.AddRange(location.VerifyAltAddress());
 

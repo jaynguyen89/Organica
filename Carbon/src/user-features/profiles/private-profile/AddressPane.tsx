@@ -19,7 +19,11 @@ import { checkAddressAndCountryListRetrievingResult } from './utility';
 const mapStateToProps = (state: any) => ({
     user : state.AuthenticationStore.authUser,
     addressList : state.AddressStore.addressList,
-    countryList : state.AddressStore.countryList
+    countryList : state.AddressStore.countryList,
+    saveAddress : state.AddressStore.saveAddress,
+    updating : state.AddressStore.updateAddress,
+    setField : state.AddressStore.setField,
+    deleting : state.AddressStore.deleteAddress
 });
 
 const mapDispatchToProps = {
@@ -64,6 +68,29 @@ const AddressPane = (props : any) => {
         setAddresses(clonedAddressList);
     }
 
+    const replaceAddressOnUpdateSuccess = (address: IAddress) => {
+        let clonedAddressList = _.cloneDeep(addresses);
+        clonedAddressList.forEach((adr: IAddress) => {
+            if (adr.id === address.id) {
+                clonedAddressList[clonedAddressList.indexOf(adr)] = address;
+                return;
+            }
+        });
+
+        setStatus({ messages : 'Your address has been updated successfully.', type : 'success' });
+        setAddresses(clonedAddressList);
+    }
+
+    const refreshAddressListOnSetFieldAndDeleteSuccess = (action: string = CONSTANTS.EMPTY) => {
+        if (action === CONSTANTS.DELETE)
+            setStatus({ messages : 'The address has been permanently deleted.', type : 'success' });
+        else
+            setStatus({ messages : 'The label has been successfully set on your address.', type : 'success' });
+        
+        const { getAddressListFor } = props;
+        getAddressListFor(props.user.userId);
+    }
+
     return (
         <div className='row'>
             <h6 className='content-caption'>
@@ -82,15 +109,17 @@ const AddressPane = (props : any) => {
             {
                 !anyError &&
                 <>
-                    <div className='col l3 m6 s12'>
+                    <div className='col l4 m6 s12'>
                         <AddressList
                             user={ props.user }
                             addresses={ addresses }
                             countries={ countries }
-                            onSaveSuccess={ appendNewAddressOnSaveSuccess } />
+                            onSaveSuccess={ appendNewAddressOnSaveSuccess }
+                            onUpdateSuccess={ replaceAddressOnUpdateSuccess }
+                            onSetFieldOrDeleteSuccess={ refreshAddressListOnSetFieldAndDeleteSuccess } />
                     </div>
-                    <div className='col l9 m6 s0'>
-                        <AddressMap />
+                    <div className='col l8 m6 s0'>
+                        <AddressMap addresses={ addresses } />
                     </div>
                 </>
             }

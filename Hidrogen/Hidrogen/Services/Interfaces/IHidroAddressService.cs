@@ -20,7 +20,7 @@ namespace Hidrogen.Services.Interfaces {
         /// <summary>
         /// Returns null if no address found with addressId, returns false if removal failed, otherwise, returns true.
         /// </summary>
-        Task<bool?> RemoveHidroAddress(int addressId);
+        Task<KeyValuePair<bool, bool>?> RemoveHidroAddress(int addressId);
         
         /// <summary>
         /// Returns Key-Value pair. Key == null if no address found with address ID, Key == false if inserting rawLocation failed.

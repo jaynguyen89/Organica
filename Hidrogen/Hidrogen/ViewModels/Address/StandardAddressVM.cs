@@ -66,11 +66,11 @@ namespace Hidrogen.ViewModels.Address {
             
             var lenTest = new Regex(@".{1,30}");
             if (!lenTest.IsMatch(Title))
-                errors.Add(13);
+                errors.Add(9);
 
-            var rx = new Regex(@"^[A-Za-z'.\- ]*$");
+            var rx = new Regex(@"^[\w\d\s'.\-]*$");
             if (!rx.IsMatch(Title))
-                errors.Add(14);
+                errors.Add(10);
 
             return errors;
         }
