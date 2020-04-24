@@ -11,7 +11,7 @@ namespace Hidrogen.Services.DatabaseServices {
     public class AccountService : IAccountService {
 
         private readonly ILogger<AccountService> _logger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
         public AccountService(
             ILogger<AccountService> logger,
@@ -25,8 +25,6 @@ namespace Hidrogen.Services.DatabaseServices {
             _logger.LogInformation("AccountService.GetAccountIdentity - Service starts.");
 
             var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
-            if (account == null) return null;
-
             return account;
         }
 
@@ -34,8 +32,6 @@ namespace Hidrogen.Services.DatabaseServices {
             _logger.LogInformation("AccountService.GetAccountTimeStamps - Service starts.");
 
             var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
-            if (account == null) return null;
-
             return account;
         }
 
@@ -45,10 +41,7 @@ namespace Hidrogen.Services.DatabaseServices {
             var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
             if (account == null) return null;
 
-            if (account.TwoFactorEnabled)
-                return account.TwoFaSecretKey;
-
-            return string.Empty;
+            return account.TwoFactorEnabled ? account.TwoFaSecretKey : string.Empty;
         }
 
         public async Task<bool> ReverseIdentityChanges(AccountIdentityVM oldIdentity) {

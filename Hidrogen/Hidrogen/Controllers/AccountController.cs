@@ -61,27 +61,30 @@ namespace Hidrogen.Controllers {
                                     : new JsonResult(new { Result = RESULTS.SUCCESS, Message = identity });
         }
 
-        [HttpGet("get-two-fa")]
+        [HttpGet("get-two-fa/{hidrogenianId}")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
-        public async Task<JsonResult> GetTwoFactorDataFor(TwoFaVM twoFa) {
-            _logger.LogInformation("AccountController.GetTwoFactorDataFor - hidrogenianId=" + twoFa.Id);
+        public async Task<JsonResult> GetTwoFactorDataFor(int hidrogenianId) {
+            _logger.LogInformation("AccountController.GetTwoFactorDataFor - hidrogenianId=" + hidrogenianId);
 
-            var secretKey = await _accountService.RetrieveTwoFaSecretKeyFor(twoFa.Id);
+            var secretKey = await _accountService.RetrieveTwoFaSecretKeyFor(hidrogenianId);
             if (secretKey == null) return new JsonResult(new { Result =RESULTS.FAILED, Message = "Error occurred while looking for your Two-Factor Authentication." });
 
             if (secretKey.Length == 0) return new JsonResult(new { Result = RESULTS.SUCCESS });
+            
+            var twoFa = new TwoFaVM { Id = hidrogenianId };
+            var identity = await _accountService.GetAccountIdentity(hidrogenianId);
 
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            var tfa = new TwoFactorAuthenticator();
             var authenticator = tfa.GenerateSetupCode(
-                HidroConstants.PROJECT_NAME, twoFa.Email,
+                HidroConstants.PROJECT_NAME, identity.Email,
                 secretKey, false, 200
             );
 
             twoFa.QrImageUrl = authenticator.QrCodeSetupImageUrl;
             twoFa.ManualQrCode = authenticator.ManualEntryKey;
 
-            return new JsonResult(new { Result = RESULTS.SUCCESS });
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = twoFa });
         }
 
         [HttpGet("get-time-logs/{hidrogenianId}")]
@@ -111,16 +114,16 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var updatedIdentity = await _accountService.UpdateIdentityForHidrogenian(identity);
+            var (key, value) = await _accountService.UpdateIdentityForHidrogenian(identity);
 
-            if (!updatedIdentity.Key)
+            if (!key)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Account not found with the given data. Please try again." });
 
-            if (updatedIdentity.Value == null)
+            if (value == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your account. Please try again." });
 
-            var oldIdentity = updatedIdentity.Value.Value.Key;
-            var newIdentity = updatedIdentity.Value.Value.Value;
+            var oldIdentity = value.Value.Key;
+            var newIdentity = value.Value.Value;
             var hidrogenian = new HidrogenianVM {
                 Id = newIdentity.Id,
                 Token = _authService.GenerateRandomToken()
@@ -131,8 +134,8 @@ namespace Hidrogen.Controllers {
                     var profile = await _profileService.GetPublicProfileFor(newIdentity.Id);
 
                     string emailTemplate;
-                    using (StreamReader reader = File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/EmailChanged.html")) {
-                        emailTemplate = reader.ReadToEnd();
+                    using (var reader = File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/EmailChanged.html")) {
+                        emailTemplate = await reader.ReadToEndAsync();
                     };
 
                     emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
@@ -156,7 +159,7 @@ namespace Hidrogen.Controllers {
                 //Send SMS to confirm phone number
             }
 
-            return new JsonResult(new { });
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = newIdentity });
         }
 
         [HttpPost("update-security")]
@@ -186,11 +189,11 @@ namespace Hidrogen.Controllers {
             var result = await _accountService.UpdatePasswordForAccount(security);
 
             return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to update password due to account not found. Please login again and try." })
-                                    : (!result.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your password. Please try agian." })
+                                    : (!result.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your password. Please try again." })
                                                      : new JsonResult(new { Result = RESULTS.SUCCESS }));
         }
 
-        [HttpPost("enable-two-fa")]
+        [HttpPost("enable-or-refresh-two-fa")]
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> EnableTwoFactorAuthentication(TwoFaVM twoFa) {
@@ -200,14 +203,16 @@ namespace Hidrogen.Controllers {
             if (!validation.Result) return new JsonResult(validation);
 
             var secretKey = HelperProvider.GenerateRandomString(12);
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
 
             var saved = await _userService.SaveTwoFaSecretKeyFor(twoFa.Id, secretKey);
             if (!saved.HasValue || !saved.Value)
-                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to setup Two-Factor Authentication at the moment. Please try agian." });
-
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to setup Two-Factor Authentication at the moment. Please try again." });
+            
+            var identity = await _accountService.GetAccountIdentity(twoFa.Id);
+            var tfa = new TwoFactorAuthenticator();
+            
             var authenticator = tfa.GenerateSetupCode(
-                HidroConstants.PROJECT_NAME, twoFa.Email,
+                HidroConstants.PROJECT_NAME, identity.Email,
                 secretKey, false, 200
             );
 
@@ -221,7 +226,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> DisableTwoFactorAuthentication(TwoFaVM twoFa) {
-            _logger.LogInformation("AccountController.EnableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
+            _logger.LogInformation("AccountController.DisableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
 
             var validation = await _reCaptchaService.IsHumanRegistration(twoFa.CaptchaToken);
             if (!validation.Result) return new JsonResult(validation);

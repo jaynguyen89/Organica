@@ -31,7 +31,9 @@ namespace Hidrogen.Controllers {
             _logger.LogInformation("PaymentController.GetPaymentDetailsFor - hidrogenianId=" + hidrogenianId);
 
             var details = await _paymentService.RetrievePaymentMethodsFor(hidrogenianId);
+            if (details != null) return new JsonResult(new {Result = RESULTS.SUCCESS, Message = details});
 
+            details = new PaymentDetailVM { HidrogenianId = hidrogenianId };
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = details });
         }
 

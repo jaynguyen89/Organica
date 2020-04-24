@@ -61,7 +61,7 @@ const AddressForm = (props : IAddressForm) => {
             <div className='modal-footer'>
                 <div className='col s12'>
                     <button className='btn left' onClick={ () => props.saveAddress() }>{ (props.isUpdating && 'Update') || 'Save' }</button>
-                    <button className='btn right red' onClick={ () => props.closeModal() }>Cancel</button>
+                    <button className='btn right grey darken-1' onClick={ () => props.closeModal() }>Cancel</button>
                 </div>
             </div>
         </div>

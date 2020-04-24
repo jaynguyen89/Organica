@@ -29,7 +29,7 @@
 .content-container {
     padding: 5px 15px;
     margin-bottom: 20px;
-    min-height: 270px;
+    min-height: 340px;
 }
 
 .content-caption {
@@ -49,4 +49,9 @@
 .link-icon:hover {
     cursor: pointer;
     color: #EFA681;
+}
+
+.instruction {
+    line-height: 23px;
+    font-size: small;
 }

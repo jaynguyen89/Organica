@@ -12,7 +12,7 @@ namespace Hidrogen.ViewModels.Payment {
         public PaymentMethodVM PaymentMethod { get; set; } = new PaymentMethodVM();
 
         public static implicit operator PaymentDetailVM(PaymentMethod detail) {
-            return new PaymentDetailVM {
+            return detail == null ? null : new PaymentDetailVM {
                 HidrogenianId = detail.HidrogenianId,
                 PaymentMethod = new PaymentMethodVM {
                     Id = detail.Id,
