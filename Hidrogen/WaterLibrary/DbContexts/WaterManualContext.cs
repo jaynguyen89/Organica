@@ -4,8 +4,8 @@ using Microsoft.Extensions.Configuration;
 namespace WaterLibrary.DbContexts {
 
     public partial class WaterDbContext {
-
-        public IConfiguration Configuration { get; }
+        
+        private IConfiguration Configuration { get; }
 
         public WaterDbContext(IConfiguration configuration)
         {

@@ -17,7 +17,6 @@
           <e p="IEmailSenderService.cs" t="Include" />
           <e p="IGoogleReCaptchaService.cs" t="Include" />
         </e>
-        <e p="IServiceCollectionExtension.cs" t="Include" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp3.1" t="Include">
@@ -25,6 +24,7 @@
             </e>
           </e>
         </e>
+        <e p="ServiceCollectionExtension.cs" t="Include" />
         <e p="Services" t="Include">
           <e p="EmailSenderService.cs" t="Include" />
           <e p="GoogleReCaptchaService.cs" t="Include" />
@@ -170,6 +170,37 @@
         </e>
       </e>
       <e p="Hidrogen.sln" t="IncludeFlat" />
+      <e p="MethaneLibrary" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="DbContext" t="Include">
+          <e p="MethaneDbContext.cs" t="Include" />
+        </e>
+        <e p="Interfaces" t="Include">
+          <e p="IAccountLogService.cs" t="Include" />
+          <e p="IRuntimeLogService.cs" t="Include" />
+        </e>
+        <e p="MethaneLibrary.csproj" t="IncludeRecursive" />
+        <e p="Models" t="Include">
+          <e p="AccountLog.cs" t="Include" />
+          <e p="RuntimeLog.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="MethaneLibrary.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="ServerOptions.cs" t="Include" />
+        <e p="ServiceCollectionExtension.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="AccountLogService.cs" t="Include" />
+          <e p="RuntimeLogService.cs" t="Include" />
+        </e>
+        <e p="ViewModels" t="Include">
+          <e p="RuntimeLogFilter.cs" t="Include" />
+        </e>
+      </e>
       <e p="packages" t="ExcludeRecursive" />
       <e p="WaterLibrary" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
@@ -193,7 +224,7 @@
           </e>
         </e>
         <e p="Services" t="Include">
-          <e p="IServiceCollectionExtension.cs" t="Include" />
+          <e p="ServiceCollectionExtension.cs" t="Include" />
           <e p="WaterService.cs" t="Include" />
         </e>
         <e p="ViewModels" t="Include">

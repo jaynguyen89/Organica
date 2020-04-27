@@ -1,8 +1,6 @@
 ﻿using Hidrogen.DbContexts;
 using Hidrogen.Services.DatabaseServices;
 using Hidrogen.Services.Interfaces;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hidrogen.Services {

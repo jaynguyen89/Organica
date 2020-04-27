@@ -1,6 +1,6 @@
 using System;
 using HelperLibrary;
-using Hidrogen.Services;
+using MethaneLibrary;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WaterLibrary.Services;
+using ServiceCollectionExtension = Hidrogen.Services.ServiceCollectionExtension;
 
 namespace Hidrogen {
 
@@ -41,9 +42,12 @@ namespace Hidrogen {
 
             services.AddHttpContextAccessor();
 
-            services.RegisterHidrogenServices();
+            ServiceCollectionExtension.RegisterHidrogenServices(services);
             services.RegisterCommonServices();
             services.RegisterWaterServices();
+            
+            services.Configure<ServerOptions>(Configuration.GetSection("MongoServer"));
+            services.RegisterMethaneServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {

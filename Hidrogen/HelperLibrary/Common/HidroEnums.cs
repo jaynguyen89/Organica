@@ -5,6 +5,17 @@ namespace HelperLibrary {
 
     public static class HidroEnums {
 
+        public enum LOGGING {
+            [StringValue("Information")]
+            INFORMATION,
+            [StringValue("Warning")]
+            WARNING,
+            [StringValue("Error")]
+            ERROR,
+            [StringValue("Fatal")]
+            FATAL
+        }
+
         public enum RESULTS {
             FAILED, SUCCESS, INTERRUPTED
         }

@@ -1,0 +1,9 @@
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\bin\Debug\netcoreapp3.1\MethaneLibrary.deps.json
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\bin\Debug\netcoreapp3.1\MethaneLibrary.dll
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\bin\Debug\netcoreapp3.1\MethaneLibrary.pdb
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.csprojAssemblyReference.cache
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.csproj.CoreCompileInputs.cache
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.AssemblyInfoInputs.cache
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.AssemblyInfo.cs
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.dll
+D:\Workspace\Organica\Hidrogen\MethaneLibrary\obj\Debug\netcoreapp3.1\MethaneLibrary.pdb

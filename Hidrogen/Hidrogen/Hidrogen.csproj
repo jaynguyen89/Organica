@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HelperLibrary\HelperLibrary.csproj" />
+    <ProjectReference Include="..\MethaneLibrary\MethaneLibrary.csproj" />
     <ProjectReference Include="..\WaterLibrary\WaterLibrary.csproj" />
   </ItemGroup>
 

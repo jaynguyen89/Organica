@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using HelperLibrary;
 using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
@@ -10,6 +11,8 @@ using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,6 +26,7 @@ namespace Hidrogen.Controllers {
     public class AuthenticationController : ControllerBase {
 
         private readonly ILogger<AuthenticationController> _logger;
+        private readonly IRuntimeLogService _runtimeLog;
         private readonly IAuthenticationService _authService;
         private readonly IHidrogenianService _userService;
         private readonly IHidroProfileService _profileService;
@@ -34,6 +38,7 @@ namespace Hidrogen.Controllers {
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
+            IRuntimeLogService runtimeLog,
             IAuthenticationService authService,
             IHidrogenianService userService,
             IHidroProfileService profileService,
@@ -42,6 +47,7 @@ namespace Hidrogen.Controllers {
             IGoogleReCaptchaService googleReCaptchaService
         ) {
             _logger = logger;
+            _runtimeLog = runtimeLog;
             _authService = authService;
             _userService = userService;
             _profileService = profileService;
@@ -84,6 +90,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationEmailAvailability(string email) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationEmailAvailability - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(CheckRegistrationEmailAvailability),
+                Data = email,
+                Briefing = "Check if the email is available for registration.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             email = email.Trim().ToLower();
             var emailAvailable = await _authService.IsEmailAddressAvailable(email);
