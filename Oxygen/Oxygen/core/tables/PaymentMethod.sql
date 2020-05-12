@@ -11,5 +11,5 @@
 	PaypalAddress NVARCHAR(50) DEFAULT NULL,
 	PaypalAddedOn DATETIME2(7) DEFAULT NULL,
 	CONSTRAINT [PK_PaymentMethod_Id] PRIMARY KEY ([Id] ASC),
-	CONSTRAINT [FK_PaymentMethod_Hidrogenian] FOREIGN KEY ([HidrogenianId]) REFERENCES [dbo].[Hidrogenian] ([Id]) ON DELETE CASCADE
+	CONSTRAINT [FK_PaymentMethod_Hidrogenian] FOREIGN KEY ([HidrogenianId]) REFERENCES [dbo].[Hidrogenian] ([Id])
 )

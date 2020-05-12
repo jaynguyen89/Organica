@@ -71,3 +71,22 @@ INSERT INTO [dbo].[Country] (
 
 
 SET IDENTITY_INSERT [dbo].[Country] OFF;
+
+
+SET IDENTITY_INSERT [dbo].[StoreRole] ON;
+
+--Store roles
+INSERT INTO [dbo].[StoreRole] (
+	Id, RoleName, [Description]
+) VALUES (1, 'Managing Listings', 'Create new listings, update and remove listings, view listing statistics and generate listing reports.');
+INSERT INTO [dbo].[StoreRole] (
+	Id, RoleName, [Description]
+) VALUES (1, 'Managing Orders', 'Process orders: dispatch items, prepare shipping packages and labels, or cancel order on request, update order if delayed.');
+INSERT INTO [dbo].[StoreRole] (
+	Id, RoleName, [Description]
+) VALUES (1, 'Delivery & Stock', 'Update stocks for every item in store, deliver items and/or collect returned items to/from buyers.');
+INSERT INTO [dbo].[StoreRole] (
+	Id, RoleName, [Description]
+) VALUES (1, 'Customer Care', 'Respond to customer queries, collect ratings and resolve issues with orders and warranty.');
+
+SET IDENTITY_INSERT [dbo].[StoreRole] OFF;

@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[ItemVariation] (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	ItemId INT NOT NULL,
+	VariationName NVARCHAR(30) DEFAULT NULL,
+	AvatarData NVARCHAR(100) DEFAULT NULL,
+	VariationPrice DECIMAL DEFAULT NULL,
+	CONSTRAINT [PK_ItemVariation_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_ItemVariation_Item] FOREIGN KEY ([ItemId]) REFERENCES Item ([Id])
+)

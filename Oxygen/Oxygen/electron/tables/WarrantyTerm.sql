@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[WarrantyTerm] (
+	Id INT IDENTITY(1,1) NOT NULL,
+	WarrantyId INT NOT NULL,
+	Title NVARCHAR(50) DEFAULT NULL,
+	Content NVARCHAR(2000) DEFAULT NULL,
+	CONSTRAINT [PK_WarrantyTerm_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_WarrantyTerm_Warranty] FOREIGN KEY ([WarrantyId]) REFERENCES Warranty ([Id])
+)

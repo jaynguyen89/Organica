@@ -110,6 +110,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationUsernameAvailability(string username) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationUsernameAvailability - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(CheckRegistrationUsernameAvailability),
+                Data = username,
+                Briefing = "Check if the username is available for registration.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             username = username.Trim();
             var userNameAvailable = await _authService.IsUserNameAvailable(username);
@@ -123,6 +130,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> RegisterAccount(RegistrationVM registration) {
             _logger.LogInformation("AuthenticationController.RegisterAccount - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(RegisterAccount),
+                Data = JsonConvert.SerializeObject(registration),
+                Briefing = "Create an account for new user then send activation email.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(registration.CaptchaToken);
             if (!verification.Result)
@@ -170,7 +184,7 @@ namespace Hidrogen.Controllers {
                 if (await _profileService.InsertProfileForNewlyCreatedHidrogenian(profile)) {
                     string emailTemplate;
                     using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
-                        emailTemplate = reader.ReadToEnd();
+                        emailTemplate = await reader.ReadToEndAsync();
                     }
 
                     emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
@@ -203,27 +217,34 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> ActivateAccount(AccountActivationVM activator) {
             _logger.LogInformation("AuthenticationController.ActivateAccount - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(ActivateAccount),
+                Data = JsonConvert.SerializeObject(activator),
+                Briefing = "Activate user account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(activator.CaptchaToken);
             if (!verification.Result)
                 return new JsonResult(verification);
 
-            var result = await _authService.ActivateHidrogenianAccount(activator);
+            var (key, value) = await _authService.ActivateHidrogenianAccount(activator);
 
-            if (!result.Key)
+            if (!key)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the activation data." });
 
-            if (result.Value == null)
+            if (value == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
-            if (!result.Value.Value)
+            if (!value.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
 
             var fullName = (await _userService.GetHidrogenianByEmail(activator.Email)).FullName;
 
             string emailTemplate;
             using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
-                emailTemplate = reader.ReadToEnd();
+                emailTemplate = await reader.ReadToEndAsync();
             }
 
             emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
@@ -244,6 +265,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> SendRecoverPasswordInstruction(RecoveryVM recoveree) {
             _logger.LogInformation("AuthenticationController.RecoverPassword - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(SendRecoverPasswordInstruction),
+                Data = JsonConvert.SerializeObject(recoveree),
+                Briefing = "Set password reset data then send an email to help user reset password.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(recoveree.CaptchaToken);
             if (!verification.Result)
@@ -259,7 +287,7 @@ namespace Hidrogen.Controllers {
 
             string emailTemplate;
             using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordReset.html")) {
-                emailTemplate = reader.ReadToEnd();
+                emailTemplate = await reader.ReadToEndAsync();
             }
 
             var fullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
@@ -286,6 +314,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> SendNewAccountActivationEmail(RecoveryVM request) {
             _logger.LogInformation("AuthenticationController.SendNewAccountActivationEmail - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(SendNewAccountActivationEmail),
+                Data = JsonConvert.SerializeObject(request),
+                Briefing = "Set account activation data then send another email to help user activate account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(request.CaptchaToken);
             if (!verification.Result)
@@ -297,36 +332,43 @@ namespace Hidrogen.Controllers {
 
             hidrogenian.Token = _authService.GenerateRandomToken();
 
-            if (await _userService.SetAccountConfirmationToken(hidrogenian)) {
-                string emailTemplate;
-                using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
-                    emailTemplate = reader.ReadToEnd();
-                }
-
-                emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
-                emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
-                emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", hidrogenian.Token);
-
-                var accountActivationEmail = new EmailParamVM {
-                    ReceiverName = hidrogenian.FullName,
-                    ReceiverAddress = hidrogenian.Email,
-                    Subject = "Hidrogen - Activate your account",
-                    Body = emailTemplate
-                };
-
-                if (await _emailService.SendEmail(accountActivationEmail))
-                    return new JsonResult(new { Result = RESULTS.SUCCESS });
-
-                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to send Account Activation email at the moment. Please try again." });
+            if (!await _userService.SetAccountConfirmationToken(hidrogenian))
+                return new JsonResult(new {Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR});
+            
+            string emailTemplate;
+            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
+                emailTemplate = await reader.ReadToEndAsync();
             }
 
-            return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
+            emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", hidrogenian.Token);
+
+            var accountActivationEmail = new EmailParamVM {
+                ReceiverName = hidrogenian.FullName,
+                ReceiverAddress = hidrogenian.Email,
+                Subject = "Hidrogen - Activate your account",
+                Body = emailTemplate
+            };
+
+            if (await _emailService.SendEmail(accountActivationEmail))
+                return new JsonResult(new { Result = RESULTS.SUCCESS });
+
+            return new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to send Account Activation email at the moment. Please try again." });
+
         }
 
         [HttpPost("set-new-password")]
         [HidroActionFilter]
         public async Task<JsonResult> SetNewPassword(RegistrationVM recovery) {
             _logger.LogInformation("AuthenticationController.SetNewPassword - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(SetNewPassword),
+                Data = JsonConvert.SerializeObject(recovery),
+                Briefing = "Set new password on recovery and send confirmation email.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = await _googleReCaptchaService.IsHumanRegistration(recovery.CaptchaToken);
             if (!verification.Result)
@@ -354,7 +396,7 @@ namespace Hidrogen.Controllers {
 
             string emailTemplate;
             using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordResetConfirmation.html")) {
-                emailTemplate = reader.ReadToEnd();
+                emailTemplate = await reader.ReadToEndAsync();
             }
 
             var fullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
@@ -377,6 +419,14 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(Authenticate),
+                Data = JsonConvert.SerializeObject(auth),
+                Briefing = "Authenticate user using login form data.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+
             HttpContext.Session.Clear();
 
             //var verification = await _googleReCaptchaService.IsHumanRegistration(auth.CaptchaToken);
@@ -407,6 +457,14 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CookieAuthenticate(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationController.CookieAuthenticate - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(CookieAuthenticate),
+                Data = JsonConvert.SerializeObject(cookie),
+                Briefing = "Authenticate user using cookie data.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+            
             HttpContext.Session.Clear();
 
             var result = await _authService.AuthenticateWithCookie(cookie);
@@ -421,6 +479,13 @@ namespace Hidrogen.Controllers {
 
         private async Task SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
             _logger.LogInformation("AuthenticationController.SetUserSessionAndCookie - private action.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = "private " + nameof(SetUserSessionAndCookie),
+                Data = JsonConvert.SerializeObject(authHidrogenian),
+                Briefing = "Set user auth data to HttpContext.Session and send to client over Response.Cookie.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             HttpContext.Session.SetString(nameof(AuthenticatedUser.AuthToken), authHidrogenian.AuthToken);
             HttpContext.Session.SetInt32(nameof(AuthenticatedUser.ExpirationTime), (int)authHidrogenian.ExpirationTime);
@@ -444,6 +509,13 @@ namespace Hidrogen.Controllers {
 
         private async Task<bool> SetUserAuthorizationPolicy(int hidrogenianId) {
             _logger.LogInformation("AuthenticationController.SetUserAuthorizationPolicy - Service starts.");
+            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = "private " + nameof(SetUserAuthorizationPolicy),
+                Data = hidrogenianId.ToString(),
+                Briefing = "Set user permissions to HttpContext.Session.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var permissions = await _authService.ComputeAuthorizationFor(hidrogenianId);
             if (permissions == null) return false;
@@ -457,6 +529,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public JsonResult LogOut() {
             _logger.LogInformation("AuthenticationController.LogOut - Service starts.");
+            _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = nameof(LogOut),
+                Data = null,
+                Briefing = "Endpoint invoked - Logout user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             HttpContext.Session.Clear();
 
@@ -470,6 +549,13 @@ namespace Hidrogen.Controllers {
 
         private List<int> VerifyRegistrationData(RegistrationVM data) {
             _logger.LogInformation("AuthenticationController.VerifyRegistrationData - Verification starts.");
+            _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationController),
+                Action = "private " + nameof(VerifyRegistrationData),
+                Data = JsonConvert.SerializeObject(data),
+                Briefing = "Check if registration data have any errors.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var errors = data.VerifyEmail();
             errors.AddRange(data.VerifyUserName());

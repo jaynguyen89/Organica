@@ -7,11 +7,15 @@ namespace Hidrogen.Models
     {
         public Hidrogenian()
         {
+            ChatParticipant = new HashSet<ChatParticipant>();
             HidroAddress = new HashSet<HidroAddress>();
             HidroProfile = new HashSet<HidroProfile>();
             HidroSetting = new HashSet<HidroSetting>();
+            HidroTrader = new HashSet<HidroTrader>();
             PaymentMethod = new HashSet<PaymentMethod>();
             RoleClaimer = new HashSet<RoleClaimer>();
+            StoreOwner = new HashSet<StoreOwner>();
+            StoreStaff = new HashSet<StoreStaff>();
         }
 
         public int Id { get; set; }
@@ -38,10 +42,14 @@ namespace Hidrogen.Models
         public DateTime? CookieSetOn { get; set; }
         public string LastDeviceInfo { get; set; }
 
+        public virtual ICollection<ChatParticipant> ChatParticipant { get; set; }
         public virtual ICollection<HidroAddress> HidroAddress { get; set; }
         public virtual ICollection<HidroProfile> HidroProfile { get; set; }
         public virtual ICollection<HidroSetting> HidroSetting { get; set; }
+        public virtual ICollection<HidroTrader> HidroTrader { get; set; }
         public virtual ICollection<PaymentMethod> PaymentMethod { get; set; }
         public virtual ICollection<RoleClaimer> RoleClaimer { get; set; }
+        public virtual ICollection<StoreOwner> StoreOwner { get; set; }
+        public virtual ICollection<StoreStaff> StoreStaff { get; set; }
     }
 }

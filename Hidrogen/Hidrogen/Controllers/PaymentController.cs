@@ -43,11 +43,11 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> UpdatePaymentDetails(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.UpdatePaymentDetails - Service starts.");
 
-            var updateResult = await _paymentService.UpdatePaymentMethods(paymentDetail);
+            var (key, value) = await _paymentService.UpdatePaymentMethods(paymentDetail);
 
-            return !updateResult.Key ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
-                                     : (updateResult.Value == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your Payment Method. Please try again." })
-                                                                   : new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value }));
+            return !key ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
+                                     : (value == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your Payment Method. Please try again." })
+                                                                   : new JsonResult(new { Result = RESULTS.SUCCESS, Message = value }));
         }
 
         [HttpGet("add-payment-details")]
@@ -71,7 +71,7 @@ namespace Hidrogen.Controllers {
             var removed = await _paymentService.DeletePaymentMethodFor(hidrogenianId, deletedMethod);
 
             return !removed.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
-                                     : (!removed.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attemtping to remove your Payment Method. Please try again." })
+                                     : (!removed.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to remove your Payment Method. Please try again." })
                                                       : new JsonResult(new { Result = RESULTS.SUCCESS }));
         }
 

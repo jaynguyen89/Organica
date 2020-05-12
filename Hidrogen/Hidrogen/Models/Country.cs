@@ -7,6 +7,7 @@ namespace Hidrogen.Models
     {
         public Country()
         {
+            CountryRegion = new HashSet<CountryRegion>();
             FineLocation = new HashSet<FineLocation>();
             RawLocation = new HashSet<RawLocation>();
         }
@@ -18,6 +19,7 @@ namespace Hidrogen.Models
         public string CurrencyCode { get; set; }
         public string CurrencyName { get; set; }
 
+        public virtual ICollection<CountryRegion> CountryRegion { get; set; }
         public virtual ICollection<FineLocation> FineLocation { get; set; }
         public virtual ICollection<RawLocation> RawLocation { get; set; }
     }

@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[Category] (
+	Id INT IDENTITY(1,1) NOT NULL,
+	CategoryName NVARCHAR(50) DEFAULT NULL,
+	[Description] NVARCHAR(100) DEFAULT NULL,
+	DependantId INT DEFAULT NULL,
+	AvatarName NVARCHAR(100) DEFAULT NULL,
+	Restrictions NVARCHAR(250) DEFAULT NULL,
+	CONSTRAINT [PK_Category_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_Category_Self] FOREIGN KEY ([DependantId]) REFERENCES Category([Id])
+)

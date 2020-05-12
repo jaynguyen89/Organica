@@ -1,5 +1,4 @@
 ﻿CREATE TABLE [dbo].[HidroRole] (
-
 	Id INT IDENTITY(1,1) NOT NULL,
 	RoleName NVARCHAR(30) DEFAULT NULL,
 	RoleDescription NVARCHAR(250) DEFAULT NULL,

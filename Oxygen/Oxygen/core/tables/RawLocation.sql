@@ -1,5 +1,4 @@
 ﻿CREATE TABLE [dbo].[RawLocation] (
-
 	Id INT IDENTITY(1, 1) NOT NULL,
 	BuildingName NVARCHAR(50) DEFAULT NULL,
 	PoBoxNumber NVARCHAR(40) DEFAULT NULL,
@@ -21,5 +20,5 @@
 	CountryId INT NOT NULL,
 	IsStandard BIT NOT NULL DEFAULT 0,
 	CONSTRAINT [PK_RawLocation_Id] PRIMARY KEY ([Id] ASC),
-	CONSTRAINT [FK_RawLocation_Country] FOREIGN KEY ([CountryId]) REFERENCES [dbo].[Country] ([Id]) ON DELETE CASCADE
+	CONSTRAINT [FK_RawLocation_Country] FOREIGN KEY ([CountryId]) REFERENCES [dbo].[Country] ([Id])
 );

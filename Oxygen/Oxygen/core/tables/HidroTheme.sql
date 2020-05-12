@@ -1,5 +1,4 @@
 ﻿CREATE TABLE [dbo].[HidroTheme] (
-
 	Id TINYINT IDENTITY(1,1) NOT NULL,
 	ThemeName NVARCHAR(30) NOT NULL DEFAULT 'Liquid Oxygen',
 	HidroFont NVARCHAR(50) NOT NULL DEFAULT 'KoHo',

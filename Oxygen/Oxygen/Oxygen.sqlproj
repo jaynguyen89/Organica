@@ -126,6 +126,21 @@
     <Folder Include="core\triggers" />
     <Folder Include="core\functions" />
     <Folder Include="publish-scripts" />
+    <Folder Include="proton" />
+    <Folder Include="proton\tables" />
+    <Folder Include="proton\functions" />
+    <Folder Include="proton\stored procedures" />
+    <Folder Include="proton\triggers" />
+    <Folder Include="neutron" />
+    <Folder Include="neutron\tables" />
+    <Folder Include="neutron\functions" />
+    <Folder Include="neutron\stored procedures" />
+    <Folder Include="neutron\triggers" />
+    <Folder Include="electron" />
+    <Folder Include="electron\tables" />
+    <Folder Include="electron\functions" />
+    <Folder Include="electron\stored procedures" />
+    <Folder Include="electron\triggers" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Security\Permissions.sql" />
@@ -140,6 +155,36 @@
     <Build Include="core\tables\FineLocation.sql" />
     <Build Include="core\tables\PaymentMethod.sql" />
     <Build Include="core\tables\Country.sql" />
+    <Build Include="proton\tables\Listing.sql" />
+    <Build Include="proton\tables\Category.sql" />
+    <Build Include="proton\tables\Classification.sql" />
+    <Build Include="proton\tables\ItemAsset.sql" />
+    <Build Include="proton\tables\ItemDetail.sql" />
+    <Build Include="neutron\tables\HidroStore.sql" />
+    <Build Include="neutron\tables\BuyerRating.sql" />
+    <Build Include="neutron\tables\BuyerReliability.sql" />
+    <Build Include="neutron\tables\HidroTrader.sql" />
+    <Build Include="neutron\tables\SellerRating.sql" />
+    <Build Include="neutron\tables\SellerReliability.sql" />
+    <Build Include="neutron\tables\Trading.sql" />
+    <Build Include="neutron\tables\TradingRating.sql" />
+    <Build Include="proton\tables\Order.sql" />
+    <Build Include="proton\tables\ItemBasket.sql" />
+    <Build Include="proton\tables\ShoppingCart.sql" />
+    <Build Include="proton\tables\ItemVariation.sql" />
+    <Build Include="proton\tables\ItemStock.sql" />
+    <Build Include="proton\tables\Item.sql" />
+    <Build Include="proton\tables\ItemBundle.sql" />
+    <Build Include="electron\tables\Warranty.sql" />
+    <Build Include="electron\tables\WarrantyTerm.sql" />
+    <Build Include="electron\tables\ChatGroup.sql" />
+    <Build Include="electron\tables\ChatParticipant.sql" />
+    <Build Include="electron\tables\ChatMessage.sql" />
+    <Build Include="neutron\tables\StoreOwner.sql" />
+    <Build Include="neutron\tables\StoreStaff.sql" />
+    <Build Include="neutron\tables\StoreRole.sql" />
+    <Build Include="neutron\tables\StaffRole.sql" />
+    <Build Include="core\tables\CountryRegion.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Oxygen-Dev.publish.xml" />

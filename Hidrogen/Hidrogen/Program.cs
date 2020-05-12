@@ -11,7 +11,7 @@ namespace Hidrogen
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);

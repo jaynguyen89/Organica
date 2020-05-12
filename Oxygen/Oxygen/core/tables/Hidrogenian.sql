@@ -1,5 +1,4 @@
 ﻿CREATE TABLE [dbo].[Hidrogenian] (
-
 	Id INT IDENTITY(1,1) NOT NULL,
 	Email NVARCHAR(50) NOT NULL,
 	EmailConfirmed BIT NOT NULL DEFAULT 0,

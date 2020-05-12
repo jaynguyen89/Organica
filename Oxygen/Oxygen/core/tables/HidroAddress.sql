@@ -1,5 +1,4 @@
 ﻿CREATE TABLE [dbo].[HidroAddress] (
-
 	Id INT IDENTITY(1,1) NOT NULL,
 	HidrogenianId INT NOT NULL,
 	LocationId INT DEFAULT NULL,
