@@ -221,6 +221,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="Rider.SolutionExplorerActivator" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="TWShift.3" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -299,6 +300,7 @@
       <workItem from="1588813822967" duration="599000" />
       <workItem from="1588912274251" duration="599000" />
       <workItem from="1589162401616" duration="608000" />
+      <workItem from="1589264963255" duration="312000" />
     </task>
     <servers />
   </component>

@@ -68,17 +68,47 @@
           <e p="PasswordResetConfirmation.html" t="Include" />
         </e>
         <e p="Models" t="Include">
+          <e p="BuyerRating.cs" t="Include" />
+          <e p="BuyerReliability.cs" t="Include" />
+          <e p="Category.cs" t="Include" />
+          <e p="ChatGroup.cs" t="Include" />
+          <e p="ChatMessage.cs" t="Include" />
+          <e p="ChatParticipant.cs" t="Include" />
+          <e p="Classification.cs" t="Include" />
           <e p="Country.cs" t="Include" />
+          <e p="CountryRegion.cs" t="Include" />
           <e p="FineLocation.cs" t="Include" />
           <e p="HidroAddress.cs" t="Include" />
           <e p="Hidrogenian.cs" t="Include" />
           <e p="HidroProfile.cs" t="Include" />
           <e p="HidroRole.cs" t="Include" />
           <e p="HidroSetting.cs" t="Include" />
+          <e p="HidroStore.cs" t="Include" />
           <e p="HidroTheme.cs" t="Include" />
+          <e p="HidroTrader.cs" t="Include" />
+          <e p="Item.cs" t="Include" />
+          <e p="ItemAsset.cs" t="Include" />
+          <e p="ItemBasket.cs" t="Include" />
+          <e p="ItemBundle.cs" t="Include" />
+          <e p="ItemDetail.cs" t="Include" />
+          <e p="ItemStock.cs" t="Include" />
+          <e p="ItemVariation.cs" t="Include" />
+          <e p="Listing.cs" t="Include" />
+          <e p="Order.cs" t="Include" />
           <e p="PaymentMethod.cs" t="Include" />
           <e p="RawLocation.cs" t="Include" />
           <e p="RoleClaimer.cs" t="Include" />
+          <e p="SellerRating.cs" t="Include" />
+          <e p="SellerReliability.cs" t="Include" />
+          <e p="ShoppingCart.cs" t="Include" />
+          <e p="StaffRole.cs" t="Include" />
+          <e p="StoreOwner.cs" t="Include" />
+          <e p="StoreRole.cs" t="Include" />
+          <e p="StoreStaff.cs" t="Include" />
+          <e p="Trading.cs" t="Include" />
+          <e p="TradingRating.cs" t="Include" />
+          <e p="Warranty.cs" t="Include" />
+          <e p="WarrantyTerm.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
