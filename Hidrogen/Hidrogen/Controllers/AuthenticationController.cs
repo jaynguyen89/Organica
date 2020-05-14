@@ -26,7 +26,7 @@ namespace Hidrogen.Controllers {
     public class AuthenticationController : ControllerBase {
 
         private readonly ILogger<AuthenticationController> _logger;
-        private readonly IRuntimeLogService _runtimeLog;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly IAuthenticationService _authService;
         private readonly IHidrogenianService _userService;
         private readonly IHidroProfileService _profileService;
@@ -38,7 +38,7 @@ namespace Hidrogen.Controllers {
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
-            IRuntimeLogService runtimeLog,
+            IRuntimeLogService runtimeLogger,
             IAuthenticationService authService,
             IHidrogenianService userService,
             IHidroProfileService profileService,
@@ -47,7 +47,7 @@ namespace Hidrogen.Controllers {
             IGoogleReCaptchaService googleReCaptchaService
         ) {
             _logger = logger;
-            _runtimeLog = runtimeLog;
+            _runtimeLogger = runtimeLogger;
             _authService = authService;
             _userService = userService;
             _profileService = profileService;
@@ -90,7 +90,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationEmailAvailability(string email) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationEmailAvailability - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(CheckRegistrationEmailAvailability),
                 Data = email,
@@ -110,7 +110,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CheckRegistrationUsernameAvailability(string username) {
             _logger.LogInformation("AuthenticationController.CheckRegistrationUsernameAvailability - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(CheckRegistrationUsernameAvailability),
                 Data = username,
@@ -130,10 +130,14 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> RegisterAccount(RegistrationVM registration) {
             _logger.LogInformation("AuthenticationController.RegisterAccount - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            
+            var clone = registration;
+            clone.Password = null;
+            clone.PasswordConfirm = null;
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(RegisterAccount),
-                Data = JsonConvert.SerializeObject(registration),
+                Data = JsonConvert.SerializeObject(clone),
                 Briefing = "Create an account for new user then send activation email.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
@@ -159,9 +163,9 @@ namespace Hidrogen.Controllers {
             if (!userNameAvailable.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The username you have entered has been taken by a Hidrogenian." });
 
-            var encryption = _authService.GenerateHashedPasswordAndSalt(registration.Password);
-            registration.Password = encryption.Key;
-            registration.PasswordConfirm = encryption.Value;
+            var (key, value) = _authService.GenerateHashedPasswordAndSalt(registration.Password);
+            registration.Password = key;
+            registration.PasswordConfirm = value;
 
             var hidrogenian = await _userService.InsertNewHidrogenian(registration);
             if (hidrogenian == null)
@@ -217,7 +221,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> ActivateAccount(AccountActivationVM activator) {
             _logger.LogInformation("AuthenticationController.ActivateAccount - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(ActivateAccount),
                 Data = JsonConvert.SerializeObject(activator),
@@ -265,7 +269,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> SendRecoverPasswordInstruction(RecoveryVM recoveree) {
             _logger.LogInformation("AuthenticationController.RecoverPassword - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(SendRecoverPasswordInstruction),
                 Data = JsonConvert.SerializeObject(recoveree),
@@ -314,7 +318,7 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> SendNewAccountActivationEmail(RecoveryVM request) {
             _logger.LogInformation("AuthenticationController.SendNewAccountActivationEmail - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(SendNewAccountActivationEmail),
                 Data = JsonConvert.SerializeObject(request),
@@ -362,10 +366,14 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> SetNewPassword(RegistrationVM recovery) {
             _logger.LogInformation("AuthenticationController.SetNewPassword - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+
+            var clone = recovery;
+            clone.Password = null;
+            clone.PasswordConfirm = null;
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(SetNewPassword),
-                Data = JsonConvert.SerializeObject(recovery),
+                Data = JsonConvert.SerializeObject(clone),
                 Briefing = "Set new password on recovery and send confirmation email.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
@@ -419,10 +427,13 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+
+            var clone = auth;
+            clone.Password = null;
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(Authenticate),
-                Data = JsonConvert.SerializeObject(auth),
+                Data = JsonConvert.SerializeObject(clone),
                 Briefing = "Authenticate user using login form data.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
@@ -439,16 +450,16 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = message });
             }
 
-            var authResult = await _authService.AuthenticateHidrogenian(auth);
-            if (!authResult.Key)
+            var (key, value) = await _authService.AuthenticateHidrogenian(auth);
+            if (!key)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
 
-            if (authResult.Value == null)
+            if (value == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Cannot find any Hidrogenian with the login credentials." });
 
-            await SetUserSessionAndCookie(authResult.Value, auth.TrustedAuth);
-            if (await SetUserAuthorizationPolicy(authResult.Value.UserId))
-                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authResult.Value });
+            await SetUserSessionAndCookie(value, auth.TrustedAuth);
+            if (await SetUserAuthorizationPolicy(value.UserId))
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = value });
 
             return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try again." });
         }
@@ -457,33 +468,39 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter]
         public async Task<JsonResult> CookieAuthenticate(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationController.CookieAuthenticate - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+
+            var clone = cookie;
+            clone.CookieToken = null;
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(CookieAuthenticate),
-                Data = JsonConvert.SerializeObject(cookie),
+                Data = JsonConvert.SerializeObject(clone),
                 Briefing = "Authenticate user using cookie data.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
             
             HttpContext.Session.Clear();
 
-            var result = await _authService.AuthenticateWithCookie(cookie);
-            if (!result.Key) return new JsonResult(new { Result = RESULTS.FAILED });
+            var (key, value) = await _authService.AuthenticateWithCookie(cookie);
+            if (!key) return new JsonResult(new { Result = RESULTS.FAILED });
 
-            await SetUserSessionAndCookie(result.Value, cookie.TrustedAuth == "True");
-            if (await SetUserAuthorizationPolicy(result.Value.UserId))
-                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = result.Value });
+            await SetUserSessionAndCookie(value, cookie.TrustedAuth == "True");
+            if (await SetUserAuthorizationPolicy(value.UserId))
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = value });
 
             return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try to manually login." });
         }
 
         private async Task SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
             _logger.LogInformation("AuthenticationController.SetUserSessionAndCookie - private action.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+
+            var clone = authHidrogenian;
+            clone.AuthToken = null;
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = "private " + nameof(SetUserSessionAndCookie),
-                Data = JsonConvert.SerializeObject(authHidrogenian),
-                Briefing = "Set user auth data to HttpContext.Session and send to client over Response.Cookie.",
+                Data = JsonConvert.SerializeObject(clone),
+                Briefing = "Internally set user auth data to HttpContext.Session and send to client over Response.Cookie.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
@@ -509,11 +526,11 @@ namespace Hidrogen.Controllers {
 
         private async Task<bool> SetUserAuthorizationPolicy(int hidrogenianId) {
             _logger.LogInformation("AuthenticationController.SetUserAuthorizationPolicy - Service starts.");
-            await _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = "private " + nameof(SetUserAuthorizationPolicy),
                 Data = hidrogenianId.ToString(),
-                Briefing = "Set user permissions to HttpContext.Session.",
+                Briefing = "Internally set user permissions to HttpContext.Session.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
@@ -529,10 +546,9 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public JsonResult LogOut() {
             _logger.LogInformation("AuthenticationController.LogOut - Service starts.");
-            _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = nameof(LogOut),
-                Data = null,
                 Briefing = "Endpoint invoked - Logout user.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
@@ -549,11 +565,15 @@ namespace Hidrogen.Controllers {
 
         private List<int> VerifyRegistrationData(RegistrationVM data) {
             _logger.LogInformation("AuthenticationController.VerifyRegistrationData - Verification starts.");
-            _runtimeLog.InsertRuntimeLog(new RuntimeLog {
+
+            var clone = data;
+            clone.Password = null;
+            clone.PasswordConfirm = null;
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
                 Action = "private " + nameof(VerifyRegistrationData),
-                Data = JsonConvert.SerializeObject(data),
-                Briefing = "Check if registration data have any errors.",
+                Data = JsonConvert.SerializeObject(clone),
+                Briefing = "Internally check if registration data have any errors.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 

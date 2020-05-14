@@ -12,8 +12,8 @@ namespace Hidrogen.Attributes {
 
     public sealed class HidroAuthorize : Attribute, IAsyncAuthorizationFilter {
 
-        private HidroPermissionVM UserPermissions;
-        private readonly HidroPermissionVM RequiredPermissions;
+        private HidroPermissionVM _userPermissions;
+        private readonly HidroPermissionVM _requiredPermissions;
 
         private const int PERM_QTY = 8;
 
@@ -27,7 +27,7 @@ namespace Hidrogen.Attributes {
             if (stringPermissions.Length == 0 || stringPermissions.Length != PERM_QTY)
                 throw new Exception("HidroAuthorize.Constructor - Permission tokens error.");
 
-            RequiredPermissions = new HidroPermissionVM {
+            _requiredPermissions = new HidroPermissionVM {
                 AllowCreate = stringPermissions[0] == "1",
                 AllowView = stringPermissions[1] == "1",
                 AllowEditOwn = stringPermissions[2] == "1",
@@ -46,16 +46,16 @@ namespace Hidrogen.Attributes {
                 return Task.CompletedTask;
             }
 
-            UserPermissions = JsonConvert.DeserializeObject<HidroPermissionVM>(sessionPermissions);
+            _userPermissions = JsonConvert.DeserializeObject<HidroPermissionVM>(sessionPermissions);
 
-            if (RequiredPermissions.AllowCreate && UserPermissions.AllowCreate == RequiredPermissions.AllowCreate) return Task.CompletedTask;
-            if (RequiredPermissions.AllowView && UserPermissions.AllowView == RequiredPermissions.AllowView) return Task.CompletedTask;
-            if (RequiredPermissions.AllowEditOwn && UserPermissions.AllowEditOwn == RequiredPermissions.AllowEditOwn) return Task.CompletedTask;
-            if (RequiredPermissions.AllowEditOthers && UserPermissions.AllowEditOthers == RequiredPermissions.AllowEditOthers) return Task.CompletedTask;
-            if (RequiredPermissions.AllowDeleteOwn && UserPermissions.AllowDeleteOwn == RequiredPermissions.AllowDeleteOwn) return Task.CompletedTask;
-            if (RequiredPermissions.AllowDeleteOthers && UserPermissions.AllowDeleteOthers == RequiredPermissions.AllowDeleteOthers) return Task.CompletedTask;
-            if (RequiredPermissions.AllowReviveOwn && UserPermissions.AllowReviveOwn == RequiredPermissions.AllowReviveOwn) return Task.CompletedTask;
-            if (RequiredPermissions.AllowReviveOthers && UserPermissions.AllowReviveOthers == RequiredPermissions.AllowReviveOthers) return Task.CompletedTask;
+            if (_requiredPermissions.AllowCreate && _userPermissions.AllowCreate == _requiredPermissions.AllowCreate) return Task.CompletedTask;
+            if (_requiredPermissions.AllowView && _userPermissions.AllowView == _requiredPermissions.AllowView) return Task.CompletedTask;
+            if (_requiredPermissions.AllowEditOwn && _userPermissions.AllowEditOwn == _requiredPermissions.AllowEditOwn) return Task.CompletedTask;
+            if (_requiredPermissions.AllowEditOthers && _userPermissions.AllowEditOthers == _requiredPermissions.AllowEditOthers) return Task.CompletedTask;
+            if (_requiredPermissions.AllowDeleteOwn && _userPermissions.AllowDeleteOwn == _requiredPermissions.AllowDeleteOwn) return Task.CompletedTask;
+            if (_requiredPermissions.AllowDeleteOthers && _userPermissions.AllowDeleteOthers == _requiredPermissions.AllowDeleteOthers) return Task.CompletedTask;
+            if (_requiredPermissions.AllowReviveOwn && _userPermissions.AllowReviveOwn == _requiredPermissions.AllowReviveOwn) return Task.CompletedTask;
+            if (_requiredPermissions.AllowReviveOthers && _userPermissions.AllowReviveOthers == _requiredPermissions.AllowReviveOthers) return Task.CompletedTask;
 
             context.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
             return Task.CompletedTask;

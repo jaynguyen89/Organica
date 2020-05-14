@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using BCrypt;
 using HelperLibrary;
 using HelperLibrary.Common;
+using Hidrogen.Controllers;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Authentication;
 using Hidrogen.ViewModels.Authorization;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -19,18 +22,28 @@ namespace Hidrogen.Services.DatabaseServices {
     public class AuthenticationService : IAuthenticationService {
 
         private readonly ILogger<AuthenticationService> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly HidrogenDbContext _dbContext;
 
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
+            IRuntimeLogService runtimeLogger,
             HidrogenDbContext dbContext
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _dbContext = dbContext;
         }
 
         public async Task<KeyValuePair<bool, bool?>> ActivateHidrogenianAccount(AccountActivationVM activator) {
             _logger.LogInformation("AuthenticationService.ActivateHidrogenianAccount - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(ActivateHidrogenianAccount),
+                Data = JsonConvert.SerializeObject(activator),
+                Briefing = "Query database to activate a user account.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
                 h => h.Email == activator.Email && !h.EmailConfirmed && h.DeactivatedOn == null
@@ -50,6 +63,13 @@ namespace Hidrogen.Services.DatabaseServices {
                     await _dbContext.SaveChangesAsync();
                 } catch (Exception e) {
                     _logger.LogError("AuthenticationService.ActivateHidrogenianAccount - Error: " + e);
+                    await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                        Controller = nameof(AuthenticationService),
+                        Action = nameof(ActivateHidrogenianAccount),
+                        Briefing = "Exception occurred while saving account data after activation: " + e,
+                        Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                    });
+                    
                     return new KeyValuePair<bool, bool?>(true, null);
                 }
 
@@ -61,6 +81,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateHidrogenian(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationService.AuthenticateHidrogenian - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(AuthenticateHidrogenian),
+                Briefing = "Query database to authenticate a user with credentials.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             Hidrogenian hidrogenian;
             string role;
@@ -81,6 +107,13 @@ namespace Hidrogen.Services.DatabaseServices {
                               select r.RoleName).FirstOrDefaultAsync();
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.AuthenticateHidrogenian - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(AuthenticateHidrogenian),
+                    Briefing = "Exception occurred while reading user and role from database: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return new KeyValuePair<bool, AuthenticatedUser>(false, null);
             }
 
@@ -113,6 +146,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool, AuthenticatedUser>> AuthenticateWithCookie(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationService.AuthenticateWithCookie - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(AuthenticateWithCookie),
+                Briefing = "Query database to authenticate a user with cookie.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             Hidrogenian dbHidrogenian;
             string role;
@@ -131,6 +170,13 @@ namespace Hidrogen.Services.DatabaseServices {
                               select r.RoleName).FirstOrDefaultAsync();
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.AuthenticateWithCookie - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(AuthenticateWithCookie),
+                    Briefing = "Exception occurred while reading user and role from database: " + e,
+                    Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+                });
+                
                 return new KeyValuePair<bool, AuthenticatedUser>(false, null);
             }
 
@@ -159,6 +205,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<HidroPermissionVM> ComputeAuthorizationFor(int hidrogenianId) {
             _logger.LogInformation("AuthenticationService.ComputeAuthorizationFor - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(ComputeAuthorizationFor),
+                Briefing = "Query database to get user's roleClaim then set permissions for hidrogenianId = " + hidrogenianId,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var roleClaim = await _dbContext.RoleClaimer.FirstOrDefaultAsync(rc => rc.HidrogenianId == hidrogenianId);
             HidroPermissionVM permissions = roleClaim;
@@ -197,6 +249,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<CookieAuthenticationVM> GenerateCookieAuthData(AuthenticatedUser auth) {
             _logger.LogInformation("AuthenticationService.GenerateCookieAuthData - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(GenerateCookieAuthData),
+                Briefing = "Calculate cookie auth data then query database to save.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var timestamp = DateTime.UtcNow;
             var unixTimestamp = ((DateTimeOffset)timestamp).ToUnixTimeSeconds();
@@ -213,6 +271,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.GenerateCookieAuthData - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(GenerateCookieAuthData),
+                    Briefing = "Exception occurred while saving cookie auth data: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -224,6 +289,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public KeyValuePair<string, string> GenerateHashedPasswordAndSalt(string plainText) {
             _logger.LogInformation("AuthenticationService.GenerateHashedPasswordAndSalt - Service starts.");
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(GenerateHashedPasswordAndSalt),
+                Briefing = "Calculate the hashed password from plain text.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var salt = BCryptHelper.GenerateSalt();
             var hashedPassword = BCryptHelper.HashPassword(plainText, salt);
@@ -233,17 +304,36 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public string GenerateRandomToken() {
             _logger.LogInformation("AuthenticationService.GenerateRandomToken - Service starts.");
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(GenerateRandomToken),
+                Briefing = "Generate a random salt string.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
             return BCryptHelper.GenerateSalt(18, SaltRevision.Revision2A);
         }
 
         public async Task<bool?> IsEmailAddressAvailable(string email) {
             _logger.LogInformation("AuthenticationService.IsEmailAddressAvailable - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(IsEmailAddressAvailable),
+                Briefing = "Query database to check if email address is not prior registered: " + email,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             bool available;
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.Email == email));
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.IsEmailAddressAvailable - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(IsEmailAddressAvailable),
+                    Briefing = "Exception occurred while reading database: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -252,12 +342,25 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<bool?> IsUserNameAvailable(string username) {
             _logger.LogInformation("AuthenticationService.IsUserNameAvailable - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(IsUserNameAvailable),
+                Briefing = "Query database to check if username is not prior registered: " + username,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             bool available;
             try {
                 available = !(await _dbContext.Hidrogenian.AnyAsync(h => h.UserName.ToLower() == username.ToLower()));
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.IsUserNameAvailable - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(IsUserNameAvailable),
+                    Briefing = "Exception occurred while reading database: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -266,6 +369,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool, bool?>?> ReplaceAccountPassword(RegistrationVM recovery) {
             _logger.LogInformation("AuthenticationService.ReplaceAccountPassword - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(ReplaceAccountPassword),
+                Briefing = "Query database to change account password.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var hidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
                 h => h.Email == recovery.Email && !h.EmailConfirmed && h.RecoveryToken != null && h.TokenSetOn != null
@@ -278,9 +387,9 @@ namespace Hidrogen.Services.DatabaseServices {
                 if (!BCryptHelper.CheckPassword(recovery.TempPassword, hidrogenian.PasswordHash))
                     return new KeyValuePair<bool, bool?>(true, null);
 
-                var hashResult = GenerateHashedPasswordAndSalt(recovery.Password);
-                hidrogenian.PasswordHash = hashResult.Key;
-                hidrogenian.PasswordSalt = hashResult.Value;
+                var (key, value) = GenerateHashedPasswordAndSalt(recovery.Password);
+                hidrogenian.PasswordHash = key;
+                hidrogenian.PasswordSalt = value;
 
                 hidrogenian.EmailConfirmed = true;
                 hidrogenian.RecoveryToken = null;
@@ -291,6 +400,13 @@ namespace Hidrogen.Services.DatabaseServices {
                     await _dbContext.SaveChangesAsync();
                 } catch (Exception e) {
                     _logger.LogError("AuthenticationService.ReplaceAccountPassword - Error: " + e);
+                    await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                        Controller = nameof(AuthenticationService),
+                        Action = nameof(ReplaceAccountPassword),
+                        Briefing = "Exception occurred while saving data: " + e,
+                        Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                    });
+                    
                     return new KeyValuePair<bool, bool?>(true, false);
                 }
 
@@ -302,6 +418,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<string, string>> SetTempPasswordAndRecoveryToken(RecoveryVM recoveree) {
             _logger.LogInformation("AuthenticationService.SetTempPasswordAndRecoveryToken - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(SetTempPasswordAndRecoveryToken),
+                Briefing = "Query database to get an account then set temp password for it.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var dbHidrogenian = !recoveree.Reattempt ? await _dbContext.Hidrogenian.FirstOrDefaultAsync(
                                                             h => h.Email == recoveree.Email && h.EmailConfirmed && h.DeactivatedOn == null)
@@ -328,6 +450,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("AuthenticationService.SetTempPasswordAndRecoveryToken - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(AuthenticationService),
+                    Action = nameof(SetTempPasswordAndRecoveryToken),
+                    Briefing = "Exception occurred while saving data: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return new KeyValuePair<string, string>(string.Empty, null);
             }
 
@@ -336,6 +465,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<bool?> VerifyAccountPasswordFor(int hidrogenianId, string password) {
             _logger.LogInformation("AuthenticationService.VerifyAccountPasswordFor - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AuthenticationService),
+                Action = nameof(SetTempPasswordAndRecoveryToken),
+                Briefing = "Query database to get an account then check if an arbitrary password matches its password.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var account = await _dbContext.Hidrogenian.FindAsync(hidrogenianId);
             if (account == null) return null;

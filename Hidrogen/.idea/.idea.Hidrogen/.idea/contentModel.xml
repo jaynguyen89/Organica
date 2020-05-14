@@ -50,6 +50,7 @@
           <e p="PaymentController.cs" t="Include" />
           <e p="PreferenceController.cs" t="Include" />
           <e p="ProfileController.cs" t="Include" />
+          <e p="TraderController.cs" t="Include" />
           <e p="WaterController.cs" t="Include" />
         </e>
         <e p="DbContexts" t="Include">
@@ -137,6 +138,7 @@
             <e p="HidroRoleService.cs" t="Include" />
             <e p="PaymentService.cs" t="Include" />
             <e p="RoleClaimerService.cs" t="Include" />
+            <e p="TraderService.cs" t="Include" />
           </e>
           <e p="HostedServices" t="Include">
             <e p="Class.cs" t="Include" />
@@ -151,6 +153,7 @@
             <e p="IHidroRoleService.cs" t="Include" />
             <e p="IPaymentService.cs" t="Include" />
             <e p="IRoleClaimerService.cs" t="Include" />
+            <e p="ITraderService.cs" t="Include" />
           </e>
           <e p="ServiceCollectionExtension.cs" t="Include" />
         </e>

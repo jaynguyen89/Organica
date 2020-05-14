@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using HelperLibrary;
 using HelperLibrary.Common;
+using Hidrogen.Controllers;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Payment;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using static HelperLibrary.HidroEnums;
@@ -16,18 +19,27 @@ namespace Hidrogen.Services.DatabaseServices {
     public class PaymentService : IPaymentService {
 
         private readonly ILogger<PaymentService> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly HidrogenDbContext _dbContext;
 
-        public PaymentService(
+        public PaymentService (
             ILogger<PaymentService> logger,
+            IRuntimeLogService runtimeLogger,
             HidrogenDbContext dbContext
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _dbContext = dbContext;
         }
 
         public async Task<PaymentDetailVM> AddBalanceToAccount(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentService.AddAccountBalance - paymentMethodId=" + paymentDetail.PaymentMethod.Id);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentService),
+                Action = nameof(AddBalanceToAccount),
+                Briefing = "Query database to add new balance to current balance for an account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var dbPaymentMethod = await _dbContext.PaymentMethod.FirstOrDefaultAsync(p => p.HidrogenianId == paymentDetail.HidrogenianId);
             if (dbPaymentMethod == null) {
@@ -37,7 +49,7 @@ namespace Hidrogen.Services.DatabaseServices {
                     BalanceAddedOn = DateTime.UtcNow
                 };
 
-                _dbContext.PaymentMethod.Add(dbPaymentMethod);
+                await _dbContext.PaymentMethod.AddAsync(dbPaymentMethod);
             }
             else {
                 dbPaymentMethod.AccountBalance = paymentDetail.PaymentMethod.AccountBalance;
@@ -50,6 +62,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("PaymentService.AddAccountBalance - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(PaymentService),
+                    Action = nameof(AddBalanceToAccount),
+                    Briefing = "Exception occurred while saving changes: " + e,
+                    Severity = LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -59,6 +78,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<bool?> DeletePaymentMethodFor(int hidrogenianId, string deletedMethod) {
             _logger.LogInformation("PaymentService.DeletePaymentMethodFor - hidrogenianId=" + hidrogenianId + " deletedMethod=" + deletedMethod);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentService),
+                Action = nameof(DeletePaymentMethodFor),
+                Briefing = "Query database to remove a payment method for an account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var paymentMethod = await _dbContext.PaymentMethod.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenianId);
             if (paymentMethod == null) return null;
@@ -75,6 +100,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("PaymentService.DeletePaymentMethodFor - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(PaymentService),
+                    Action = nameof(DeletePaymentMethodFor),
+                    Briefing = "Exception occurred while removing: " + e,
+                    Severity = LOGGING.ERROR.GetValue()
+                });
+                
                 return false;
             }
 
@@ -83,6 +115,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<PaymentDetailVM> InsertNewPaymentMethod(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentService.InsertNewPaymentMethod - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentService),
+                Action = nameof(InsertNewPaymentMethod),
+                Briefing = "Query database to save a payment method for an account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var dbPaymentMethod = new PaymentMethod();
             if (paymentDetail.PaymentMethod.CreditCard != null)
@@ -101,12 +139,18 @@ namespace Hidrogen.Services.DatabaseServices {
                 };
 
             dbPaymentMethod.HidrogenianId = paymentDetail.HidrogenianId;
-            _dbContext.PaymentMethod.Add(dbPaymentMethod);
+            await _dbContext.PaymentMethod.AddAsync(dbPaymentMethod);
 
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("PaymentService.InsertNewPaymentMethod - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(PaymentService),
+                    Action = nameof(InsertNewPaymentMethod),
+                    Briefing = "Exception occurred while saving: " + e,
+                    Severity = LOGGING.INFORMATION.GetValue()
+                });
                 return null;
             }
 
@@ -116,6 +160,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<PaymentDetailVM> RetrievePaymentMethodsFor(int hidrogenianId) {
             _logger.LogInformation("PaymentService.RetrievePaymentMethodsFor - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentService),
+                Action = nameof(RetrievePaymentMethodsFor),
+                Briefing = "Query database to get all payment methods' details for hidrogenianId = " + hidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var paymentMethod = await _dbContext.PaymentMethod.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenianId);
             return paymentMethod;
@@ -123,6 +173,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool, PaymentDetailVM>> UpdatePaymentMethods(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentService.UpdatePaymentMethods - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentService),
+                Action = nameof(UpdatePaymentMethods),
+                Briefing = "Query database to update a payment method for an account.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var dbPaymentMethod = await _dbContext.PaymentMethod.FindAsync(paymentDetail.PaymentMethod.Id);
             if (dbPaymentMethod == null) return new KeyValuePair<bool, PaymentDetailVM>(false, null);
@@ -141,6 +197,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("PaymentService.UpdatePaymentMethods - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(PaymentService),
+                    Action = nameof(UpdatePaymentMethods),
+                    Briefing = "Exception occurred while saving changes: " + e,
+                    Severity = LOGGING.INFORMATION.GetValue()
+                });
+                
                 return new KeyValuePair<bool, PaymentDetailVM>(true, null);
             }
 

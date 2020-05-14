@@ -4,15 +4,15 @@ using MethaneLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Hidrogen.Services.DatabaseServices {
-
-    public class HidroRoleService : IHidroRoleService {
-
-        private readonly ILogger<HidroRoleService> _logger;
+    
+    public class TraderService : ITraderService {
+        
+        private readonly ILogger<TraderService> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
-        private HidrogenDbContext _dbContext;
+        private readonly HidrogenDbContext _dbContext;
 
-        public HidroRoleService(
-            ILogger<HidroRoleService> logger,
+        public TraderService(
+            ILogger<TraderService> logger,
             IRuntimeLogService runtimeLogger,
             HidrogenDbContext dbContext
         ) {

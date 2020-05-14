@@ -33,8 +33,7 @@ namespace Hidrogen.ViewModels.Account {
             };
         }
 
-        private static readonly List<string> INVALIDS = new List<string>
-        {
+        private static readonly List<string> INVALIDS = new List<string> {
             "--", "_@", "-@", ".-", "-.", "._", "_.", " ", "@_", "@-", "__", "..", "_-", "-_"
         };
 

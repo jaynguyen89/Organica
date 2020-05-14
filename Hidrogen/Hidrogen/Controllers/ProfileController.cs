@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using HelperLibrary;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -18,15 +21,18 @@ namespace Hidrogen.Controllers {
     public class ProfileController {
         
         private readonly ILogger<ProfileController> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly IWaterService _waterService;
         private readonly IHidroProfileService _profileService;
 
         public ProfileController(
             ILogger<ProfileController> logger,
+            IRuntimeLogService runtimeLogger,
             IWaterService waterService,
             IHidroProfileService profileService
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _waterService = waterService;
             _profileService = profileService;
         }
@@ -36,6 +42,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("1,0,0,0,0,0,0,0")]
         public async Task<JsonResult> SaveProfileAvatar([FromForm] AssetFormVM uploading) {
             _logger.LogInformation("ProfileController.SaveProfileAvatar - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = nameof(SaveProfileAvatar),
+                Briefing = "Save the uploaded photo as profile avatar for user having hidrogenianId = " + uploading.HidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var errors = uploading.CheckFile();
             if (errors.Count != 0) {
@@ -55,6 +67,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> RetrievePrivateProfile(int hidrogenianId) {
             _logger.LogInformation("ProfileController.RetrievePublicProfile - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = nameof(RetrievePrivateProfile),
+                Briefing = "Get private profile details for user having hidrogenianId = " + hidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var profile = await _profileService.GetPublicProfileFor(hidrogenianId);
 
@@ -67,6 +85,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdateProfileAvatar([FromForm] AssetReplaceVM uploading) {
             _logger.LogInformation("ProfileController.UpdateProfileAvatar - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = nameof(UpdateProfileAvatar),
+                Briefing = "Save new photo to update user profile with hidrogenianId = " + uploading.HidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var errors = uploading.CheckFile();
             if (errors.Count != 0) {
@@ -86,6 +110,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,0,0,1,0,0,0")]
         public async Task<JsonResult> RemoveProfileAvatar(int hidrogenianId, string apikey) {
             _logger.LogInformation("ProfileController.RemoveProfileAvatar - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = nameof(RemoveProfileAvatar),
+                Briefing = "Remove user avatar photo with hidrogenianId = " + hidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var result = await _profileService.DeleteAvatarInformation(hidrogenianId);
             if (result == null) return new JsonResult(new { Result = RESULTS.FAILED, Message = "No avatar found with the given profile data. Unable to remove." });
@@ -105,6 +135,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdatePrivateProfile(HidroProfileVM profile) {
             _logger.LogInformation("ProfileController.UpdatePrivateProfile - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = nameof(RemoveProfileAvatar),
+                Data = JsonConvert.SerializeObject(profile),
+                Briefing = "Update private profile in database for a user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var verification = VerifyProfileData(profile);
             if (verification.Count != 0) {
@@ -122,6 +159,12 @@ namespace Hidrogen.Controllers {
 
         private async Task<JsonResult> UpdateHidrogenianAvatarInternally(int hidrogenianId, string apiKey, ResultVM avatarResult) {
             _logger.LogInformation("ProfileController.UpdateHidrogenianAvatarInternally - Service runs internally.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = "private " + nameof(UpdateHidrogenianAvatarInternally),
+                Briefing = "Internally save new avatar information to profile for user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var avatar = (AvatarVM)avatarResult;
             var profile = new HidroProfileVM {
@@ -144,6 +187,12 @@ namespace Hidrogen.Controllers {
 
         private List<int> VerifyProfileData(HidroProfileVM profile) {
             _logger.LogInformation("ProfileController.VerifyProfileData - Verification starts.");
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(ProfileController),
+                Action = "private " + nameof(VerifyProfileData),
+                Briefing = "Internally check the submitted profile data for any errors.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var errors = profile.VerifyFamilyName();
             errors.AddRange(profile.VerifyGivenName());

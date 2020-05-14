@@ -3,6 +3,8 @@ using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WaterLibrary.Interfaces;
@@ -16,15 +18,18 @@ namespace Hidrogen.Controllers {
     public class WaterController {
 
         private readonly ILogger<WaterController> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly IWaterService _tokenService;
 
         private const int TOKEN_LIFE = 3600; // 3 Minutes
 
         public WaterController(
             ILogger<WaterController> logger,
+            IRuntimeLogService runtimeLogger,
             IWaterService tokenService
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _tokenService = tokenService;
         }
 
@@ -33,6 +38,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("1,0,0,0,0,0,0,0")]
         public async Task<JsonResult> GetApiToken(string task) {
             _logger.LogInformation("WaterController.GetApiToken - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(WaterController),
+                Action = nameof(GetApiToken),
+                Briefing = "Get a WATER API token before uploading file to Water for task = " + task,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var tokenLength = HelperProvider.RandomNumberInRange(30, 100);
 

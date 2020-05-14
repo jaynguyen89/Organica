@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using HelperLibrary;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Controllers {
@@ -17,13 +21,16 @@ namespace Hidrogen.Controllers {
     public class AddressController {
         
         private readonly ILogger<AddressController> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly IHidroAddressService _addressService;
 
         public AddressController(
             ILogger<AddressController> logger,
+            IRuntimeLogService runtimeLogger,
             IHidroAddressService addressService
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _addressService = addressService;
         }
 
@@ -32,6 +39,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> GetAddressListFor(int hidrogenianId) {
             _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + hidrogenianId);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = nameof(GetAddressListFor),
+                Data = hidrogenianId.ToString(),
+                Briefing = "Get the list of all addresses for CAB.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var addressList = await _addressService.RetrieveAddressesForHidrogenian(hidrogenianId);
 
@@ -44,7 +58,14 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("1,0,0,0,0,0,0,0")]
         public async Task<JsonResult> AddNewAddressFor(AddressBinderVM binder) {
             _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + binder.HidrogenianId);
-
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = nameof(AddNewAddressFor),
+                Data = JsonConvert.SerializeObject(binder),
+                Briefing = "Add a new address to database for the user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+            
             IGenericAddressVM address;
             if (binder.LocalAddress == null) address = binder.StandardAddress;
             else address = binder.LocalAddress;
@@ -68,6 +89,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,0,0,1,0,0,0")]
         public async Task<JsonResult> RemoveHidrogenianAddress(int addressId) {
             _logger.LogInformation("AddressController.RemoveHidrogenianAddress - addressId=" + addressId);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = nameof(RemoveHidrogenianAddress),
+                Data = addressId.ToString(),
+                Briefing = "Remove an address by ID from database for user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var result = await _addressService.RemoveHidroAddress(addressId);
             if (!result.HasValue) return new JsonResult(new { Result = RESULTS.FAILED, Message = "No address found with the given data. Please try again." });
@@ -81,10 +109,18 @@ namespace Hidrogen.Controllers {
         [HidroActionFilter("Customer")]
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> UpdateHidrogenianAddress(AddressBinderVM binder) {
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = nameof(UpdateHidrogenianAddress),
+                Data = JsonConvert.SerializeObject(binder),
+                Briefing = "Update an address in database for the user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+            
             IGenericAddressVM address;
             if (binder.LocalAddress == null) address = binder.StandardAddress;
             else address = binder.LocalAddress;
-            
+
             _logger.LogInformation("AddressController.UpdateHidrogenianAddress - addressId=" + address.Id);
 
             var verification = VerifyAddress(address);
@@ -103,10 +139,8 @@ namespace Hidrogen.Controllers {
             if (!updateResult.Key.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to update the address details. Please try again." });
 
-            if (updateResult.Value == null)
-                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try again." });
-
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value });
+            return updateResult.Value == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try again." })
+                                              : new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value });
         }
         
         [HttpPost("set-address-field")]
@@ -114,6 +148,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,1,0,0,0,0,0")]
         public async Task<JsonResult> SetAddressAsPrimaryOrDeliveryFor(AddressSetterVM data) {
             _logger.LogInformation("AddressController.SetAddressAsPrimaryFor - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = nameof(SetAddressAsPrimaryOrDeliveryFor),
+                Data = JsonConvert.SerializeObject(data),
+                Briefing = "Set an address <ForDelivery> or <AsPrimary>.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var result = await _addressService.SetFieldDataForAddress(data);
             
@@ -123,6 +164,14 @@ namespace Hidrogen.Controllers {
         }
 
         private List<int> VerifyAddress(IGenericAddressVM address) {
+            _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(AddressController),
+                Action = "private" + nameof(VerifyAddress),
+                Data = JsonConvert.SerializeObject(address),
+                Briefing = "Internally verify the submitted address data for any errors.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+            
             var errors = new List<int>();
             var location = address.IsStandard ? address.sAddress : (GenericLocationVM)address.lAddress;
 

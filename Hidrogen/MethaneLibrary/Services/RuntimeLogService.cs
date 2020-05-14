@@ -28,7 +28,7 @@ namespace MethaneLibrary.Services {
             _logger.LogInformation("RuntimeLogService.InsertRuntimeLog - Service starts.");
 
             try {
-                //await _dbContext.RuntimeLog.InsertOneAsync(log);
+                await _dbContext.RuntimeLog.InsertOneAsync(log);
             } catch (Exception e) {
                 _logger.LogError("RuntimeLogService.InsertRuntimeLog - Error: " + e);
                 return false;
@@ -42,7 +42,7 @@ namespace MethaneLibrary.Services {
             _logger.LogInformation("RuntimeLogService.InsertRuntimeLogRange - Service starts.");
 
             try {
-                //await _dbContext.RuntimeLog.InsertManyAsync(logs);
+                await _dbContext.RuntimeLog.InsertManyAsync(logs);
             } catch (Exception e) {
                 _logger.LogError("RuntimeLogService.InsertRuntimeLogRange - Error: " + e);
                 return false;
@@ -57,7 +57,7 @@ namespace MethaneLibrary.Services {
 
             List<RuntimeLog> logs;
             try {
-                //logs = await _dbContext.RuntimeLog.Find(Builders<RuntimeLog>.Filter.Empty).Skip(from).Limit(quantity).ToListAsync();
+                logs = await _dbContext.RuntimeLog.Find(Builders<RuntimeLog>.Filter.Empty).Skip(from).Limit(quantity).ToListAsync();
             } catch (Exception e) {
                 _logger.LogError("RuntimeLogService.InsertRuntimeLogRange - Error: " + e);
                 return null;

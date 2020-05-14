@@ -2,31 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HelperLibrary;
+using Hidrogen.Controllers;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Address;
 using Hidrogen.ViewModels.Address.Generic;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Hidrogen.Services.DatabaseServices {
 
     public class HidroAddressService : IHidroAddressService {
 
         private readonly ILogger<HidroAddressService> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly HidrogenDbContext _dbContext;
 
         public HidroAddressService(
             ILogger<HidroAddressService> logger,
+            IRuntimeLogService runtimeLogger,
             HidrogenDbContext dbContext
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _dbContext = dbContext;
         }
 
         public async Task<IGenericAddressVM> InsertRawAddressFor(int hidrogenianId, IGenericAddressVM address) {
             _logger.LogInformation("HidroAddressService.InsertRawAddressFor - hidrogenianId=" + hidrogenianId);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = nameof(InsertRawAddressFor),
+                Data = JsonConvert.SerializeObject(address),
+                Briefing = "Query database to save new address for user having hidrogenianId = " + hidrogenianId,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var rawLocation = await InsertRawLocation(address);
             if (rawLocation == null) return null;
@@ -40,11 +55,18 @@ namespace Hidrogen.Services.DatabaseServices {
                 IsDeliveryAddress = false
             };
 
-            _dbContext.HidroAddress.Add(hidrogenianAddress);
+            await _dbContext.HidroAddress.AddAsync(hidrogenianAddress);
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting hidroAddress: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = nameof(InsertRawAddressFor),
+                    Briefing = "Exception occurred while saving address: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -54,6 +76,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool, bool>?> RemoveHidroAddress(int addressId) {
             _logger.LogInformation("HidroAddressService.RemoveHidroAddress - addressId=" + addressId);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = nameof(RemoveHidroAddress),
+                Briefing = "Query database to remove an address with id = " + addressId,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var dbAddress = await _dbContext.HidroAddress.FindAsync(addressId);
             if (dbAddress == null) return null;
@@ -66,6 +94,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.RemoveHidroAddress - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = nameof(RemoveHidroAddress),
+                    Briefing = "Exception occurred while saving changes: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return new KeyValuePair<bool, bool>(true, false);
             }
 
@@ -74,6 +109,12 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<List<IGenericAddressVM>> RetrieveAddressesForHidrogenian(int hidrogenianId) {
             _logger.LogInformation("HidroAddressService.RetrieveAddressesForHidrogenian - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = nameof(RetrieveAddressesForHidrogenian),
+                Briefing = "Query database to get the list of all addresses belong to user having hidrogenianId = " + hidrogenianId,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var vmAddresses = new List<IGenericAddressVM>();
             try {
@@ -122,6 +163,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 }
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.RetrieveAddressesForHidrogenian - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = nameof(RetrieveAddressesForHidrogenian),
+                    Briefing = "Exception occurred while reading and mapping address data: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 
@@ -130,6 +178,13 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<KeyValuePair<bool?, IGenericAddressVM>> UpdateHidroAddress(IGenericAddressVM address) {
             _logger.LogInformation("HidroAddressService.UpdateHidroAddress - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = nameof(UpdateHidroAddress),
+                Data = JsonConvert.SerializeObject(address),
+                Briefing = "Query database to update an address for user.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var dbAddress = await _dbContext.HidroAddress.FindAsync(address.Id);
             if (dbAddress == null) return new KeyValuePair<bool?, IGenericAddressVM>(null, null);
@@ -149,6 +204,13 @@ namespace Hidrogen.Services.DatabaseServices {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.UpdateHidroAddress - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = nameof(RetrieveAddressesForHidrogenian),
+                    Briefing = "Exception while saving data changes: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return new KeyValuePair<bool?, IGenericAddressVM>(true, null);
             }
 
@@ -161,6 +223,13 @@ namespace Hidrogen.Services.DatabaseServices {
 
         public async Task<bool?> SetFieldDataForAddress(AddressSetterVM data) {
             _logger.LogInformation("HidroAddressService.SetFieldDataForAddress - AddressId=" + data.Id);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = nameof(SetFieldDataForAddress),
+                Data = JsonConvert.SerializeObject(data),
+                Briefing = "Query database to update an address with <ForDelivery> or <AsPrimary>.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             var hidrogenianAddresses = await _dbContext.HidroAddress
                 .Where(a => a.HidrogenianId == data.HidrogenianId).ToListAsync();
@@ -195,6 +264,13 @@ namespace Hidrogen.Services.DatabaseServices {
             }
             catch (Exception e) {
                 _logger.LogError("HidroAddressService.SetFieldDataForAddress - Error: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = nameof(SetFieldDataForAddress),
+                    Briefing = "Exception occurred while saving changes: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return false;
             }
 
@@ -203,6 +279,13 @@ namespace Hidrogen.Services.DatabaseServices {
 
         private async Task<RawLocation> InsertRawLocation(IGenericAddressVM address) {
             _logger.LogInformation("HidroAddressService.InsertRawLocation - Service runs internally.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroAddressService),
+                Action = "private " + nameof(InsertRawLocation),
+                Data = JsonConvert.SerializeObject(address),
+                Briefing = "Query database to save a raw location for an address.",
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
 
             RawLocation rawLocation;
             if (address.IsStandard) {
@@ -214,11 +297,19 @@ namespace Hidrogen.Services.DatabaseServices {
                 rawLocation.IsStandard = address.IsStandard;
             }
 
-            _dbContext.RawLocation.Add(rawLocation);
+            await _dbContext.RawLocation.AddAsync(rawLocation);
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.InsertRawAddressFor - Error at inserting rawLocation: " + e);
+                await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                    Controller = nameof(HidroAddressService),
+                    Action = "private " + nameof(InsertRawLocation),
+                    Data = JsonConvert.SerializeObject(address),
+                    Briefing = "Exception occurred while saving data: " + e,
+                    Severity = HidroEnums.LOGGING.ERROR.GetValue()
+                });
+                
                 return null;
             }
 

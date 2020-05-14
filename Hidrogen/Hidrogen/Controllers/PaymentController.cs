@@ -1,10 +1,14 @@
 ﻿using System.Threading.Tasks;
+using HelperLibrary;
 using Hidrogen.Attributes;
 using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Payment;
+using MethaneLibrary.Interfaces;
+using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Controllers {
@@ -14,13 +18,16 @@ namespace Hidrogen.Controllers {
     public class PaymentController {
         
         private readonly ILogger<PaymentController> _logger;
+        private readonly IRuntimeLogService _runtimeLogger;
         private readonly IPaymentService _paymentService;
 
         public PaymentController(
             ILogger<PaymentController> logger,
+            IRuntimeLogService runtimeLogger,
             IPaymentService paymentService
         ) {
             _logger = logger;
+            _runtimeLogger = runtimeLogger;
             _paymentService = paymentService;
         }
 
@@ -29,6 +36,12 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,1,0,0,0,0,0,0")]
         public async Task<JsonResult> GetPaymentDetailsFor(int hidrogenianId) {
             _logger.LogInformation("PaymentController.GetPaymentDetailsFor - hidrogenianId=" + hidrogenianId);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentController),
+                Action = nameof(GetPaymentDetailsFor),
+                Briefing = "Get all payment details for user having hidrogenianId = " + hidrogenianId,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var details = await _paymentService.RetrievePaymentMethodsFor(hidrogenianId);
             if (details != null) return new JsonResult(new {Result = RESULTS.SUCCESS, Message = details});
@@ -43,6 +56,20 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> UpdatePaymentDetails(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.UpdatePaymentDetails - Service starts.");
 
+            var clone = paymentDetail;
+            if (clone.PaymentMethod.CreditCard != null) {
+                clone.PaymentMethod.CreditCard.CardNumber = null;
+                clone.PaymentMethod.CreditCard.SecurityCode = null;
+            }
+
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentController),
+                Action = nameof(UpdatePaymentDetails),
+                Data = JsonConvert.SerializeObject(clone),
+                Briefing = "Update payment methods in database for a user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
+
             var (key, value) = await _paymentService.UpdatePaymentMethods(paymentDetail);
 
             return !key ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
@@ -55,6 +82,20 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("1,0,0,0,0,0,0,0")]
         public async Task<JsonResult> AddPaymentDetails(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.AddPaymentDetails - Service starts.");
+            
+            var clone = paymentDetail;
+            if (clone.PaymentMethod.CreditCard != null) {
+                clone.PaymentMethod.CreditCard.CardNumber = null;
+                clone.PaymentMethod.CreditCard.SecurityCode = null;
+            }
+
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentController),
+                Action = nameof(AddPaymentDetails),
+                Data = JsonConvert.SerializeObject(clone),
+                Briefing = "Add new payment method into database for a user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var newPaymentMethod = await _paymentService.InsertNewPaymentMethod(paymentDetail);
 
@@ -67,6 +108,13 @@ namespace Hidrogen.Controllers {
         [HidroAuthorize("0,0,1,0,1,0,0,0")]
         public async Task<JsonResult> RemovePaymentDetailsFor(int hidrogenianId, string deletedMethod = "card") {
             _logger.LogInformation("PaymentController.RemovePaymentDetailsFor - hidrogenianId=" + hidrogenianId);
+            
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentController),
+                Action = nameof(RemovePaymentDetailsFor),
+                Briefing = "Remove a payment method for user having hidrogenianId = " + hidrogenianId + " and deletedMethod = " + deletedMethod,
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var removed = await _paymentService.DeletePaymentMethodFor(hidrogenianId, deletedMethod);
 
@@ -77,6 +125,14 @@ namespace Hidrogen.Controllers {
 
         public async Task<JsonResult> AddBalanceToAccount(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.AddBalanceToAccount - Service starts.");
+            
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(PaymentController),
+                Action = nameof(RemovePaymentDetailsFor),
+                Data = JsonConvert.SerializeObject(paymentDetail),
+                Briefing = "Add more account balance for a user.",
+                Severity = LOGGING.INFORMATION.GetValue()
+            });
 
             var added = await _paymentService.AddBalanceToAccount(paymentDetail);
 
