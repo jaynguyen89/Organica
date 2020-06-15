@@ -32,8 +32,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("payment-details/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetPaymentDetailsFor(int hidrogenianId) {
             _logger.LogInformation("PaymentController.GetPaymentDetailsFor - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -51,12 +51,12 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPut("update-payment-details")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdatePaymentDetails(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.UpdatePaymentDetails - Service starts.");
 
-            var clone = paymentDetail;
+            var clone = paymentDetail.Copy();
             if (clone.PaymentMethod.CreditCard != null) {
                 clone.PaymentMethod.CreditCard.CardNumber = null;
                 clone.PaymentMethod.CreditCard.SecurityCode = null;
@@ -78,12 +78,12 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("add-payment-details")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("1,0,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.CREATE)]
         public async Task<JsonResult> AddPaymentDetails(PaymentDetailVM paymentDetail) {
             _logger.LogInformation("PaymentController.AddPaymentDetails - Service starts.");
             
-            var clone = paymentDetail;
+            var clone = paymentDetail.Copy();
             if (clone.PaymentMethod.CreditCard != null) {
                 clone.PaymentMethod.CreditCard.CardNumber = null;
                 clone.PaymentMethod.CreditCard.SecurityCode = null;
@@ -104,8 +104,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpDelete("remove-payment-details/{deletedMethod?}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,1,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.DELETE_OWN)]
         public async Task<JsonResult> RemovePaymentDetailsFor(int hidrogenianId, string deletedMethod = "card") {
             _logger.LogInformation("PaymentController.RemovePaymentDetailsFor - hidrogenianId=" + hidrogenianId);
             

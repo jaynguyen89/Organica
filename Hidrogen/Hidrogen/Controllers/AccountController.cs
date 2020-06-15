@@ -56,8 +56,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("get-identity/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetIdentityDetailFor(int hidrogenianId) {
             _logger.LogInformation("AccountController.GetIdentityDetailFor - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -75,8 +75,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("get-two-fa/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetTwoFactorDataFor(int hidrogenianId) {
             _logger.LogInformation("AccountController.GetTwoFactorDataFor - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -108,8 +108,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("get-time-logs/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetTimeStampsFor(int hidrogenianId) {
             _logger.LogInformation("AccountController.GetAccountTimeStamps - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -127,8 +127,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("update-identity")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdateAccountIdentity(AccountIdentityVM identity) {
             _logger.LogInformation("AccountController.UpdateAccountIdentity - hidrogenianId=" + identity.Id);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -197,8 +197,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("update-security")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdateAccountPassword(AccountSecurityVM security) {
             _logger.LogInformation("AccountController.UpdateAccountPassword - hidrogenianId=" + security.Id);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -234,8 +234,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("enable-or-refresh-two-fa")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> EnableTwoFactorAuthentication(TwoFaVM twoFa) {
             _logger.LogInformation("AccountController.EnableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -269,8 +269,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("disable-two-fa")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> DisableTwoFactorAuthentication(TwoFaVM twoFa) {
             _logger.LogInformation("AccountController.DisableTwoFactorAuthentication - hidrogenianId=" + twoFa.Id);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

@@ -34,8 +34,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("get-api-key/{task}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("1,0,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.CREATE)]
         public async Task<JsonResult> GetApiToken(string task) {
             _logger.LogInformation("WaterController.GetApiToken - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

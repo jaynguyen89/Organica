@@ -131,7 +131,7 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> RegisterAccount(RegistrationVM registration) {
             _logger.LogInformation("AuthenticationController.RegisterAccount - Service starts.");
             
-            var clone = registration;
+            var clone = registration.Copy();
             clone.Password = null;
             clone.PasswordConfirm = null;
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -367,7 +367,7 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> SetNewPassword(RegistrationVM recovery) {
             _logger.LogInformation("AuthenticationController.SetNewPassword - Service starts.");
 
-            var clone = recovery;
+            var clone = recovery.Copy();
             clone.Password = null;
             clone.PasswordConfirm = null;
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -428,7 +428,7 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> Authenticate(AuthenticationVM auth) {
             _logger.LogInformation("AuthenticationController.Authenticate - Service starts.");
 
-            var clone = auth;
+            var clone = auth.Copy();
             clone.Password = null;
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
@@ -469,7 +469,7 @@ namespace Hidrogen.Controllers {
         public async Task<JsonResult> CookieAuthenticate(CookieAuthenticationVM cookie) {
             _logger.LogInformation("AuthenticationController.CookieAuthenticate - Service starts.");
 
-            var clone = cookie;
+            var clone = cookie.Copy();
             clone.CookieToken = null;
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
@@ -494,7 +494,7 @@ namespace Hidrogen.Controllers {
         private async Task SetUserSessionAndCookie(AuthenticatedUser authHidrogenian, bool trusted) {
             _logger.LogInformation("AuthenticationController.SetUserSessionAndCookie - private action.");
 
-            var clone = authHidrogenian;
+            var clone = authHidrogenian.Copy();
             clone.AuthToken = null;
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AuthenticationController),
@@ -543,7 +543,7 @@ namespace Hidrogen.Controllers {
 
         [HttpGet("sign-out")]
         [HidroActionFilter]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public JsonResult LogOut() {
             _logger.LogInformation("AuthenticationController.LogOut - Service starts.");
             _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -566,7 +566,7 @@ namespace Hidrogen.Controllers {
         private List<int> VerifyRegistrationData(RegistrationVM data) {
             _logger.LogInformation("AuthenticationController.VerifyRegistrationData - Verification starts.");
 
-            var clone = data;
+            var clone = data.Copy();
             clone.Password = null;
             clone.PasswordConfirm = null;
             _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

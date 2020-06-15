@@ -5,6 +5,38 @@ namespace HelperLibrary {
 
     public static class HidroEnums {
 
+        public enum ROLES {
+            [StringValue("Guest")]
+            GUEST,
+            [StringValue("Customer")]
+            CUSTOMER,
+            [StringValue("Supporter")]
+            SUPPORTER,
+            [StringValue("Moderator")]
+            MOD,
+            [StringValue("Administrator")]
+            ADMIN
+        }
+
+        public enum PERMISSIONS {
+            [StringValue("AllowCreate")]
+            CREATE,
+            [StringValue("AllowView")]
+            VIEW,
+            [StringValue("AllowEditOwn")]
+            EDIT_OWN,
+            [StringValue("AllowEditOthers")]
+            EDIT_OTHERS,
+            [StringValue("AllowDeleteOwn")]
+            DELETE_OWN,
+            [StringValue("AllowDeleteOthers")]
+            DELETE_OTHERS,
+            [StringValue("AllowReviveOwn")]
+            REVIVE_OWN,
+            [StringValue("AllowReviveOthers")]
+            REVIVE_OTHERS
+        }
+
         public enum LOGGING {
             [StringValue("Information")]
             INFORMATION,

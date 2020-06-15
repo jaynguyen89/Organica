@@ -35,8 +35,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("address-list/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetAddressListFor(int hidrogenianId) {
             _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -54,8 +54,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("add-address")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("1,0,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.CREATE)]
         public async Task<JsonResult> AddNewAddressFor(AddressBinderVM binder) {
             _logger.LogInformation("AddressController.GetAddressListFor - hidrogenianId=" + binder.HidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -85,8 +85,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpDelete("remove-address/{addressId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,0,0,1,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.DELETE_OWN)]
         public async Task<JsonResult> RemoveHidrogenianAddress(int addressId) {
             _logger.LogInformation("AddressController.RemoveHidrogenianAddress - addressId=" + addressId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -106,8 +106,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("update-address")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdateHidrogenianAddress(AddressBinderVM binder) {
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(AddressController),
@@ -144,8 +144,8 @@ namespace Hidrogen.Controllers {
         }
         
         [HttpPost("set-address-field")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> SetAddressAsPrimaryOrDeliveryFor(AddressSetterVM data) {
             _logger.LogInformation("AddressController.SetAddressAsPrimaryFor - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

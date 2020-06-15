@@ -17,8 +17,8 @@ namespace Hidrogen.ViewModels.Authentication {
         public List<int> VerifyAuthenticationData() {
             var errors = new List<int>();
 
-            if (UserName != null) UserName = UserName.Trim().ToLower();
-            if (Email != null) Email = Email.Trim().ToLower();
+            UserName = UserName?.Trim().ToLower();
+            Email = Email?.Trim().ToLower();
 
             if ((string.IsNullOrEmpty(UserName) && string.IsNullOrEmpty(Email)) ||
                 (string.IsNullOrWhiteSpace(UserName) && string.IsNullOrWhiteSpace(Email)))

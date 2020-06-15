@@ -38,8 +38,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("save-avatar")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("1,0,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.CREATE)]
         public async Task<JsonResult> SaveProfileAvatar([FromForm] AssetFormVM uploading) {
             _logger.LogInformation("ProfileController.SaveProfileAvatar - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -63,8 +63,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpGet("get-private-profile/{hidrogenianId}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.VIEW)]
         public async Task<JsonResult> RetrievePrivateProfile(int hidrogenianId) {
             _logger.LogInformation("ProfileController.RetrievePublicProfile - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -81,8 +81,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPut("update-avatar")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdateProfileAvatar([FromForm] AssetReplaceVM uploading) {
             _logger.LogInformation("ProfileController.UpdateProfileAvatar - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -106,8 +106,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpDelete("remove-avatar/{hidrogenianId}/{apikey}")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,0,0,1,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.DELETE_OWN)]
         public async Task<JsonResult> RemoveProfileAvatar(int hidrogenianId, string apikey) {
             _logger.LogInformation("ProfileController.RemoveProfileAvatar - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
@@ -131,8 +131,8 @@ namespace Hidrogen.Controllers {
         }
 
         [HttpPost("update-private-profile")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,0,1,0,0,0,0,0")]
+        [HidroActionFilter(ROLES.CUSTOMER)]
+        [HidroAuthorize(PERMISSIONS.EDIT_OWN)]
         public async Task<JsonResult> UpdatePrivateProfile(HidroProfileVM profile) {
             _logger.LogInformation("ProfileController.UpdatePrivateProfile - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

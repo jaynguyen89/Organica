@@ -29,8 +29,8 @@ namespace Hidrogen.Controllers {
         }
         
         [HttpGet("compact-countries")]
-        [HidroActionFilter("Customer")]
-        [HidroAuthorize("0,1,0,0,0,0,0,0")]
+        [HidroActionFilter(HidroEnums.ROLES.CUSTOMER)]
+        [HidroAuthorize(HidroEnums.PERMISSIONS.VIEW)]
         public async Task<JsonResult> GetCountriesForDropdown() {
             _logger.LogInformation("CountryController.GetCountriesForDropdown - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

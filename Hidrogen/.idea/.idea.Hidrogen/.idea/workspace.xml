@@ -83,98 +83,97 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/Country.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/WaterService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterManualContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/FineLocation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/Interfaces/IWaterService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AssetReplaceVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AvatarResultVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/WaterResultVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/AssetFormVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroAddressService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ICountryService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IPaymentService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroProfileService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidrogenianService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/PaymentService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Startup.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Program.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/RoleClaimerService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroRoleService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AuthenticationService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AccountService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroAuthorize.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/ManualDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/HidrogenDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/HidroProfileVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/CountryVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/AddressBinderVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/HidrogenianVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/TwoFaVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13DA8DF4-F4FB-4394-A581-F44A587913F7/43/ModelBinderAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/TimeStampVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountIdentityVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountSecurityVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServerOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/3B/Type.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/12/Array.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroAttributes.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardLocationVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/AddressSetterVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalLocationVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalAddressVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardAddressVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/TraderController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/GenericLocationVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/IGenericAddressVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Payment/PaymentDetailVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServerOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/RegistrationVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/AuthenticatedUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/CookieAuthenticationVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/RecoveryVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/AccountActivationVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/PreferenceController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/PaymentController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/AuthenticationVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/ProfileController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/PreferenceController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///C# Console" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/TraderController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/PaymentController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/RawLocation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/AccountLog.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/RuntimeLog.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/AccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/RuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/DbContext/MethaneDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IAccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IRuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/MethaneLibrary/ViewModels/RuntimeLogFilter.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/RawLocation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13DA8DF4-F4FB-4394-A581-F44A587913F7/43/ModelBinderAttribute.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/3B/Type.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/Country.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/FineLocation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Startup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/WaterService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterManualContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/Interfaces/IWaterService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AssetReplaceVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AvatarResultVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/WaterResultVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/AssetFormVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroAddressService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ICountryService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/HelperProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IPaymentService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroProfileService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidrogenianService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/PaymentService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/RoleClaimerService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroRoleService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AuthenticationService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AccountService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroAuthorize.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/ManualDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/HidrogenDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/HidroProfileVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/CountryVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/AddressBinderVM.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Payment/PaymentDetailVM.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Account/TwoFaVM.cs" />
-        <option value="$PROJECT_DIR$/Methane/Class1.cs" />
-        <option value="$PROJECT_DIR$/HelperLibrary/IServiceCollectionExtension.cs" />
-        <option value="$PROJECT_DIR$/WaterLibrary/Services/ServiceCollectionExtension.cs" />
-        <option value="$PROJECT_DIR$/Methane/IServiceCollectionExtension.cs" />
         <option value="$PROJECT_DIR$/Methane/ServiceCollectionExtension.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Class1.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Interfaces/IErrorLogService.cs" />
@@ -195,19 +194,11 @@
         <option value="$PROJECT_DIR$/MethaneLibrary/ServiceCollectionExtension.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Startup.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Models/RuntimeLog.cs" />
-        <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Program.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Services/RuntimeLogService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountIdentityVM.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/PaymentController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/ProfileController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AccountService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AuthenticationService.cs" />
@@ -219,7 +210,21 @@
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/PaymentService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/RoleClaimerService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/TraderController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/AuthenticationVM.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/Services/ObjectHelperService.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/Interfaces/IObjectHelperService.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/HelperProvider.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Attributes/HidroAuthorize.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/PaymentController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/ProfileController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" />
       </list>
     </option>
   </component>
@@ -230,6 +235,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.3500243" />
+    <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.29995137" />
     <property name="Rider.SolutionExplorerActivator" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -315,6 +322,10 @@
       <workItem from="1589353429883" duration="82000" />
       <workItem from="1589353665543" duration="437000" />
       <workItem from="1589419524391" duration="15661000" />
+      <workItem from="1589443022896" duration="994000" />
+      <workItem from="1592185616014" duration="2268000" />
+      <workItem from="1592191528126" duration="873000" />
+      <workItem from="1592192414525" duration="6047000" />
     </task>
     <servers />
   </component>
@@ -359,119 +370,136 @@
     <state x="4511" y="1336" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1586591172048" />
     <state x="4511" y="1347" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/63.0.2131.1234/3902.1080.1858.1080@3902.1080.1858.1080" timestamp="1587517882248" />
     <state x="761" y="305" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1589353448988" />
-    <state width="431" height="466" key="DebuggerActiveHint" timestamp="1587098710919">
+    <state width="431" height="466" key="DebuggerActiveHint" timestamp="1592187825356">
       <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="538" height="408" key="DebuggerActiveHint/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1586417282846" />
     <state width="431" height="466" key="DebuggerActiveHint/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587098710919" />
-    <state width="2088" height="205" key="GridCell.Tab.0.bottom" timestamp="1589442873122">
+    <state width="431" height="466" key="DebuggerActiveHint/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592187825356" />
+    <state width="2088" height="153" key="GridCell.Tab.0.bottom" timestamp="1592196509880">
       <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="187" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
     <state width="2088" height="187" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
     <state width="1816" height="174" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1080.1858.1080@3902.1080.1858.1080" timestamp="1587717111047" />
-    <state width="2088" height="205" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1589442873122" />
-    <state width="2088" height="205" key="GridCell.Tab.0.center" timestamp="1589442873122">
+    <state width="2088" height="153" key="GridCell.Tab.0.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.0.center" timestamp="1592196509879">
       <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="187" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
     <state width="2088" height="187" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
     <state width="1816" height="174" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1080.1858.1080@3902.1080.1858.1080" timestamp="1587717111047" />
-    <state width="2088" height="205" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1589442873122" />
-    <state width="2088" height="205" key="GridCell.Tab.0.left" timestamp="1589442873122">
+    <state width="2088" height="153" key="GridCell.Tab.0.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509879" />
+    <state width="2088" height="153" key="GridCell.Tab.0.left" timestamp="1592196509879">
       <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="187" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
     <state width="2088" height="187" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
     <state width="1816" height="174" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1080.1858.1080@3902.1080.1858.1080" timestamp="1587717111047" />
-    <state width="2088" height="205" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1589442873122" />
-    <state width="2088" height="205" key="GridCell.Tab.0.right" timestamp="1589442873122">
+    <state width="2088" height="153" key="GridCell.Tab.0.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509879" />
+    <state width="2088" height="153" key="GridCell.Tab.0.right" timestamp="1592196509880">
       <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="187" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587373783402" />
     <state width="2088" height="187" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587354198152" />
     <state width="1816" height="174" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1080.1858.1080@3902.1080.1858.1080" timestamp="1587717111047" />
-    <state width="2088" height="205" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1589442873122" />
-    <state width="1815" height="152" key="GridCell.Tab.1.bottom" timestamp="1587112215954">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.0.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.1.bottom" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.1.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
     <state width="2088" height="276" key="GridCell.Tab.1.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.1.center" timestamp="1587112215954">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.1.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.1.center" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.1.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
     <state width="2088" height="276" key="GridCell.Tab.1.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.1.left" timestamp="1587112215954">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.1.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.1.left" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.1.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
     <state width="2088" height="276" key="GridCell.Tab.1.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.1.right" timestamp="1587112215954">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.1.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.1.right" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.1.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
     <state width="2088" height="276" key="GridCell.Tab.1.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.2.bottom" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.1.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.2.bottom" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.2.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.2.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.2.center" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.2.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.2.center" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.2.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.2.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.2.left" timestamp="1587112215954">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.2.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.2.left" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.2.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215954" />
     <state width="2088" height="276" key="GridCell.Tab.2.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.2.right" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.2.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.2.right" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.2.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.2.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.3.bottom" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.2.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.3.bottom" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.3.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.3.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
-    <state width="1815" height="152" key="GridCell.Tab.3.center" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.3.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.3.center" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.3.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.3.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.3.left" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.3.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.3.left" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.3.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.3.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213391" />
-    <state width="1815" height="152" key="GridCell.Tab.3.right" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.3.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.3.right" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.3.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.3.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
-    <state width="1815" height="152" key="GridCell.Tab.4.bottom" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.3.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.4.bottom" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.4.bottom/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.4.bottom/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
-    <state width="1815" height="152" key="GridCell.Tab.4.center" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.4.bottom/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.4.center" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.4.center/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.4.center/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
-    <state width="1815" height="152" key="GridCell.Tab.4.left" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.4.center/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.4.left" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.4.left/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.4.left/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
-    <state width="1815" height="152" key="GridCell.Tab.4.right" timestamp="1587112215955">
-      <screen x="3902" y="1069" width="1858" height="1080" />
+    <state width="2088" height="153" key="GridCell.Tab.4.left/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
+    <state width="2088" height="153" key="GridCell.Tab.4.right" timestamp="1592196509880">
+      <screen x="63" y="0" width="2131" height="1234" />
     </state>
     <state width="1815" height="152" key="GridCell.Tab.4.right/63.0.2131.1234/3902.1069.1858.1080@3902.1069.1858.1080" timestamp="1587112215955" />
     <state width="2088" height="276" key="GridCell.Tab.4.right/63.0.2131.1234/3902.1069.1858.1080@63.0.2131.1234" timestamp="1587099213392" />
+    <state width="2088" height="153" key="GridCell.Tab.4.right/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592196509880" />
     <state x="4423" y="1351" key="Rider.ProjectTemplateDialog.Size" timestamp="1587957941632">
       <screen x="3902" y="1080" width="1858" height="1080" />
     </state>
@@ -497,6 +525,10 @@
       <screen x="3902" y="1080" width="1858" height="1080" />
     </state>
     <state x="3947" y="1059" width="1795" height="1221" maximized="true" key="dock-window-1/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1587970832956" />
+    <state x="811" y="216" width="635" height="801" key="find.popup" timestamp="1592193854302">
+      <screen x="63" y="0" width="2131" height="1234" />
+    </state>
+    <state x="811" y="216" width="635" height="801" key="find.popup/63.0.2131.1234/3902.1080.1858.1080@63.0.2131.1234" timestamp="1592193854302" />
     <state x="4494" y="1304" width="672" height="678" key="search.everywhere.popup" timestamp="1586488126243">
       <screen x="3902" y="1069" width="1858" height="1080" />
     </state>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.ViewModels.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,15 +18,28 @@ namespace Hidrogen.Attributes {
 
         private const int PERM_QTY = 8;
 
-        public HidroAuthorize(string policy) {
+        public HidroAuthorize(HidroEnums.PERMISSIONS policy) {
+            _requiredPermissions = new HidroPermissionVM {
+                AllowCreate = policy.GetValue() == HidroConstants.PERMISSION_VALS["create"],
+                AllowView = policy.GetValue() == HidroConstants.PERMISSION_VALS["view"],
+                AllowEditOwn = policy.GetValue() == HidroConstants.PERMISSION_VALS["edit_own"],
+                AllowEditOthers = policy.GetValue() == HidroConstants.PERMISSION_VALS["edit_others"],
+                AllowDeleteOwn = policy.GetValue() == HidroConstants.PERMISSION_VALS["delete_own"],
+                AllowDeleteOthers = policy.GetValue() == HidroConstants.PERMISSION_VALS["delete_others"],
+                AllowReviveOwn = policy.GetValue() == HidroConstants.PERMISSION_VALS["revive_own"],
+                AllowReviveOthers = policy.GetValue() == HidroConstants.PERMISSION_VALS["revive_others"]
+            };
+        }
+
+        /*public HidroAuthorize(string policy) {
             policy = policy.Trim().Replace(HidroConstants.WHITE_SPACE, string.Empty);
 
             if (string.IsNullOrEmpty(policy) || string.IsNullOrWhiteSpace(policy))
-                throw new Exception("HidroAuthorize.Constructor - No permission given.");
+                throw new FormatException("HidroAuthorize.Constructor - No permission given.");
 
             var stringPermissions = policy.Split(",");
             if (stringPermissions.Length == 0 || stringPermissions.Length != PERM_QTY)
-                throw new Exception("HidroAuthorize.Constructor - Permission tokens error.");
+                throw new FormatException("HidroAuthorize.Constructor - Permission tokens error.");
 
             _requiredPermissions = new HidroPermissionVM {
                 AllowCreate = stringPermissions[0] == "1",
@@ -37,7 +51,7 @@ namespace Hidrogen.Attributes {
                 AllowReviveOwn = stringPermissions[6] == "1",
                 AllowReviveOthers = stringPermissions[7] == "1"
             };
-        }
+        }*/
 
         public Task OnAuthorizationAsync(AuthorizationFilterContext context) {
             var sessionPermissions = context.HttpContext.Session.GetString(nameof(HidroAuthorize));

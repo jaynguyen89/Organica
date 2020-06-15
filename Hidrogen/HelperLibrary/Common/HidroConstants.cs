@@ -2,7 +2,7 @@
 
 namespace HelperLibrary.Common {
 
-    public class HidroConstants {
+    public static class HidroConstants {
 
         public const string PROJECT_NAME = "HidrogenStore";
 
@@ -28,7 +28,7 @@ namespace HelperLibrary.Common {
         public const string MAIL_SENDER_ADDRESS = "nguyen.le.kim.phuc@gmail.com";
         public const string MAIL_SENDER_NAME = "Hidrogen";
 
-        public static readonly List<string> ROLES = new List<string> {
+        private static readonly List<string> ROLES = new List<string> {
             "customer", "supporter", "moderator", "administrator"
         };
 
@@ -49,6 +49,17 @@ namespace HelperLibrary.Common {
             { "mixed", "multipart/mixed" },
             { "alt", "multipart/alternative" },
             { "base64", "application/base64" }
+        };
+        
+        public static Dictionary<string, string> PERMISSION_VALS = new Dictionary<string, string> {
+            { "create", "AllowCreate" },
+            { "view", "AllowView" },
+            { "edit_own", "AllowEditOwn" },
+            { "edit_others", "AllowEditOthers" },
+            { "delete_own", "AllowDeleteOwn" },
+            { "deleteOthers", "AllowDeleteOthers" },
+            { "revive_own", "AllowReviveOwn" },
+            { "revive_others", "AllowReviveOthers" }
         };
     }
 }
