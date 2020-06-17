@@ -1,0 +1,41 @@
+.performance-wrapper {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+.performance-content {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.performance-content h5 {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.performance-content hr {
+    width: 35%;
+    margin-left: 0;
+}
+
+@media screen and (max-width: 992px) {
+    .performance-content hr {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .performance-content hr {
+        width: 80%;
+    }
+}
+
+.content-container {
+    padding: 5px 15px;
+}
+
+.content-caption {
+    font-weight: 600;
+    margin: 30px auto;
+}

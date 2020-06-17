@@ -55,3 +55,20 @@
     line-height: 40px !important;
     vertical-align: super;
 }
+
+.exclusive {
+    background-color: #EFA681;
+    margin-right: 1px;
+}
+
+.li-active {
+    font-weight: bold;
+    border-bottom: 2px solid #EA8F61;
+    background-color: rgba(0, 0, 0, 0.05)
+}
+
+.ex-active {
+    background-color: #EA8F61;
+    font-weight: bold;
+    border-bottom: 2px solid #1C5E7D;
+}

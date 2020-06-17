@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './style.css';
 
 import { ClickAwayListener } from '@material-ui/core';
-import CarbonAvatar from '../../shared/CarbonAtavar';
+import CarbonAvatar from '../../shared/CarbonAvatar';
 
 import { universalSignOut } from '../../authentication/redux/actions';
 
@@ -48,6 +48,10 @@ const AuthItem = (props: any) => {
                                 <div className='nav-expand-item' onClick={ () => window.location.href = '/user-profile' }>
                                     <i className='fas fa-user-circle hidro-primary-icon'></i>
                                     <span>My Profile</span>
+                                </div>
+                                <div className='nav-expand-item' onClick={ () => window.location.href = '/my-performance' }>
+                                    <i className='fas fa-seedling hidro-primary-icon'></i>
+                                    <span>My Performance</span>
                                 </div>
                                 <div className='nav-expand-item' onClick={ () => window.location.href = '/user-profile' }>
                                     <i className='fas fa-comment-dots hidro-primary-icon'></i>

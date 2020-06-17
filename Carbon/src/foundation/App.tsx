@@ -11,6 +11,7 @@ import ForgotPassword from '../account-claimation/password-recovery/ForgotPasswo
 import PasswordReset from '../account-claimation/password-recovery/PasswordReset';
 import UserProfile from '../user-features/profiles/private-profile/PrivateProfile';
 import HidroAccount from '../user-features/account/HidroAccount';
+import MyPerformance from '../user-features/performance/MyPerformance';
 
 const App = () => {
     return (
@@ -28,6 +29,7 @@ const App = () => {
                     <Route path='/reset-password' component={ PasswordReset } />
                     <Route path='/user-account' component={ HidroAccount } />
                     <Route path='/user-profile' component={ UserProfile } />
+                    <Route path='/my-performance' component={ MyPerformance } />
                 </Switch>
             </BrowserRouter>
         </>

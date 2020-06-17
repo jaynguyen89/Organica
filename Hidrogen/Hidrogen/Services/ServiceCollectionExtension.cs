@@ -20,6 +20,7 @@ namespace Hidrogen.Services {
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ICountryService, CountryService>();
+            services.AddScoped<ITraderService, TraderService>();
 
             return services;
         }

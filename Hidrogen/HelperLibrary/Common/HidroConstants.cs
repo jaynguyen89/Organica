@@ -57,7 +57,7 @@ namespace HelperLibrary.Common {
             { "edit_own", "AllowEditOwn" },
             { "edit_others", "AllowEditOthers" },
             { "delete_own", "AllowDeleteOwn" },
-            { "deleteOthers", "AllowDeleteOthers" },
+            { "delete_others", "AllowDeleteOthers" },
             { "revive_own", "AllowReviveOwn" },
             { "revive_others", "AllowReviveOthers" }
         };

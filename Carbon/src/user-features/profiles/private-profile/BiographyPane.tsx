@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { CONSTANTS } from '../../../helpers/helper';
 import { IStatus } from '../../../shared/CarbonAlert';
 
-import CarbonAtavar from '../../../shared/CarbonAtavar';
+import CarbonAvatar from '../../../shared/CarbonAvatar';
 import BiographyForm from './sub-contents/BiographyForm';
 import BiographyShow from './sub-contents/BiographyShow';
 import { useDropzone } from 'react-dropzone';
@@ -193,7 +193,7 @@ const BiographyPane = (props: any) => {
                 <i className='fas fa-user-circle hidro-primary-icon'></i>&nbsp;&nbsp;Biography
             </h6>
             <div className='col m3 s12' style={{ textAlign:'center' }}>
-                <CarbonAtavar size='200px' /><br />
+                <CarbonAvatar size='200px' /><br />
                 {
                     (
                         

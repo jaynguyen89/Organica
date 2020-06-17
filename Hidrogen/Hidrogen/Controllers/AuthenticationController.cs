@@ -33,6 +33,7 @@ namespace Hidrogen.Controllers {
         private readonly IRoleClaimerService _roleClaimer;
         private readonly IEmailSenderService _emailService;
         private readonly IGoogleReCaptchaService _googleReCaptchaService;
+        private readonly ITraderService _traderService;
 
         private readonly string PROJECT_FOLDER = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + @"/Hidrogen/";
 
@@ -44,7 +45,8 @@ namespace Hidrogen.Controllers {
             IHidroProfileService profileService,
             IRoleClaimerService roleClaimer,
             IEmailSenderService emailService,
-            IGoogleReCaptchaService googleReCaptchaService
+            IGoogleReCaptchaService googleReCaptchaService,
+            ITraderService traderService
         ) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
@@ -54,6 +56,7 @@ namespace Hidrogen.Controllers {
             _roleClaimer = roleClaimer;
             _emailService = emailService;
             _googleReCaptchaService = googleReCaptchaService;
+            _traderService = traderService;
         }
 
         public static JsonResult FilterResult(FILTER_RESULT result) {
@@ -244,16 +247,17 @@ namespace Hidrogen.Controllers {
             if (!value.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
 
-            var fullName = (await _userService.GetHidrogenianByEmail(activator.Email)).FullName;
+            var user = await _userService.GetHidrogenianByEmail(activator.Email);
+            await _traderService.CreateInitialTraderAccount(user.Id);
 
             string emailTemplate;
             using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
                 emailTemplate = await reader.ReadToEndAsync();
             }
 
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", user.FullName);
             var activationConfirmEmail = new EmailParamVM {
-                ReceiverName = fullName,
+                ReceiverName = user.FullName,
                 ReceiverAddress = activator.Email,
                 Subject = "Hidrogen - Account Activated",
                 Body = emailTemplate
