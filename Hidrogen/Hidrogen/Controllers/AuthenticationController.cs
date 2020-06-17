@@ -7,7 +7,6 @@ using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
@@ -15,6 +14,8 @@ using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
@@ -35,6 +36,9 @@ namespace Hidrogen.Controllers {
         private readonly IGoogleReCaptchaService _googleReCaptchaService;
         private readonly ITraderService _traderService;
 
+        private readonly IMemoryCache _memoryCache;
+        private readonly IDistributedCache _redisCache;
+
         private readonly string PROJECT_FOLDER = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + @"/Hidrogen/";
 
         public AuthenticationController(
@@ -46,7 +50,9 @@ namespace Hidrogen.Controllers {
             IRoleClaimerService roleClaimer,
             IEmailSenderService emailService,
             IGoogleReCaptchaService googleReCaptchaService,
-            ITraderService traderService
+            ITraderService traderService,
+            IMemoryCache memoryCache,
+            IDistributedCache redisCache
         ) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
@@ -57,6 +63,8 @@ namespace Hidrogen.Controllers {
             _emailService = emailService;
             _googleReCaptchaService = googleReCaptchaService;
             _traderService = traderService;
+            _memoryCache = memoryCache;
+            _redisCache = redisCache;
         }
 
         public static JsonResult FilterResult(FILTER_RESULT result) {
@@ -462,6 +470,16 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Cannot find any Hidrogenian with the login credentials." });
 
             await SetUserSessionAndCookie(value, auth.TrustedAuth);
+            /*await _redisCache.SetAsync(
+                nameof(AuthenticatedUser),
+                HelperProvider.EncodeDataForCache(value),
+                new DistributedCacheEntryOptions {
+                    SlidingExpiration = TimeSpan.FromSeconds(HidroConstants.CACHE_SLIDING_EXPIRATION_TIME),
+                    AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(HidroConstants.CACHE_ABSOLUTE_EXPIRATION_TIME)
+                });*/
+
+            //var test = HelperProvider.DecodeCachedData<AuthenticatedUser>(await _redisCache.GetAsync(nameof(AuthenticatedUser)));
+            
             if (await SetUserAuthorizationPolicy(value.UserId))
                 return new JsonResult(new { Result = RESULTS.SUCCESS, Message = value });
 

@@ -28,6 +28,9 @@ namespace HelperLibrary.Common {
         public const string MAIL_SENDER_ADDRESS = "nguyen.le.kim.phuc@gmail.com";
         public const string MAIL_SENDER_NAME = "Hidrogen";
 
+        public const int CACHE_SLIDING_EXPIRATION_TIME = 600;
+        public const int CACHE_ABSOLUTE_EXPIRATION_TIME = 3600;
+
         private static readonly List<string> ROLES = new List<string> {
             "customer", "supporter", "moderator", "administrator"
         };

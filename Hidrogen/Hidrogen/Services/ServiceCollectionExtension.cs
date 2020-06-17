@@ -1,6 +1,8 @@
 ﻿using Hidrogen.DbContexts;
+using Hidrogen.Services.ApplicationServices;
 using Hidrogen.Services.DatabaseServices;
 using Hidrogen.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hidrogen.Services {
@@ -10,6 +12,7 @@ namespace Hidrogen.Services {
         public static IServiceCollection RegisterHidrogenServices(this IServiceCollection services) {
             //Register all services here
             services.AddScoped<HidrogenDbContext>();
+            services.AddSingleton<HidroMemoryCache>();
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IHidrogenianService, HidrogenianService>();

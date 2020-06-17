@@ -3,9 +3,12 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
 using System.Text.RegularExpressions;
 using HelperLibrary.ArrayExtensions;
 using HelperLibrary.Common;
+using Newtonsoft.Json;
 using static HelperLibrary.Common.HidroAttributes;
 
 namespace HelperLibrary {
@@ -66,6 +69,18 @@ namespace HelperLibrary {
                 return dt;
 
             return null;
+        }
+
+        public static byte[] EncodeDataForCache(object data) {
+            var serializedData = JsonConvert.SerializeObject(data);
+            var encoding = Encoding.UTF8.GetBytes(serializedData);
+
+            return encoding;
+        }
+
+        public static T DecodeCachedData<T>(byte[] data) {
+            var plainData = Encoding.UTF8.GetString(data);
+            return JsonConvert.DeserializeObject<T>(plainData);
         }
 
         private static bool IsPrimitive(this Type type) {

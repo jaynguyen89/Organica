@@ -128,6 +128,9 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="ApplicationServices" t="Include">
+            <e p="HidroMemoryCache.cs" t="Include" />
+          </e>
           <e p="DatabaseServices" t="Include">
             <e p="AccountService.cs" t="Include" />
             <e p="AuthenticationService.cs" t="Include" />
@@ -139,9 +142,6 @@
             <e p="PaymentService.cs" t="Include" />
             <e p="RoleClaimerService.cs" t="Include" />
             <e p="TraderService.cs" t="Include" />
-          </e>
-          <e p="HostedServices" t="Include">
-            <e p="Class.cs" t="Include" />
           </e>
           <e p="Interfaces" t="Include">
             <e p="IAccountService.cs" t="Include" />

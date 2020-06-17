@@ -43,6 +43,12 @@ namespace Hidrogen {
             services.AddHttpContextAccessor();
 
             ServiceCollectionExtension.RegisterHidrogenServices(services);
+
+            services.AddStackExchangeRedisCache(options => {
+                options.Configuration = Configuration.GetSection("RedisCaching")["Connection"];
+                options.InstanceName = Configuration.GetSection("RedisCaching")["HidroData"];
+            });
+            
             services.RegisterCommonServices();
             services.RegisterWaterServices();
             
