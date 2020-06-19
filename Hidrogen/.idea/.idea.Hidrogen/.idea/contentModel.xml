@@ -45,6 +45,7 @@
         <e p="Controllers" t="Include">
           <e p="AccountController.cs" t="Include" />
           <e p="AddressController.cs" t="Include" />
+          <e p="AppController.cs" t="Include" />
           <e p="AuthenticationController.cs" t="Include" />
           <e p="CountryController.cs" t="Include" />
           <e p="PaymentController.cs" t="Include" />

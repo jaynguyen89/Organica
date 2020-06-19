@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Google.Authenticator;
 using HelperLibrary;
@@ -7,13 +6,14 @@ using HelperLibrary.Common;
 using HelperLibrary.Interfaces;
 using HelperLibrary.ViewModels;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Account;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
@@ -22,7 +22,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("account")]
-    public class AccountController {
+    public class AccountController : AppController {
         
         private readonly ILogger<AccountController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -33,8 +33,6 @@ namespace Hidrogen.Controllers {
         private readonly IEmailSenderService _emailService;
         private readonly IGoogleReCaptchaService _reCaptchaService;
 
-        private readonly string PROJECT_FOLDER = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + @"/Hidrogen/";
-
         public AccountController(
             ILogger<AccountController> logger,
             IRuntimeLogService runtimeLogger,
@@ -43,8 +41,10 @@ namespace Hidrogen.Controllers {
             IHidrogenianService userService,
             IHidroProfileService profileService,
             IEmailSenderService emailService,
-            IGoogleReCaptchaService reCaptchaService
-        ) {
+            IGoogleReCaptchaService reCaptchaService,
+            IMemoryCache memoryCache,
+            IDistributedCache redisCache
+        ) : base(memoryCache, redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _accountService = accountService;
@@ -67,11 +67,16 @@ namespace Hidrogen.Controllers {
                 Briefing = "Get data for Identity Panel in CAB.",
                 Severity = LOGGING.INFORMATION.GetValue()
             });
-            
-            var identity = await _accountService.GetAccountIdentity(hidrogenianId);
 
-            return identity == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find an account with the given data. Please reload page to try again." })
-                                    : new JsonResult(new { Result = RESULTS.SUCCESS, Message = identity });
+            var identity = await ReadFromRedisCacheAsync<AccountIdentityVM>("Account_IdentityDetail");
+            if (identity != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = identity });
+
+            identity = await _accountService.GetAccountIdentity(hidrogenianId);
+            if (identity == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to find an account with the given data. Please reload page to try again."});
+
+            await InsertRedisCacheEntryAsync("Account_IdentityDetail", identity);
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = identity });
         }
 
         [HttpGet("get-two-fa/{hidrogenianId}")]
@@ -87,13 +92,14 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
+            var twoFa = ReadFromMemoryCache<TwoFaVM>("Account_2FAData");
+            if (twoFa != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = twoFa });
+
             var secretKey = await _accountService.RetrieveTwoFaSecretKeyFor(hidrogenianId);
             if (secretKey == null) return new JsonResult(new { Result =RESULTS.FAILED, Message = "Error occurred while looking for your Two-Factor Authentication." });
-
             if (secretKey.Length == 0) return new JsonResult(new { Result = RESULTS.SUCCESS });
             
-            var twoFa = new TwoFaVM { Id = hidrogenianId };
-            var identity = await _accountService.GetAccountIdentity(hidrogenianId);
+            var identity = await ReadFromRedisCacheAsync<AccountIdentityVM>("Account_IdentityDetail") ?? await _accountService.GetAccountIdentity(hidrogenianId);
 
             var tfa = new TwoFactorAuthenticator();
             var authenticator = tfa.GenerateSetupCode(
@@ -101,9 +107,13 @@ namespace Hidrogen.Controllers {
                 secretKey, false, 200
             );
 
-            twoFa.QrImageUrl = authenticator.QrCodeSetupImageUrl;
-            twoFa.ManualQrCode = authenticator.ManualEntryKey;
-
+            twoFa = new TwoFaVM {
+                Id = hidrogenianId,
+                QrImageUrl = authenticator.QrCodeSetupImageUrl,
+                ManualQrCode = authenticator.ManualEntryKey
+            };
+            
+            InsertMemoryCacheEntry("Account_2FAData", twoFa, typeof(TwoFaVM).GetProperties().Length);
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = twoFa });
         }
 
@@ -120,10 +130,15 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var timeStamps = await _accountService.GetAccountTimeStamps(hidrogenianId);
+            var timeStamps = await ReadFromRedisCacheAsync<TimeStampVM>("Account_TimeStamps");
+            if (timeStamps != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = timeStamps });
 
-            return timeStamps == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Failed to retrieve account activity logs. Please reload page to try again." })
-                                      : new JsonResult(new { Result = RESULTS.SUCCESS, Message = timeStamps });
+            timeStamps = await _accountService.GetAccountTimeStamps(hidrogenianId);
+            if (timeStamps == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "Failed to retrieve account activity logs. Please reload page to try again."});
+
+            await InsertRedisCacheEntryAsync("Account_TimeStamps", timeStamps);
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = timeStamps });
         }
 
         [HttpPost("update-identity")]
@@ -148,16 +163,16 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var (key, value) = await _accountService.UpdateIdentityForHidrogenian(identity);
+            var (accountFound, updatedResult) = await _accountService.UpdateIdentityForHidrogenian(identity);
 
-            if (!key)
+            if (!accountFound)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Account not found with the given data. Please try again." });
 
-            if (value == null)
+            if (updatedResult == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your account. Please try again." });
 
-            var oldIdentity = value.Value.Key;
-            var newIdentity = value.Value.Value;
+            var oldIdentity = updatedResult.Value.Key;
+            var newIdentity = updatedResult.Value.Value;
             var hidrogenian = new HidrogenianVM {
                 Id = newIdentity.Id,
                 Token = _authService.GenerateRandomToken()
@@ -167,10 +182,7 @@ namespace Hidrogen.Controllers {
                 if (await _userService.SetAccountConfirmationToken(hidrogenian)) {
                     var profile = await _profileService.GetPublicProfileFor(newIdentity.Id);
 
-                    string emailTemplate;
-                    using (var reader = File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/EmailChanged.html")) {
-                        emailTemplate = await reader.ReadToEndAsync();
-                    };
+                    var emailTemplate = await ParseEmailTemplateFromFileWithName("EmailChanged.html");
 
                     emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
                     emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", newIdentity.Email);
@@ -193,6 +205,7 @@ namespace Hidrogen.Controllers {
                 //Send SMS to confirm phone number
             }
 
+            await RemoveRedisCacheEntryAsync("Account_IdentityDetail");
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = newIdentity });
         }
 
@@ -221,10 +234,10 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var (key, value) = _authService.GenerateHashedPasswordAndSalt(security.NewPassword);
+            var (newHashedPassword, newSalt) = _authService.GenerateHashedPasswordAndSalt(security.NewPassword);
             security.Password = null;
-            security.NewPassword = key;
-            security.PasswordConfirm = value;
+            security.NewPassword = newHashedPassword;
+            security.PasswordConfirm = newSalt;
 
             var result = await _accountService.UpdatePasswordForAccount(security);
 
@@ -254,7 +267,7 @@ namespace Hidrogen.Controllers {
             if (!saved.HasValue || !saved.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to setup Two-Factor Authentication at the moment. Please try again." });
             
-            var identity = await _accountService.GetAccountIdentity(twoFa.Id);
+            var identity = await ReadFromRedisCacheAsync<AccountIdentityVM>("Account_IdentityDetail") ?? await _accountService.GetAccountIdentity(twoFa.Id);
             var tfa = new TwoFactorAuthenticator();
             
             var authenticator = tfa.GenerateSetupCode(
@@ -264,6 +277,9 @@ namespace Hidrogen.Controllers {
 
             twoFa.QrImageUrl = authenticator.QrCodeSetupImageUrl;
             twoFa.ManualQrCode = authenticator.ManualEntryKey;
+            
+            RemoveMemoryCacheEntry("Account_2FAData");
+            InsertMemoryCacheEntry("Account_2FAData", twoFa, typeof(TwoFaVM).GetProperties().Length);
 
             return new JsonResult(new { Result = RESULTS.SUCCESS, Message = twoFa });
         }
@@ -284,10 +300,11 @@ namespace Hidrogen.Controllers {
             if (!validation.Result) return new JsonResult(validation);
 
             var updated = await _userService.RemoveTwoFaSecretKeyFor(twoFa.Id);
-
-            return !updated.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find your account with the given data. Please login again and try." })
-                                     : (!updated.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while removing your Two-Factor Authentication data. Please try again." })
-                                                       : new JsonResult(new { Result = RESULTS.SUCCESS }));
+            if (!updated.HasValue) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to find your account with the given data. Please login again and retry."});
+            if (!updated.Value) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Error occurred while removing your Two-Factor Authentication data. Please try again."});
+            
+            RemoveMemoryCacheEntry("Account_2FAData");
+            return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
         private List<int> VerifyIdentityData(AccountIdentityVM identity) {

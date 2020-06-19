@@ -54,9 +54,8 @@ namespace Hidrogen.Controllers {
             };
 
             var result = await _tokenService.SetApiToken(token);
-            if (!result) return new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to load your photos. Please reload page to try again." });
-
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = token.Token });
+            return !result ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to load your photos. Please reload page to try again." })
+                           : new JsonResult(new { Result = RESULTS.SUCCESS, Message = token.Token });
         }
     }
 }

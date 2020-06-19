@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 using HelperLibrary;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
+using Hidrogen.ViewModels;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace Hidrogen.Controllers {
     
     [ApiController]
     [Route("country")]
-    public class CountryController {
+    public class CountryController : AppController {
         
         private readonly ILogger<CountryController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -21,8 +22,9 @@ namespace Hidrogen.Controllers {
         public CountryController(
             ILogger<CountryController> logger,
             IRuntimeLogService runtimeLogger,
-            ICountryService countryService
-        ) {
+            ICountryService countryService,
+            IDistributedCache redisCache
+        ) : base(redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _countryService = countryService;
@@ -40,9 +42,13 @@ namespace Hidrogen.Controllers {
                 Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
             });
 
-            var result = await _countryService.GetCompactCountries();
+            var compactCountries = await ReadFromRedisCacheAsync<CountryVM[]>("Country_CompactList", true);
+            if (compactCountries != null) return new JsonResult(new { Result = HidroEnums.RESULTS.SUCCESS, Message = compactCountries });
+
+            compactCountries = await _countryService.GetCompactCountries();
             
-            return new JsonResult(new { Result = HidroEnums.RESULTS.SUCCESS, Message = result });
+            await InsertRedisCacheEntryAsync("Country_CompactList", compactCountries, true);
+            return new JsonResult(new { Result = HidroEnums.RESULTS.SUCCESS, Message = compactCountries });
         }
     }
 }

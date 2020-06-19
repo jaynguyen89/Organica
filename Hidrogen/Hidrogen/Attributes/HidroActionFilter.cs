@@ -54,7 +54,7 @@ namespace Hidrogen.Attributes {
                             context.Result = new RedirectToActionResult("FilterResult", "Authentication", new {result = HidroEnums.FILTER_RESULT.AUTHENTICATION_EXPIRED});
 
                         var allowSuperUser = !string.Equals(_defaultRole, HidroEnums.ROLES.CUSTOMER.GetValue(), StringComparison.CurrentCultureIgnoreCase) &&
-                                                   HidroConstants.GetRoleHierrachy(userSession.Role.ToLower()) > HidroConstants.GetRoleHierrachy(_defaultRole.ToLower());
+                                                   HidroConstants.GetRoleHierarchy(userSession.Role.ToLower()) > HidroConstants.GetRoleHierarchy(_defaultRole.ToLower());
                         
                         var allowCustomer = string.Equals(_defaultRole, HidroEnums.ROLES.CUSTOMER.GetValue(), StringComparison.CurrentCultureIgnoreCase) &&
                                                   (

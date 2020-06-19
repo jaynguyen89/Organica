@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Hidrogen.Services.ApplicationServices {
     
     public class HidroMemoryCache {
         
-        public MemoryCache MemoryCache { get; set; }
+        private MemoryCache MemoryCache { get; set; }
 
         public HidroMemoryCache() {
             MemoryCache = new MemoryCache(new MemoryCacheOptions {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using HelperLibrary;
 using HelperLibrary.Common;
@@ -14,8 +13,6 @@ using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
@@ -24,7 +21,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("authentication")]
-    public class AuthenticationController : ControllerBase {
+    public class AuthenticationController : AppController {
 
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -36,11 +33,6 @@ namespace Hidrogen.Controllers {
         private readonly IGoogleReCaptchaService _googleReCaptchaService;
         private readonly ITraderService _traderService;
 
-        private readonly IMemoryCache _memoryCache;
-        private readonly IDistributedCache _redisCache;
-
-        private readonly string PROJECT_FOLDER = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + @"/Hidrogen/";
-
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
             IRuntimeLogService runtimeLogger,
@@ -50,9 +42,7 @@ namespace Hidrogen.Controllers {
             IRoleClaimerService roleClaimer,
             IEmailSenderService emailService,
             IGoogleReCaptchaService googleReCaptchaService,
-            ITraderService traderService,
-            IMemoryCache memoryCache,
-            IDistributedCache redisCache
+            ITraderService traderService
         ) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
@@ -63,8 +53,6 @@ namespace Hidrogen.Controllers {
             _emailService = emailService;
             _googleReCaptchaService = googleReCaptchaService;
             _traderService = traderService;
-            _memoryCache = memoryCache;
-            _redisCache = redisCache;
         }
 
         public static JsonResult FilterResult(FILTER_RESULT result) {
@@ -174,9 +162,9 @@ namespace Hidrogen.Controllers {
             if (!userNameAvailable.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The username you have entered has been taken by a Hidrogenian." });
 
-            var (key, value) = _authService.GenerateHashedPasswordAndSalt(registration.Password);
-            registration.Password = key;
-            registration.PasswordConfirm = value;
+            var (hashedPassword, salt) = _authService.GenerateHashedPasswordAndSalt(registration.Password);
+            registration.Password = hashedPassword;
+            registration.PasswordConfirm = salt;
 
             var hidrogenian = await _userService.InsertNewHidrogenian(registration);
             if (hidrogenian == null)
@@ -197,10 +185,7 @@ namespace Hidrogen.Controllers {
                 };
 
                 if (await _profileService.InsertProfileForNewlyCreatedHidrogenian(profile)) {
-                    string emailTemplate;
-                    using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
-                        emailTemplate = await reader.ReadToEndAsync();
-                    }
+                    var emailTemplate = await ParseEmailTemplateFromFileWithName("AccountActivation.html");
 
                     emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
                     emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
@@ -244,24 +229,21 @@ namespace Hidrogen.Controllers {
             if (!verification.Result)
                 return new JsonResult(verification);
 
-            var (key, value) = await _authService.ActivateHidrogenianAccount(activator);
+            var (accountFound, activationResult) = await _authService.ActivateHidrogenianAccount(activator);
 
-            if (!key)
+            if (!accountFound)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the activation data." });
 
-            if (value == null)
+            if (activationResult == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
-            if (!value.Value)
+            if (!activationResult.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
 
             var user = await _userService.GetHidrogenianByEmail(activator.Email);
             await _traderService.CreateInitialTraderAccount(user.Id);
 
-            string emailTemplate;
-            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivationConfirmation.html")) {
-                emailTemplate = await reader.ReadToEndAsync();
-            }
+            var emailTemplate = await ParseEmailTemplateFromFileWithName("AccountActivationConfirmation.html");
 
             emailTemplate = emailTemplate.Replace("[HidrogenianName]", user.FullName);
             var activationConfirmEmail = new EmailParamVM {
@@ -293,25 +275,22 @@ namespace Hidrogen.Controllers {
             if (!verification.Result)
                 return new JsonResult(verification);
 
-            var result = await _authService.SetTempPasswordAndRecoveryToken(recoveree);
+            var (tempPassword, recoveryToken) = await _authService.SetTempPasswordAndRecoveryToken(recoveree);
 
-            if (result.Key == null)
+            if (tempPassword == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
 
-            if (string.IsNullOrEmpty(result.Key))
+            if (string.IsNullOrEmpty(tempPassword))
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
-            string emailTemplate;
-            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordReset.html")) {
-                emailTemplate = await reader.ReadToEndAsync();
-            }
+            var emailTemplate = await ParseEmailTemplateFromFileWithName("PasswordReset.html");
 
             var fullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
 
             emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
             emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", recoveree.Email);
-            emailTemplate = emailTemplate.Replace("[INITIAL-PW]", result.Key);
-            emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", result.Value);
+            emailTemplate = emailTemplate.Replace("[INITIAL-PW]", tempPassword);
+            emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", recoveryToken);
 
             var recoverPasswordEmail = new EmailParamVM {
                 ReceiverName = fullName,
@@ -351,10 +330,7 @@ namespace Hidrogen.Controllers {
             if (!await _userService.SetAccountConfirmationToken(hidrogenian))
                 return new JsonResult(new {Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR});
             
-            string emailTemplate;
-            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/AccountActivation.html")) {
-                emailTemplate = await reader.ReadToEndAsync();
-            }
+            var emailTemplate = await ParseEmailTemplateFromFileWithName("AccountActivation.html");
 
             emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
             emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
@@ -414,10 +390,7 @@ namespace Hidrogen.Controllers {
             if (!result.Value.Value.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
-            string emailTemplate;
-            using (var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/PasswordResetConfirmation.html")) {
-                emailTemplate = await reader.ReadToEndAsync();
-            }
+            var emailTemplate = await ParseEmailTemplateFromFileWithName("PasswordResetConfirmation.html");
 
             var fullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
             emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
@@ -462,26 +435,16 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = message });
             }
 
-            var (key, value) = await _authService.AuthenticateHidrogenian(auth);
-            if (!key)
+            var (accountFound, authenticatedUser) = await _authService.AuthenticateHidrogenian(auth);
+            if (!accountFound)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address." });
 
-            if (value == null)
+            if (authenticatedUser == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Cannot find any Hidrogenian with the login credentials." });
 
-            await SetUserSessionAndCookie(value, auth.TrustedAuth);
-            /*await _redisCache.SetAsync(
-                nameof(AuthenticatedUser),
-                HelperProvider.EncodeDataForCache(value),
-                new DistributedCacheEntryOptions {
-                    SlidingExpiration = TimeSpan.FromSeconds(HidroConstants.CACHE_SLIDING_EXPIRATION_TIME),
-                    AbsoluteExpiration = DateTimeOffset.UtcNow.AddSeconds(HidroConstants.CACHE_ABSOLUTE_EXPIRATION_TIME)
-                });*/
-
-            //var test = HelperProvider.DecodeCachedData<AuthenticatedUser>(await _redisCache.GetAsync(nameof(AuthenticatedUser)));
-            
-            if (await SetUserAuthorizationPolicy(value.UserId))
-                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = value });
+            await SetUserSessionAndCookie(authenticatedUser, auth.TrustedAuth);
+            if (await SetUserAuthorizationPolicy(authenticatedUser.UserId)) 
+                return new JsonResult(new {Result = RESULTS.SUCCESS, Message = authenticatedUser});
 
             return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try again." });
         }
@@ -503,12 +466,13 @@ namespace Hidrogen.Controllers {
             
             HttpContext.Session.Clear();
 
-            var (key, value) = await _authService.AuthenticateWithCookie(cookie);
-            if (!key) return new JsonResult(new { Result = RESULTS.FAILED });
+            var (accountFound, authenticatedUser) = await _authService.AuthenticateWithCookie(cookie);
+            if (!accountFound) return new JsonResult(new { Result = RESULTS.FAILED });
 
-            await SetUserSessionAndCookie(value, cookie.TrustedAuth == "True");
-            if (await SetUserAuthorizationPolicy(value.UserId))
-                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = value });
+            await SetUserSessionAndCookie(authenticatedUser, cookie.TrustedAuth == "True");
+            
+            if (await SetUserAuthorizationPolicy(authenticatedUser.UserId))
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = authenticatedUser });
 
             return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while sign into your account. Please try to manually login." });
         }

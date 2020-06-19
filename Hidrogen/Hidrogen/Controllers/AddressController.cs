@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using HelperLibrary;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Address;
@@ -10,6 +9,7 @@ using Hidrogen.ViewModels.Address.Generic;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
@@ -18,7 +18,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("address")]
-    public class AddressController {
+    public class AddressController : AppController {
         
         private readonly ILogger<AddressController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -27,8 +27,9 @@ namespace Hidrogen.Controllers {
         public AddressController(
             ILogger<AddressController> logger,
             IRuntimeLogService runtimeLogger,
-            IHidroAddressService addressService
-        ) {
+            IHidroAddressService addressService,
+            IDistributedCache redisCache
+        ) : base(redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _addressService = addressService;
@@ -47,10 +48,15 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var addressList = await _addressService.RetrieveAddressesForHidrogenian(hidrogenianId);
+            var addressList = await ReadFromRedisCacheAsync<List<IGenericAddressVM>>("Profile_AddressList");
+            if (addressList != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
 
-            return addressList == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while retrieving data for location list. Please reload page to try again." })
-                                       : new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
+            addressList = await _addressService.RetrieveAddressesForHidrogenian(hidrogenianId);
+            if (addressList == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "An error occurred while retrieving data for location list. Please reload page to try again."});
+
+            await InsertRedisCacheEntryAsync("Profile_AddressList", addressList);
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
         }
 
         [HttpPost("add-address")]
@@ -79,9 +85,11 @@ namespace Hidrogen.Controllers {
             }
 
             var rawAddress = await _addressService.InsertRawAddressFor(binder.HidrogenianId, address);
-
-            return rawAddress == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while saving your address. Please try again." })
-                                      : new JsonResult(new { Result = RESULTS.SUCCESS, Message = rawAddress });
+            if (rawAddress == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "An error occurred while saving your address. Please try again."});
+            
+            await RemoveRedisCacheEntryAsync("Profile_AddressList");
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = rawAddress });
         }
 
         [HttpDelete("remove-address/{addressId}")]
@@ -100,9 +108,10 @@ namespace Hidrogen.Controllers {
             var result = await _addressService.RemoveHidroAddress(addressId);
             if (!result.HasValue) return new JsonResult(new { Result = RESULTS.FAILED, Message = "No address found with the given data. Please try again." });
             if (!result.Value.Key) return new JsonResult(new { Result = RESULTS.FAILED, Message = "The address is currently set as either Primary or Delivery. Deletion cancelled." });
-
-            return !result.Value.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to delete the address. Please try again." })
-                                       : new JsonResult(new { Result = RESULTS.SUCCESS });
+            if (!result.Value.Value) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Error occurred while attempting to delete the address. Please try again."});
+            
+            await RemoveRedisCacheEntryAsync("Profile_AddressList");
+            return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
         [HttpPost("update-address")]
@@ -131,16 +140,19 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = messages });
             }
 
-            var updateResult = await _addressService.UpdateHidroAddress(address);
+            var (updatedSuccess, newAddress) = await _addressService.UpdateHidroAddress(address);
 
-            if (!updateResult.Key.HasValue)
+            if (!updatedSuccess.HasValue)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No address found with the given data. Please try again." });
 
-            if (!updateResult.Key.Value)
+            if (!updatedSuccess.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while attempting to update the address details. Please try again." });
 
-            return updateResult.Value == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try again." })
-                                              : new JsonResult(new { Result = RESULTS.SUCCESS, Message = updateResult.Value });
+            if (newAddress == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "Error occurred while saving your new address details. Please try again."});
+            
+            await RemoveRedisCacheEntryAsync("Profile_AddressList");
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = newAddress });
         }
         
         [HttpPost("set-address-field")]
@@ -157,10 +169,11 @@ namespace Hidrogen.Controllers {
             });
 
             var result = await _addressService.SetFieldDataForAddress(data);
+            if (!result.HasValue) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to find the address with given data. Please check again."});
+            if (!result.Value) return new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update the address. Please try again." });
             
-            return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find the address with given data. Please check again." })
-                                    : (result.Value ? new JsonResult(new { Result = RESULTS.SUCCESS })
-                                                    : new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update the address. Please try again." }));
+            await RemoveRedisCacheEntryAsync("Profile_AddressList");
+            return new JsonResult(new {Result = RESULTS.SUCCESS});
         }
 
         private List<int> VerifyAddress(IGenericAddressVM address) {

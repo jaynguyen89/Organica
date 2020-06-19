@@ -28,14 +28,14 @@ namespace HelperLibrary.Common {
         public const string MAIL_SENDER_ADDRESS = "nguyen.le.kim.phuc@gmail.com";
         public const string MAIL_SENDER_NAME = "Hidrogen";
 
-        public const int CACHE_SLIDING_EXPIRATION_TIME = 600;
-        public const int CACHE_ABSOLUTE_EXPIRATION_TIME = 3600;
+        public const int CACHE_SLIDING_EXPIRATION_TIME = 3; //days
+        public const int CACHE_ABSOLUTE_EXPIRATION_TIME = 30; //days
 
         private static readonly List<string> ROLES = new List<string> {
             "customer", "supporter", "moderator", "administrator"
         };
 
-        public static int GetRoleHierrachy(string role) {
+        public static int GetRoleHierarchy(string role) {
             return ROLES.IndexOf(role);
         }
 
@@ -63,6 +63,16 @@ namespace HelperLibrary.Common {
             { "delete_others", "AllowDeleteOthers" },
             { "revive_own", "AllowReviveOwn" },
             { "revive_others", "AllowReviveOthers" }
+        };
+        
+        public static Dictionary<string, string> CACHE_ENTRY_KEYS = new Dictionary<string, string> {
+            { "Profile_AddressList", "Profile_AddressList" },
+            { "Account_IdentityDetail", "Account_IdentityDetail" },
+            { "Account_2FAData", "Account_2FAData" },
+            { "Account_TimeStamps", "Account_TimeStamps" },
+            { "Country_CompactList", "Country_CompactList" },
+            { "Account_PaymentDetails", "Account_PaymentDetails" },
+            { "Profile_AvatarInfo", "Profile_AvatarInfo" }
         };
     }
 }

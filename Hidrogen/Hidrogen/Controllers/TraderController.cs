@@ -1,11 +1,11 @@
 ﻿using Hidrogen.Services.Interfaces;
 using MethaneLibrary.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using WaterLibrary.Interfaces;
 
 namespace Hidrogen.Controllers {
     
-    public class TraderController {
+    public class TraderController : AppController {
         
         private readonly ILogger<TraderController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -14,8 +14,9 @@ namespace Hidrogen.Controllers {
         public TraderController(
             ILogger<TraderController> logger,
             IRuntimeLogService runtimeLogger,
-            ITraderService traderService
-        ) {
+            ITraderService traderService,
+            IDistributedCache redisCache
+        ) : base(redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _traderService = traderService;

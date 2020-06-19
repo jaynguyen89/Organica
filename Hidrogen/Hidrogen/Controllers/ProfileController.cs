@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using HelperLibrary;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using WaterLibrary.Interfaces;
@@ -18,7 +18,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("profile")]
-    public class ProfileController {
+    public class ProfileController : AppController {
         
         private readonly ILogger<ProfileController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -29,8 +29,9 @@ namespace Hidrogen.Controllers {
             ILogger<ProfileController> logger,
             IRuntimeLogService runtimeLogger,
             IWaterService waterService,
-            IHidroProfileService profileService
-        ) {
+            IHidroProfileService profileService,
+            IDistributedCache redisCache
+        ) : base(redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _waterService = waterService;
@@ -74,10 +75,14 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var profile = await _profileService.GetPublicProfileFor(hidrogenianId);
+            var profile = await ReadFromRedisCacheAsync<HidroProfileVM>("Profile_PrivateProfile");
+            if (profile != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = profile });
 
-            return profile == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to retrieve profile information at the moment. Please try again." })
-                                   : new JsonResult(new { Result = RESULTS.SUCCESS, Message = profile });
+            profile = await _profileService.GetPublicProfileFor(hidrogenianId);
+            if (profile == null) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to retrieve profile information at the moment. Please try again."});
+
+            await InsertRedisCacheEntryAsync("Profile_PrivateProfile", profile);
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = profile });
         }
 
         [HttpPut("update-avatar")]
@@ -121,6 +126,8 @@ namespace Hidrogen.Controllers {
             if (result == null) return new JsonResult(new { Result = RESULTS.FAILED, Message = "No avatar found with the given profile data. Unable to remove." });
             if (result.Length == 0) return new JsonResult(new { Result = RESULTS.FAILED, Message = "Error happened while removing your avatar. Please try again." });
 
+            await RemoveRedisCacheEntryAsync("Profile_AvatarInfo");
+            
             var avatar = JsonConvert.DeserializeObject<AvatarVM>(result);
             var deleted = await _waterService.SendDeleteAvatarRequestToWater(apikey, avatar.Name);
 
@@ -150,11 +157,11 @@ namespace Hidrogen.Controllers {
             }
 
             var result = await _profileService.UpdatePrivateProfile(profile);
+            if (!result.HasValue) return new JsonResult(new {Result = RESULTS.FAILED, Message = "No profile found with the given data. Unable to update."});
+            if (!result.Value) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Error happened while updating your profile. Please try again."});
 
-            return !result.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "No profile found with the given data. Unable to update." }) : (
-                result.Value ? new JsonResult(new { Result = RESULTS.SUCCESS })
-                             : new JsonResult(new { Result = RESULTS.FAILED, Message = "Error happened while updating your profile. Please try again." })
-            );
+            await RemoveRedisCacheEntryAsync("Profile_PrivateProfile");
+            return new JsonResult(new {Result = RESULTS.SUCCESS});
         }
 
         private async Task<JsonResult> UpdateHidrogenianAvatarInternally(int hidrogenianId, string apiKey, ResultVM avatarResult) {
@@ -173,16 +180,17 @@ namespace Hidrogen.Controllers {
             };
 
             var result = await _profileService.UpdateHidrogenianAvatar(profile);
-            if (!result.HasValue || !result.Value) {
-                var deleted = await _waterService.SendDeleteAvatarRequestToWater(apiKey, avatar.Name);
-
-                if (deleted == null) return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Please reload page and try again." });
-
-                return !deleted.Error ? new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Changes have been reverted. Please try again." })
-                                      : new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Please try again" });
+            if (result.HasValue && result.Value) {
+                await RemoveRedisCacheEntryAsync("Profile_PrivateProfile");
+                return new JsonResult(new {Result = RESULTS.SUCCESS, Message = avatar.Name});
             }
+            
+            var deleted = await _waterService.SendDeleteAvatarRequestToWater(apiKey, avatar.Name);
+            if (deleted == null) return new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Please reload page and try again." });
 
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = avatar.Name });
+            return !deleted.Error ? new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Changes have been reverted. Please try again." })
+                                  : new JsonResult(new { Result = RESULTS.INTERRUPTED, Message = "Your avatar was uploaded, however, an error occurred while we update your profile. Please try again" });
+
         }
 
         private List<int> VerifyProfileData(HidroProfileVM profile) {

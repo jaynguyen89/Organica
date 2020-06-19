@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using HelperLibrary;
 using Hidrogen.Attributes;
-using Hidrogen.Services;
 using Hidrogen.Services.Interfaces;
 using Hidrogen.ViewModels.Payment;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static HelperLibrary.HidroEnums;
@@ -15,7 +15,7 @@ namespace Hidrogen.Controllers {
 
     [ApiController]
     [Route("payment")]
-    public class PaymentController {
+    public class PaymentController : AppController {
         
         private readonly ILogger<PaymentController> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -24,8 +24,9 @@ namespace Hidrogen.Controllers {
         public PaymentController(
             ILogger<PaymentController> logger,
             IRuntimeLogService runtimeLogger,
-            IPaymentService paymentService
-        ) {
+            IPaymentService paymentService,
+            IDistributedCache redisCache
+        ) : base(redisCache) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _paymentService = paymentService;
@@ -43,11 +44,13 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var details = await _paymentService.RetrievePaymentMethodsFor(hidrogenianId);
-            if (details != null) return new JsonResult(new {Result = RESULTS.SUCCESS, Message = details});
+            var paymentDetails = await ReadFromRedisCacheAsync<PaymentDetailVM>("Account_PaymentDetails");
+            if (paymentDetails != null) return new JsonResult(new {Result = RESULTS.SUCCESS, Message = paymentDetails});
 
-            details = new PaymentDetailVM { HidrogenianId = hidrogenianId };
-            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = details });
+            paymentDetails = await _paymentService.RetrievePaymentMethodsFor(hidrogenianId) ?? new PaymentDetailVM { HidrogenianId = hidrogenianId };
+
+            await InsertRedisCacheEntryAsync("Account_PaymentDetails", paymentDetails);
+            return new JsonResult(new {Result = RESULTS.SUCCESS, Message = paymentDetails});
         }
 
         [HttpPut("update-payment-details")]
@@ -70,11 +73,14 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var (key, value) = await _paymentService.UpdatePaymentMethods(paymentDetail);
+            var (paymentMethodFound, updatedResult) = await _paymentService.UpdatePaymentMethods(paymentDetail);
+            if (!paymentMethodFound)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account."});
+            if (updatedResult == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your Payment Method. Please try again."});
 
-            return !key ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
-                                     : (value == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to update your Payment Method. Please try again." })
-                                                                   : new JsonResult(new { Result = RESULTS.SUCCESS, Message = value }));
+            await RemoveRedisCacheEntryAsync("Account_PaymentDetails");
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = updatedResult });
         }
 
         [HttpGet("add-payment-details")]
@@ -98,9 +104,11 @@ namespace Hidrogen.Controllers {
             });
 
             var newPaymentMethod = await _paymentService.InsertNewPaymentMethod(paymentDetail);
-
-            return newPaymentMethod == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while saving your new Payment Method. Please try again." })
-                                            : new JsonResult(new { Result = RESULTS.SUCCESS, Message = newPaymentMethod });
+            if (newPaymentMethod == null)
+                return new JsonResult(new {Result = RESULTS.FAILED, Message = "An error occurred while saving your new Payment Method. Please try again."});
+            
+            await RemoveRedisCacheEntryAsync("Account_PaymentDetails");
+            return new JsonResult(new { Result = RESULTS.SUCCESS, Message = newPaymentMethod });
         }
 
         [HttpDelete("remove-payment-details/{deletedMethod?}")]
@@ -117,10 +125,11 @@ namespace Hidrogen.Controllers {
             });
 
             var removed = await _paymentService.DeletePaymentMethodFor(hidrogenianId, deletedMethod);
-
-            return !removed.HasValue ? new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account." })
-                                     : (!removed.Value ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to remove your Payment Method. Please try again." })
-                                                      : new JsonResult(new { Result = RESULTS.SUCCESS }));
+            if (!removed.HasValue) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to find a Payment Method associated with your account."});
+            if (!removed.Value) return new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while attempting to remove your Payment Method. Please try again." });
+            
+            await RemoveRedisCacheEntryAsync("Account_PaymentDetails");
+            return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
 
         public async Task<JsonResult> AddBalanceToAccount(PaymentDetailVM paymentDetail) {
@@ -135,9 +144,10 @@ namespace Hidrogen.Controllers {
             });
 
             var added = await _paymentService.AddBalanceToAccount(paymentDetail);
-
-            return added == null ? new JsonResult(new { Result = RESULTS.FAILED, Message = "An error occurred while saving your account balance. Please try again." })
-                                 : new JsonResult(new { Result = RESULTS.SUCCESS });
+            if (added == null) return new JsonResult(new {Result = RESULTS.FAILED, Message = "An error occurred while saving your account balance. Please try again."});
+            
+            await RemoveRedisCacheEntryAsync("Account_PaymentDetails");
+            return new JsonResult(new { Result = RESULTS.SUCCESS });
         }
     }
 }
