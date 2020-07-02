@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using BCrypt;
 using HelperLibrary;
 using HelperLibrary.Common;
-using Hidrogen.Controllers;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
@@ -13,13 +12,15 @@ using Hidrogen.ViewModels.Authentication;
 using Hidrogen.ViewModels.Authorization;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Hidrogen.Services.DatabaseServices {
 
-    public class AuthenticationService : IAuthenticationService {
+    public class AuthenticationService : HidroServiceBase, IAuthenticationService {
 
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -28,8 +29,10 @@ namespace Hidrogen.Services.DatabaseServices {
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
             IRuntimeLogService runtimeLogger,
-            HidrogenDbContext dbContext
-        ) {
+            HidrogenDbContext dbContext,
+            IMemoryCache memoryCache,
+            IHttpContextAccessor httpContextAccessor
+        ) : base(memoryCache, httpContextAccessor) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _dbContext = dbContext;
@@ -45,9 +48,10 @@ namespace Hidrogen.Services.DatabaseServices {
                 Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
             });
 
-            var dbHidrogenian = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
-                h => h.Email == activator.Email && !h.EmailConfirmed && h.DeactivatedOn == null
-            );
+            var dbHidrogenian = ReadFromMemoryCache<Hidrogenian>("HidrogenianService_UnactivatedUser", activator.Email) ??
+                                await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                                    h => h.Email == activator.Email && !h.EmailConfirmed && h.DeactivatedOn == null
+                                );
 
             if (dbHidrogenian == null) return new KeyValuePair<bool, bool?>(false, null);
 
@@ -73,6 +77,7 @@ namespace Hidrogen.Services.DatabaseServices {
                     return new KeyValuePair<bool, bool?>(true, null);
                 }
 
+                //RemoveMemoryCacheEntry("HidrogenianService_UnactivatedUser", dbHidrogenian.Email);
                 return new KeyValuePair<bool, bool?>(true, true);
             }
 

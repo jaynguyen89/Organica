@@ -144,6 +144,7 @@
             <e p="RoleClaimerService.cs" t="Include" />
             <e p="TraderService.cs" t="Include" />
           </e>
+          <e p="HidroServiceBase.cs" t="Include" />
           <e p="Interfaces" t="Include">
             <e p="IAccountService.cs" t="Include" />
             <e p="IAuthenticationService.cs" t="Include" />

@@ -229,6 +229,14 @@ namespace Hidrogen.Controllers {
             if (!verification.Result)
                 return new JsonResult(verification);
 
+            var userAccount = await _userService.GetUnactivatedHidrogenianByEmail(activator.Email);
+            if (userAccount == null)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Unable to find a Hidrogenian account that matches your request." });
+            
+            var traderAccountCreated = await _traderService.CreateInitialTraderAccountIfNecessary(userAccount.Id);
+            if (!traderAccountCreated)
+                return new JsonResult(new { Result = RESULTS.FAILED, Message = "Failed to initialize your account for first use. Please try later to activate account again." });
+
             var (accountFound, activationResult) = await _authService.ActivateHidrogenianAccount(activator);
 
             if (!accountFound)
@@ -240,14 +248,12 @@ namespace Hidrogen.Controllers {
             if (!activationResult.Value)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "The activation data have been no longer valid. Please request another activation email." });
 
-            var user = await _userService.GetHidrogenianByEmail(activator.Email);
-            await _traderService.CreateInitialTraderAccount(user.Id);
-
+            var profile = await _profileService.GetPrivateProfileFor(userAccount.Id);
             var emailTemplate = await ParseEmailTemplateFromFileWithName("AccountActivationConfirmation.html");
 
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", user.FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
             var activationConfirmEmail = new EmailParamVM {
-                ReceiverName = user.FullName,
+                ReceiverName = profile.FullName,
                 ReceiverAddress = activator.Email,
                 Subject = "Hidrogen - Account Activated",
                 Body = emailTemplate
@@ -284,16 +290,15 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
             var emailTemplate = await ParseEmailTemplateFromFileWithName("PasswordReset.html");
+            var profile = await _profileService.GetPrivateProfileByEmail(recoveree.Email);
 
-            var fullName = (await _userService.GetHidrogenianByEmail(recoveree.Email)).FullName;
-
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
             emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", recoveree.Email);
             emailTemplate = emailTemplate.Replace("[INITIAL-PW]", tempPassword);
             emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", recoveryToken);
 
             var recoverPasswordEmail = new EmailParamVM {
-                ReceiverName = fullName,
+                ReceiverName = profile.FullName,
                 ReceiverAddress = recoveree.Email,
                 Subject = "Hidrogen - Reset your password",
                 Body = emailTemplate
@@ -321,7 +326,7 @@ namespace Hidrogen.Controllers {
             if (!verification.Result)
                 return new JsonResult(verification);
 
-            var hidrogenian = await _userService.GetUnactivatedHidrogenianByEmail(request.Email);
+            var hidrogenian = await _userService.GetUnactivatedHidrogenianVMByEmail(request.Email);
             if (hidrogenian == null)
                 return new JsonResult(new { Result = RESULTS.FAILED, Message = "No Hidrogenian account matches the provided email address. Otherwise, if you have an Account Activation email that has not expired, please follow instruction in the email." });
 
@@ -329,15 +334,16 @@ namespace Hidrogen.Controllers {
 
             if (!await _userService.SetAccountConfirmationToken(hidrogenian))
                 return new JsonResult(new {Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR});
-            
+
+            var profile = await _profileService.GetPrivateProfileFor(hidrogenian.Id);
             var emailTemplate = await ParseEmailTemplateFromFileWithName("AccountActivation.html");
 
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", hidrogenian.FullName);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
             emailTemplate = emailTemplate.Replace("[HidrogenianEmail]", hidrogenian.Email);
             emailTemplate = emailTemplate.Replace("[CONFIRM-TOKEN]", hidrogenian.Token);
 
             var accountActivationEmail = new EmailParamVM {
-                ReceiverName = hidrogenian.FullName,
+                ReceiverName = profile.FullName,
                 ReceiverAddress = hidrogenian.Email,
                 Subject = "Hidrogen - Activate your account",
                 Body = emailTemplate
@@ -391,12 +397,12 @@ namespace Hidrogen.Controllers {
                 return new JsonResult(new { Result = RESULTS.FAILED, Error = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR });
 
             var emailTemplate = await ParseEmailTemplateFromFileWithName("PasswordResetConfirmation.html");
-
-            var fullName = (await _userService.GetHidrogenianByEmail(recovery.Email)).FullName;
-            emailTemplate = emailTemplate.Replace("[HidrogenianName]", fullName);
+            
+            var profile = await _profileService.GetPrivateProfileByEmail(recovery.Email);
+            emailTemplate = emailTemplate.Replace("[HidrogenianName]", profile.FullName);
 
             var accountActivationEmail = new EmailParamVM {
-                ReceiverName = fullName,
+                ReceiverName = profile.FullName,
                 ReceiverAddress = recovery.Email,
                 Subject = "Hidrogen - New password has set",
                 Body = emailTemplate

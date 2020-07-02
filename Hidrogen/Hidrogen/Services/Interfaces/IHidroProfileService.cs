@@ -13,7 +13,12 @@ namespace Hidrogen.Services.Interfaces {
         /// <summary>
         /// Returns null indicating profile not found with the given hidrogenian ID, otherwise, returns the profile. 
         /// </summary>
-        Task<HidroProfileVM> GetPublicProfileFor(int hidrogenianId);
+        Task<HidroProfileVM> GetPrivateProfileFor(int hidrogenianId);
+        
+        /// <summary>
+        /// Returns null indicating profile not found with the given hidrogenian EMAIL, otherwise, returns the profile. 
+        /// </summary>
+        Task<HidroProfileVM> GetPrivateProfileByEmail(string email);
 
         /// <summary>
         /// Returns null indicating profile not found with the given data, returns true indicating successful update, otherwise returns false.

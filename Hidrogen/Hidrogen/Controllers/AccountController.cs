@@ -180,7 +180,7 @@ namespace Hidrogen.Controllers {
 
             if (!newIdentity.EmailConfirmed)
                 if (await _userService.SetAccountConfirmationToken(hidrogenian)) {
-                    var profile = await _profileService.GetPublicProfileFor(newIdentity.Id);
+                    var profile = await _profileService.GetPrivateProfileFor(newIdentity.Id);
 
                     var emailTemplate = await ParseEmailTemplateFromFileWithName("EmailChanged.html");
 

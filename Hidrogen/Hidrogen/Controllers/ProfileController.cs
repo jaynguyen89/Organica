@@ -78,7 +78,7 @@ namespace Hidrogen.Controllers {
             var profile = await ReadFromRedisCacheAsync<HidroProfileVM>("Profile_PrivateProfile");
             if (profile != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = profile });
 
-            profile = await _profileService.GetPublicProfileFor(hidrogenianId);
+            profile = await _profileService.GetPrivateProfileFor(hidrogenianId);
             if (profile == null) return new JsonResult(new {Result = RESULTS.FAILED, Message = "Unable to retrieve profile information at the moment. Please try again."});
 
             await InsertRedisCacheEntryAsync("Profile_PrivateProfile", profile);

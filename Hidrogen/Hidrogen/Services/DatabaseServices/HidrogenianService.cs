@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using HelperLibrary;
-using Hidrogen.Controllers;
 using Hidrogen.DbContexts;
 using Hidrogen.Models;
 using Hidrogen.Services.Interfaces;
@@ -9,12 +8,14 @@ using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
 using MethaneLibrary.Interfaces;
 using MethaneLibrary.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Hidrogen.Services.DatabaseServices {
 
-    public class HidrogenianService : IHidrogenianService {
+    public class HidrogenianService : HidroServiceBase, IHidrogenianService  {
 
         private readonly ILogger<HidrogenianService> _logger;
         private readonly IRuntimeLogService _runtimeLogger;
@@ -23,8 +24,10 @@ namespace Hidrogen.Services.DatabaseServices {
         public HidrogenianService(
             ILogger<HidrogenianService> logger,
             IRuntimeLogService runtimeLogger,
-            HidrogenDbContext dbContext
-        ) {
+            HidrogenDbContext dbContext,
+            IMemoryCache memoryCache,
+            IHttpContextAccessor httpContextAccessor
+        ) : base(memoryCache, httpContextAccessor) {
             _logger = logger;
             _runtimeLogger = runtimeLogger;
             _dbContext = dbContext;
@@ -44,12 +47,35 @@ namespace Hidrogen.Services.DatabaseServices {
             );
         }
 
-        public async Task<HidrogenianVM> GetUnactivatedHidrogenianByEmail(string email) {
+        public async Task<Hidrogenian> GetUnactivatedHidrogenianByEmail(string email) {
             _logger.LogInformation("HidrogenianService.GetUnactivatedHidrogenianByEmail - Service starts.");
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(HidrogenianService),
                 Action = nameof(GetUnactivatedHidrogenianByEmail),
                 Briefing = "Query database to get an inactive Hidrogenian by email = " + email,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
+
+            var unactivatedUser = ReadFromMemoryCache<Hidrogenian>("HidrogenianService_UnactivatedUser", email);
+            if (unactivatedUser != null) return unactivatedUser;
+            
+            unactivatedUser = await _dbContext.Hidrogenian.FirstOrDefaultAsync(
+                h => h.Email == email && !h.EmailConfirmed && h.DeactivatedOn == null && h.RecoveryToken != null &&
+                     h.TokenSetOn != null && h.TokenSetOn.Value.AddHours(24) > DateTime.UtcNow
+            );
+            
+            if (unactivatedUser != null)
+                InsertMemoryCacheEntry("HidrogenianService_UnactivatedUser", unactivatedUser, typeof(Hidrogenian).GetProperties().Length, email);
+            
+            return unactivatedUser;
+        }
+
+        public async Task<HidrogenianVM> GetUnactivatedHidrogenianVMByEmail(string email) {
+            _logger.LogInformation("HidrogenianService.GetUnactivatedHidrogenianVMByEmail - Service starts.");
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidrogenianService),
+                Action = nameof(GetUnactivatedHidrogenianVMByEmail),
+                Briefing = "Query database to get an inactive HidrogenianVM by email = " + email,
                 Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
             });
             

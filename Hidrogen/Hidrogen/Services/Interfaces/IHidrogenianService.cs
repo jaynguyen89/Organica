@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Hidrogen.Models;
 using Hidrogen.ViewModels;
 using Hidrogen.ViewModels.Authentication;
 
@@ -29,7 +30,12 @@ namespace Hidrogen.Services.Interfaces {
         /// <summary>
         /// Returns null if no account satisfied conditions.
         /// </summary>
-        Task<HidrogenianVM> GetUnactivatedHidrogenianByEmail(string email);
+        Task<Hidrogenian> GetUnactivatedHidrogenianByEmail(string email);
+        
+        /// <summary>
+        /// Returns null if no account satisfied conditions.
+        /// </summary>
+        Task<HidrogenianVM> GetUnactivatedHidrogenianVMByEmail(string email);
 
         /// <summary>
         /// Returns null if no account found, returns false if database update failed, otherwise return true.

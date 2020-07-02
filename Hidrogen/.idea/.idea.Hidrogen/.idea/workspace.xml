@@ -83,15 +83,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/HidrogenianVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/TwoFaVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13DA8DF4-F4FB-4394-A581-F44A587913F7/43/ModelBinderAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/TimeStampVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountIdentityVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountSecurityVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/3B/Type.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/12/Array.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroAttributes.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/StandardLocationVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/AddressSetterVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalLocationVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/LocalAddressVM.cs" root0="FORCE_HIGHLIGHTING" />
@@ -100,9 +95,7 @@
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Address/Generic/IGenericAddressVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Payment/PaymentDetailVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authorization/HidroPermissionVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServerOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/RegistrationVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/AuthenticatedUser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/ViewModels/Authentication/CookieAuthenticationVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" root0="FORCE_HIGHLIGHTING" />
@@ -119,41 +112,43 @@
     <setting file="file://$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/PartialModels/RawLocation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/AccountLog.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/RuntimeLog.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/AccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/ApplicationServices/HidroMemoryCache.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/RuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/DbContext/MethaneDbContext.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IAccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IRuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ViewModels/RuntimeLogFilter.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/C33AFD71-6EE0-4892-B8AD-69B81D88AE1C/1E0/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/Country.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/FineLocation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Startup.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/WaterService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/DbContexts/WaterManualContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/Interfaces/IWaterService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AssetReplaceVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/AvatarResultVM.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Hidrogen/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9773C4FF-BEAA-45EF-B14E-C3B56EBA01BB/1/SqlServerCacheServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/WaterResultVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WaterLibrary/ViewModels/Generic/AssetFormVM.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/HelperProvider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Services/HidroServiceBase.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroAttributes.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServerOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/AccountLog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Models/RuntimeLog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/AccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Services/RuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/DbContext/MethaneDbContext.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IAccountLogService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/Interfaces/IRuntimeLogService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/MethaneLibrary/ViewModels/RuntimeLogFilter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/Country.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/FineLocation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Startup.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/Models/HidroProfile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Hidrogen/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroAddressService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13DA8DF4-F4FB-4394-A581-F44A587913F7/153/ControllerFactoryProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IAuthenticationService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ICountryService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/ServiceCollectionExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidrogenianService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/13DA8DF4-F4FB-4394-A581-F44A587913F7/FE/ControllerActionInvoker.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/HelperProvider.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IAccountService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/Interfaces/IPaymentService.cs" root0="FORCE_HIGHLIGHTING" />
@@ -169,7 +164,6 @@
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AccountService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroAuthorize.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Hidrogen/DbContexts/ManualDbContext.cs" root0="FORCE_HIGHLIGHTING" />
@@ -181,11 +175,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/MethaneLibrary/Interfaces/IErrorLogService.cs" />
-        <option value="$PROJECT_DIR$/WaterLibrary/Services/ErrorLogService.cs" />
-        <option value="$PROJECT_DIR$/MethaneLibrary/Services/ErrorLogService.cs" />
-        <option value="$PROJECT_DIR$/WaterLibrary/DbContexts/WaterManualContext.cs" />
-        <option value="$PROJECT_DIR$/MethaneLibrary/Services/ServiceCollectionExtension.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/ServerOptions.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Models/ErrorLog.cs" />
         <option value="$PROJECT_DIR$/MethaneLibrary/Models/AccountLog.cs" />
@@ -201,10 +190,7 @@
         <option value="$PROJECT_DIR$/Hidrogen/ViewModels/Account/AccountIdentityVM.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AccountService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/CountryService.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AuthenticationService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroAddressService.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidrogenianService.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroRoleService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/PaymentService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/RoleClaimerService.cs" />
@@ -214,8 +200,6 @@
         <option value="$PROJECT_DIR$/Hidrogen/Attributes/HidroAuthorize.cs" />
         <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroEnums.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Attributes/HidroActionFilter.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Services/ServiceCollectionExtension.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Startup.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/appsettings.json" />
@@ -224,14 +208,24 @@
         <option value="$PROJECT_DIR$/HelperLibrary/HelperProvider.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/CountryController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/AddressController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/TraderController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/ProfileController.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/PaymentController.cs" />
-        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" />
-        <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/WaterController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidrogenianService.cs" />
         <option value="$PROJECT_DIR$/Hidrogen/Controllers/AppController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/IHidroServiceBase.cs" />
+        <option value="$PROJECT_DIR$/HelperLibrary/Common/HidroConstants.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AccountController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/HidroServiceBase.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/ViewModels/HidrogenianVM.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidrogenianService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/ITraderService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/Interfaces/IHidroProfileService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/HidroProfileService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Controllers/AuthenticationController.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/TraderService.cs" />
+        <option value="$PROJECT_DIR$/Hidrogen/Services/DatabaseServices/AuthenticationService.cs" />
       </list>
     </option>
   </component>

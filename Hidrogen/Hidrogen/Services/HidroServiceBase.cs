@@ -1,39 +1,46 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using HelperLibrary;
 using HelperLibrary.Common;
 using Hidrogen.ViewModels.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Hidrogen.Controllers {
+namespace Hidrogen.Services {
     
-    public class AppController : ControllerBase {
+    public class HidroServiceBase {
         
         private readonly IMemoryCache _memoryCache;
         private readonly IDistributedCache _redisCache;
-        
-        private readonly string PROJECT_FOLDER = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + @"/Hidrogen/";
+        private readonly HttpContext _httpContext;
 
-        public AppController() { }
+        protected HidroServiceBase() { }
 
-        public AppController(IDistributedCache redisCache) {
+        protected HidroServiceBase(
+            IDistributedCache redisCache,
+            IHttpContextAccessor httpContextAccessor
+        ) {
             _redisCache = redisCache;
+            _httpContext = httpContextAccessor.HttpContext;
         }
 
-        public AppController(IMemoryCache memoryCache) {
-            _memoryCache = memoryCache;
-        }
-
-        public AppController(
+        protected HidroServiceBase(
             IMemoryCache memoryCache,
-            IDistributedCache redisCache
+            IHttpContextAccessor httpContextAccessor
         ) {
             _memoryCache = memoryCache;
+            _httpContext = httpContextAccessor.HttpContext;
+        }
+
+        protected HidroServiceBase(
+            IDistributedCache redisCache,
+            IMemoryCache memoryCache,
+            IHttpContextAccessor httpContextAccessor
+        ) {
             _redisCache = redisCache;
+            _memoryCache = memoryCache;
+            _httpContext = httpContextAccessor.HttpContext;
         }
         
         /// <summary>
@@ -41,7 +48,7 @@ namespace Hidrogen.Controllers {
         /// and `isCommon` == false indicating cache entry is associated with the current user id.
         /// </summary>
         protected async Task InsertRedisCacheEntryAsync(string entryKey, object data, bool isCommon = false) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+            var hidrogenianId = _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
             
             await _redisCache.SetAsync(
                 isCommon ?
@@ -59,7 +66,7 @@ namespace Hidrogen.Controllers {
         /// and `isCommon` == false indicating cache entry is associated with the current user id.
         /// </summary>
         protected async Task<T> ReadFromRedisCacheAsync<T>(string entryKey, bool isCommon = false) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+            var hidrogenianId = _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
 
             var cachedData = await _redisCache.GetAsync(
                 isCommon ?
@@ -81,15 +88,18 @@ namespace Hidrogen.Controllers {
             string entryKey,
             object data,
             int size = 1,
+            string keySuffix = null,
             CacheItemPriority priority = CacheItemPriority.Normal,
             bool isCommon = false
         ) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+            var suffix = string.IsNullOrEmpty(keySuffix)
+                                ? _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId)).ToString()
+                                : keySuffix;
 
             _memoryCache.Set(
                 isCommon ?
                     HidroConstants.CACHE_ENTRY_KEYS[entryKey] :
-                    $"{HidroConstants.CACHE_ENTRY_KEYS[entryKey]}_{hidrogenianId}",
+                    $"{HidroConstants.CACHE_ENTRY_KEYS[entryKey]}_{suffix}",
                 data,
                 priority == CacheItemPriority.NeverRemove ?
                     new MemoryCacheEntryOptions {
@@ -109,13 +119,15 @@ namespace Hidrogen.Controllers {
         /// Read an entry from Memory cache with: `entryKey` declared in HidroConstants.CACHE_ENTRY_KEYS, 
         /// and `isCommon` == false indicating cache entry is associated with the current user id.
         /// </summary>
-        protected T ReadFromMemoryCache<T>(string entryKey, bool isCommon = false) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+        protected T ReadFromMemoryCache<T>(string entryKey, string keySuffix = null, bool isCommon = false) {
+            var suffix = string.IsNullOrEmpty(keySuffix)
+                                ? _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId)).ToString()
+                                : keySuffix;
 
             var data = _memoryCache.Get<T>(
                 isCommon ?
                 HidroConstants.CACHE_ENTRY_KEYS[entryKey] :
-                $"{HidroConstants.CACHE_ENTRY_KEYS[entryKey]}_{hidrogenianId}"
+                $"{HidroConstants.CACHE_ENTRY_KEYS[entryKey]}_{suffix}"
             );
 
             return data;
@@ -125,26 +137,19 @@ namespace Hidrogen.Controllers {
         /// Remove Redis cache entry by the entryKey specified.
         /// </summary>
         protected async Task RemoveRedisCacheEntryAsync(string entryKey) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+            var hidrogenianId = _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
             await _redisCache.RemoveAsync($"{entryKey}_{hidrogenianId}");
         }
         
         /// <summary>
         /// Remove cache entry from Memory by the entryKey specified.
         /// </summary>
-        protected void RemoveMemoryCacheEntry(string entryKey) {
-            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
-            _memoryCache.Remove($"{entryKey}_{hidrogenianId}");
-        }
-        
-        /// <summary>
-        /// Parse a file from HtmlTemplates folder to get its content as string.
-        /// </summary>
-        protected async Task<string> ParseEmailTemplateFromFileWithName(string fileName) {
-            using var reader = System.IO.File.OpenText(PROJECT_FOLDER + @"HtmlTemplates/" + fileName);
-            var emailTemplate = await reader.ReadToEndAsync();
-
-            return emailTemplate;
+        protected void RemoveMemoryCacheEntry(string entryKey, string keySuffix = null) {
+            var suffix = string.IsNullOrEmpty(keySuffix)
+                                ? _httpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId)).ToString()
+                                : keySuffix;
+            
+            _memoryCache.Remove($"{entryKey}_{suffix}");
         }
     }
 }

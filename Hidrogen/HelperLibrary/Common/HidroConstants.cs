@@ -6,6 +6,8 @@ namespace HelperLibrary.Common {
 
         public const string PROJECT_NAME = "HidrogenStore";
 
+        public const int EMAIL_VALIDITY_DURATION = 24; //hours
+
         public const int TRUSTED_AUTH_EXPIRATION_TIME = 6 * 60 * 60; // 6 hours
         public const int INTRUSTED_AUTH_EXPIRATION_TIME = 1 * 60 * 60; // 1 hour
 
@@ -72,7 +74,8 @@ namespace HelperLibrary.Common {
             { "Account_TimeStamps", "Account_TimeStamps" },
             { "Country_CompactList", "Country_CompactList" },
             { "Account_PaymentDetails", "Account_PaymentDetails" },
-            { "Profile_AvatarInfo", "Profile_AvatarInfo" }
+            { "Profile_AvatarInfo", "Profile_AvatarInfo" },
+            { "HidrogenianService_UnactivatedUser", "HidrogenianService_UnactivatedUser" }
         };
     }
 }

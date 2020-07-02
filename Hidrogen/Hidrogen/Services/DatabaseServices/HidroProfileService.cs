@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using HelperLibrary;
 using Hidrogen.Controllers;
@@ -31,7 +32,7 @@ namespace Hidrogen.Services.DatabaseServices {
         }
 
         public async Task<string> DeleteAvatarInformation(int hidrogenianId) {
-            _logger.LogInformation("HidroProfileService.GetPublicProfileFor - profileId=" + hidrogenianId);
+            _logger.LogInformation("HidroProfileService.GetPrivateProfileFor - profileId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(HidroProfileService),
                 Action = nameof(DeleteAvatarInformation),
@@ -49,7 +50,7 @@ namespace Hidrogen.Services.DatabaseServices {
             try {
                 await _dbContext.SaveChangesAsync();
             } catch (Exception e) {
-                _logger.LogError("HidroProfileService.GetPublicProfileFor - Error: " + e);
+                _logger.LogError("HidroProfileService.GetPrivateProfileFor - Error: " + e);
                 await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                     Controller = nameof(HidroProfileService),
                     Action = nameof(DeleteAvatarInformation),
@@ -63,17 +64,35 @@ namespace Hidrogen.Services.DatabaseServices {
             return avatarInfo;
         }
 
-        public async Task<HidroProfileVM> GetPublicProfileFor(int hidrogenianId) {
-            _logger.LogInformation("HidroProfileService.GetPublicProfileFor - hidrogenianId=" + hidrogenianId);
+        public async Task<HidroProfileVM> GetPrivateProfileFor(int hidrogenianId) {
+            _logger.LogInformation("HidroProfileService.GetPrivateProfileFor - hidrogenianId=" + hidrogenianId);
             await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
                 Controller = nameof(HidroProfileService),
-                Action = nameof(GetPublicProfileFor),
+                Action = nameof(GetPrivateProfileFor),
                 Briefing = "Query database to get public profile details having hidrogenianId = " + hidrogenianId,
                 Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
             });
 
             var dbProfile = await _dbContext.HidroProfile.FirstOrDefaultAsync(p => p.HidrogenianId == hidrogenianId);
-            return dbProfile ?? null;
+            return dbProfile;
+        }
+
+        public async Task<HidroProfileVM> GetPrivateProfileByEmail(string email) {
+            _logger.LogInformation("HidroProfileService.GetPrivateProfileFor - email=" + email);
+            await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {
+                Controller = nameof(HidroProfileService),
+                Action = nameof(GetPrivateProfileByEmail),
+                Briefing = "Query database to get public profile details having email = " + email,
+                Severity = HidroEnums.LOGGING.INFORMATION.GetValue()
+            });
+
+            var dbProfile = await (from p in _dbContext.HidroProfile
+                                   join h in _dbContext.Hidrogenian
+                                       on p.HidrogenianId equals h.Id
+                                   where h.Email == email
+                                       select p).FirstOrDefaultAsync();
+            
+            return dbProfile;
         }
 
         public async Task<bool> InsertProfileForNewlyCreatedHidrogenian(HidroProfileVM profile) {
