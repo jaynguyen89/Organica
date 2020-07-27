@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using HelperLibrary;
 using HelperLibrary.Common;
@@ -71,6 +72,18 @@ namespace Hidrogen.Controllers {
             
             var data = HelperProvider.DecodeCachedData<T>(cachedData);
             return data;
+        }
+
+        protected async Task<string> ReadRawRedisCacheEntry(string entryKey, bool isCommon = false) {
+            var hidrogenianId = HttpContext.Session.GetInt32(nameof(AuthenticatedUser.UserId));
+            
+            var cachedData = await _redisCache.GetAsync(
+                isCommon ?
+                    HidroConstants.CACHE_ENTRY_KEYS[entryKey] :
+                    $"{HidroConstants.CACHE_ENTRY_KEYS[entryKey]}_{hidrogenianId}"
+            );
+
+            return cachedData == null ? null : Encoding.UTF8.GetString(cachedData);
         }
 
         /// <summary>

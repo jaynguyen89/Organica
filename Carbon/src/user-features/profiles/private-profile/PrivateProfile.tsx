@@ -23,7 +23,7 @@ const PrivateProfile = (props: any) => {
                         <CarbonAvatar size='35px' />
                         &nbsp;&nbsp;Your Profile
                     </h5>
-                    <hr />
+                    
                     <div className='row'>
                         <BiographyPane />
                         <AddressPane />

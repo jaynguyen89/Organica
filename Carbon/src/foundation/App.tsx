@@ -12,6 +12,7 @@ import PasswordReset from '../account-claimation/password-recovery/PasswordReset
 import UserProfile from '../user-features/profiles/private-profile/PrivateProfile';
 import HidroAccount from '../user-features/account/HidroAccount';
 import MyPerformance from '../user-features/performance/MyPerformance';
+import CustomerHome from '../customer-home/CustomerHome';
 
 const App = () => {
     return (
@@ -30,6 +31,7 @@ const App = () => {
                     <Route path='/user-account' component={ HidroAccount } />
                     <Route path='/user-profile' component={ UserProfile } />
                     <Route path='/my-performance' component={ MyPerformance } />
+                    <Route path='/customer-home' component={ CustomerHome } />
                 </Switch>
             </BrowserRouter>
         </>

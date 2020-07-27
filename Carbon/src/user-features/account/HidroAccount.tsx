@@ -23,7 +23,7 @@ const HidroAccount = () => {
                         <CarbonAvatar size='35px' />
                         &nbsp;&nbsp;Your Account
                     </h5>
-                    <hr />
+                    
                     <div className='row'>
                         <AccountPane />
                         <PreferencePane />

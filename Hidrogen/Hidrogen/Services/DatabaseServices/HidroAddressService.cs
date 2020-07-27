@@ -122,11 +122,9 @@ namespace Hidrogen.Services.DatabaseServices {
                                                      .Where(ha => ha.HidrogenianId == hidrogenianId)
                                                      .Select(ha => ha).ToListAsync();
 
-                foreach (var address in hidroAddresses) {
-                    RawLocation rawLocation; FineLocation fineLocation;
-
+                foreach (var address in hidroAddresses)
                     if (address.IsRefined) {
-                        fineLocation = await _dbContext.FineLocation.FindAsync(address.LocationId.Value);
+                        var fineLocation = await _dbContext.FineLocation.FindAsync(address.LocationId.Value);
                         fineLocation.Country = await _dbContext.Country.FindAsync(fineLocation.CountryId);
 
                         if (fineLocation.IsStandard) {
@@ -143,7 +141,7 @@ namespace Hidrogen.Services.DatabaseServices {
                         }
                     }
                     else {
-                        rawLocation = await _dbContext.RawLocation.FindAsync(address.LocationId.Value);
+                        var rawLocation = await _dbContext.RawLocation.FindAsync(address.LocationId.Value);
                         rawLocation.Country = await _dbContext.Country.FindAsync(rawLocation.CountryId);
 
                         if (rawLocation.IsStandard) {
@@ -159,8 +157,6 @@ namespace Hidrogen.Services.DatabaseServices {
                             vmAddresses.Add(localRawLocation);
                         }
                     }
-
-                }
             } catch (Exception e) {
                 _logger.LogError("HidroAddressService.RetrieveAddressesForHidrogenian - Error: " + e);
                 await _runtimeLogger.InsertRuntimeLog(new RuntimeLog {

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using static HelperLibrary.HidroEnums;
 
 namespace Hidrogen.Controllers {
@@ -48,8 +49,29 @@ namespace Hidrogen.Controllers {
                 Severity = LOGGING.INFORMATION.GetValue()
             });
 
-            var addressList = await ReadFromRedisCacheAsync<List<IGenericAddressVM>>("Profile_AddressList");
-            if (addressList != null) return new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
+            var addressList = new List<IGenericAddressVM>();
+
+            var cachedAddresses = await ReadRawRedisCacheEntry("Profile_AddressList");
+            if (!string.IsNullOrEmpty(cachedAddresses)) {
+                var addressesArray = JArray.Parse(cachedAddresses);
+
+                foreach (var addressObject in addressesArray.Children<JObject>())
+                    foreach (var property in addressObject.Properties())
+                        switch (property.Name) {
+                            case nameof(IGenericAddressVM.IsStandard) when (bool) property.Value: {
+                                var address = JsonConvert.DeserializeObject<StandardAddressVM>(addressObject.ToString(Formatting.None));
+                                addressList.Add(address);
+                                break;
+                            }
+                            case nameof(IGenericAddressVM.IsStandard) when !((bool) property.Value): {
+                                var address = JsonConvert.DeserializeObject<LocalAddressVM>(addressObject.ToString(Formatting.None));
+                                addressList.Add(address);
+                                break;
+                            }
+                        }
+                
+                return new JsonResult(new { Result = RESULTS.SUCCESS, Message = addressList });
+            }
 
             addressList = await _addressService.RetrieveAddressesForHidrogenian(hidrogenianId);
             if (addressList == null)

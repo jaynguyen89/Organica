@@ -75,6 +75,7 @@ namespace HelperLibrary.Common {
             { "Country_CompactList", "Country_CompactList" },
             { "Account_PaymentDetails", "Account_PaymentDetails" },
             { "Profile_AvatarInfo", "Profile_AvatarInfo" },
+            { "Profile_PrivateProfile", "Profile_PrivateProfile" },
             { "HidrogenianService_UnactivatedUser", "HidrogenianService_UnactivatedUser" }
         };
     }
